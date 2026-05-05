@@ -2,170 +2,12 @@
   HOJA DE REFERENCIA: Comandos Windows (CMD y PowerShell)
   ================================================
   Este documento es una cheat sheet interactiva con pestañas y búsqueda.
-  CSS está embebido (podría moverse a styles.css si crece el proyecto).
 -->
 
-<style>
-  /* --- VARIABLES CSS --- */
-  :root {
-    --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    --font-mono: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
-    --color-background-primary: #ffffff;
-    --color-background-secondary: #f3f4f6;
-    --color-background-info: #eff6ff;
-    --color-background-success: #ecfdf5;
-    --color-background-warning: #fffbeb;
-    --color-text-primary: #111827;
-    --color-text-secondary: #4b5563;
-    --color-text-tertiary: #9ca3af;
-    --color-text-info: #2563eb;
-    --color-text-success: #059669;
-    --color-text-warning: #d97706;
-    --color-border-primary: #d1d5db;
-    --color-border-secondary: #e5e7eb;
-    --color-border-tertiary: #f3f4f6;
-    --border-radius-md: 6px;
-    --border-radius-lg: 10px;
-  }
-
-  /* --- RESET BÁSICO --- */
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  /* --- ESTILOS DEL BODY --- */
-  body { font-family: var(--font-sans); background: #f1f5f9; min-height: 100vh; padding: 1rem; }
-
-  /* --- CONTENEDOR PRINCIPAL --- */
-  .main-container {
-    max-width: 900px;
-    margin: 0 auto;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    padding: 2rem;
-  }
-
-  /* --- ACCESIBILIDAD: OCULTAR VISUALMENTE PERO MANTENER PARA LECTORES DE PANTALLA --- */
-  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
-
-  /* --- TÍTULO VISIBLE --- */
-  .main-title { text-align: center; font-size: 2.2rem; font-weight: 700; color: var(--color-text-primary); margin-bottom: 1.5rem; letter-spacing: -0.02em; }
-
-  /* --- PESTAÑAS PRINCIPALES (Tabs) --- */
-  .tabs-main { display: flex; gap: 6px; margin-bottom: 0.5rem; flex-wrap: wrap; justify-content: center; width: 100%; }
-  .tab-main {
-    padding: 6px 16px;
-    border-radius: var(--border-radius-md);
-    border: 0.5px solid var(--color-border-secondary);
-    background: transparent;
-    cursor: pointer;
-    font-size: 13px;
-    color: var(--color-text-secondary);
-    transition: all 0.15s;
-  }
-  .tab-main.active {
-    background: var(--color-background-secondary);
-    color: var(--color-text-primary);
-    border-color: var(--color-border-primary);
-    font-weight: 500;
-  }
-
-  /* --- PESTAÑAS SECUNDARIAS (Sub-tabs) --- */
-  .subtabs { display: flex; gap: 6px; margin-bottom: 1.5rem; flex-wrap: wrap; justify-content: center; width: 100%; }
-  .subtabs .inner { width: min(100%, 760px); max-width: 760px; display: flex; gap: 6px; justify-content: center; }
-  .subtab {
-    padding: 6px 16px;
-    border-radius: var(--border-radius-md);
-    border: 0.5px solid var(--color-border-tertiary);
-    background: transparent;
-    cursor: pointer;
-    font-size: 12px;
-    color: var(--color-text-tertiary);
-    transition: all 0.15s;
-    flex: 0 0 auto;
-  }
-  .subtab.active {
-    background: var(--color-background-info);
-    color: var(--color-text-info);
-    border-color: var(--color-text-info);
-    font-weight: 600;
-  }
-
-  /* --- SECCIONES (Ocultas por defecto, se muestran con .active) --- */
-  .section { display: none; }
-  .section.active { display: block; }
-
-  /* --- CAJA DE BÚSQUEDA --- */
-  .search-box {
-    width: 100%;
-    padding: 8px 12px;
-    border: 0.5px solid var(--color-border-secondary);
-    border-radius: var(--border-radius-md);
-    font-size: 14px;
-    margin-bottom: 1rem;
-    background: var(--color-background-primary);
-    color: var(--color-text-primary);
-  }
-
-  /* --- GRUPOS DE COMANDOS --- */
-  .cmd-group { margin-bottom: 1.5rem; }
-  .group-title {
-    font-size: 11px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--color-text-tertiary);
-    margin-bottom: 8px;
-    padding-bottom: 4px;
-    border-bottom: 0.5px solid var(--color-border-tertiary);
-  }
-
-  /* --- FILA DE COMANDO: nombre + descripción --- */
-  .cmd-row {
-    display: grid;
-    grid-template-columns: 160px 1fr;
-    gap: 8px;
-    padding: 5px 0;
-    border-bottom: 0.5px solid var(--color-border-tertiary);
-    align-items: start;
-  }
-  .cmd-row:last-child { border-bottom: none; }
-
-  /* --- NOMBRE DEL COMANDO --- */
-  .cmd-name {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--color-text-info);
-    background: var(--color-background-info);
-    padding: 2px 6px;
-    border-radius: 4px;
-    white-space: nowrap;
-    align-self: start;
-  }
-
-  /* --- DESCRIPCIÓN DEL COMANDO --- */
-  .cmd-desc { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
-  .cmd-purpose { font-size: 10px; font-weight: 600; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px; }
-
-  /* --- PARÁMETRO (flags como -l, -a, etc.) --- */
-  .param {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    background: var(--color-background-secondary);
-    padding: 1px 5px;
-    border-radius: 3px;
-    color: var(--color-text-primary);
-    margin-right: 2px;
-    white-space: nowrap;
-    display: inline-block;
-    margin-bottom: 2px;
-  }
-
-  /* --- UTILIDAD: OCULTAR ELEMENTOS --- */
-  .hidden { display: none !important; }
-</style>
+<link rel="stylesheet" href="../styles.css" />
 
 <!-- TÍTULO VISIBLE CENTRADO -->
-<h1 class="main-title">Referencia de Comandos Windows</h1>
+<h1 class="main-title">Comandos Windows</h1>
 
 <!-- TÍTULO ACCESIBLE (solo para lectores de pantalla) -->
 <h2 class="sr-only">Referencia interactiva de comandos Windows CMD y PowerShell</h2>
@@ -174,7 +16,8 @@
 <div class="main-container">
   <!-- BOTÓN VOLVER AL INICIO -->
   <div style="margin-bottom: 1rem;">
-    <a href="../index.html" style="display: inline-flex; align-items: center; gap: 6px; color: var(--color-text-secondary); text-decoration: none; font-size: 14px; padding: 6px 12px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; cursor: pointer; transition: all 0.15s;">
+    <a href="../index.html"
+      style="display: inline-flex; align-items: center; gap: 6px; color: var(--color-text-secondary); text-decoration: none; font-size: 14px; padding: 6px 12px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; cursor: pointer; transition: all 0.15s;">
       ← Volver al inicio
     </a>
   </div>
@@ -205,7 +48,8 @@
   </div>
 
   <!-- CAJA DE BÚSQUEDA: mismo ancho que las pestañas -->
-  <input class="search-box" type="text" placeholder="Buscar comando o parámetro..." oninput="filterCmds(this.value)" id="searchInput" />
+  <input class="search-box" type="text" placeholder="Buscar comando o parámetro..." oninput="filterCmds(this.value)"
+    id="searchInput" />
 
   <div id="allCmds">
     <!-- #################### CMD #################### -->
@@ -213,11 +57,23 @@
     <div class="section active" id="tab-cmd-nav" data-group="cmd-nav">
       <div class="cmd-group">
         <div class="group-title">Navegación de directorios (CMD)</div>
-        <div class="cmd-row"><span class="cmd-name">dir</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista el contenido de un directorio.<br><span class="param">/w</span> formato ancho · <span class="param">/p</span> prefijo · <span class="param">/q</span> silencioso · <span class="param">/a</span> ocultos · <span class="param">/o</span> orden · <span class="param">/t</span> clasificación</span></div>
-        <div class="cmd-row"><span class="cmd-name">cd</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia al directorio especificado.<br><span class="param">ruta</span> ir a ruta · <span class="param">..</span> subir nivel · <span class="param">\</span> raíz · <span class="param">%CD%</span> directorio actual</span></div>
-        <div class="cmd-row"><span class="cmd-name">md</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Crea directorios nuevos.<br><span class="param">nombre</span> crear directorio · <span class="param">/s</span> crear padre si no existe</span></div>
-        <div class="cmd-row"><span class="cmd-name">rd / rmdir</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Elimina directorios.<br><span class="param">/s</span> incluye subdirectorios · <span class="param">/q</span> silencioso · <span class="param">nombre</span> directorio a borrar</span></div>
-        <div class="cmd-row"><span class="cmd-name">cls</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Limpia la pantalla de la consola. Sin parámetros.</span></div>
+        <div class="cmd-row"><span class="cmd-name">dir</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Lista el contenido de un directorio.<br><span class="param">/w</span> formato ancho · <span
+              class="param">/p</span> prefijo · <span class="param">/q</span> silencioso · <span class="param">/a</span>
+            ocultos · <span class="param">/o</span> orden · <span class="param">/t</span> clasificación</span></div>
+        <div class="cmd-row"><span class="cmd-name">cd</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Cambia al directorio especificado.<br><span class="param">ruta</span> ir a ruta · <span
+              class="param">..</span> subir nivel · <span class="param">\</span> raíz · <span class="param">%CD%</span>
+            directorio actual</span></div>
+        <div class="cmd-row"><span class="cmd-name">md</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Crea directorios nuevos.<br><span class="param">nombre</span> crear directorio · <span
+              class="param">/s</span> crear padre si no existe</span></div>
+        <div class="cmd-row"><span class="cmd-name">rd / rmdir</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Elimina directorios.<br><span class="param">/s</span> incluye
+            subdirectorios · <span class="param">/q</span> silencioso · <span class="param">nombre</span> directorio a
+            borrar</span></div>
+        <div class="cmd-row"><span class="cmd-name">cls</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Limpia la pantalla de la consola. Sin parámetros.</span></div>
       </div>
     </div>
 
@@ -225,12 +81,29 @@
     <div class="section" id="tab-cmd-files" data-group="cmd-files">
       <div class="cmd-group">
         <div class="group-title">Gestión de archivos (CMD)</div>
-        <div class="cmd-row"><span class="cmd-name">copy</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Copia archivos.<br><span class="param">origen destino</span> copiar archivo · <span class="param">/y</span> confirmar sobrescritura · <span class="param">/v</span> verbose · <span class="param">/z</span> en ZIP</span></div>
-        <div class="cmd-row"><span class="cmd-name">move</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Mueve o renombra archivos.<br><span class="param">origen destino</span> mover/renombrar · <span class="param">/y</span> confirmar sobrescritura</span></div>
-        <div class="cmd-row"><span class="cmd-name">del / erase</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Elimina archivos.<br><span class="param">archivo</span> eliminar archivo · <span class="param">/p</span> confirmar · <span class="param">/f</span> forzar · <span class="param">/s</span> silencioso</span></div>
-        <div class="cmd-row"><span class="cmd-name">xcopy</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Copia archivos y árboles de directorios.<br><span class="param">/s</span> directorios vacíos · <span class="param">/e</span> directorios y subdirectorios · <span class="param">/h</span> archivos ocultos · <span class="param">/r</span> recursivo</span></div>
-        <div class="cmd-row"><span class="cmd-name">robocopy</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Copia robusta de archivos (reemplaza xcopy).<br><span class="param">/s</span> recursivo · <span class="param">/e</span> todo · <span class="param">/mir</span> espejo · <span class="param">/purge</span> limpiar · <span class="param">/mt:n</span> hilos</span></div>
-        <div class="cmd-row"><span class="cmd-name">attrib</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra o cambia atributos de archivos.<br><span class="param">+r/-r</span> lectura · <span class="param">+h/-h</span> oculto · <span class="param">+s/-s</span> sistema · <span class="param">/s</span> recursivo</span></div>
+        <div class="cmd-row"><span class="cmd-name">copy</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Copia archivos.<br><span class="param">origen destino</span> copiar archivo · <span
+              class="param">/y</span> confirmar sobrescritura · <span class="param">/v</span> verbose · <span
+              class="param">/z</span> en ZIP</span></div>
+        <div class="cmd-row"><span class="cmd-name">move</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Mueve o renombra archivos.<br><span class="param">origen destino</span> mover/renombrar ·
+            <span class="param">/y</span> confirmar sobrescritura</span></div>
+        <div class="cmd-row"><span class="cmd-name">del / erase</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Elimina archivos.<br><span class="param">archivo</span>
+            eliminar archivo · <span class="param">/p</span> confirmar · <span class="param">/f</span> forzar · <span
+              class="param">/s</span> silencioso</span></div>
+        <div class="cmd-row"><span class="cmd-name">xcopy</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Copia archivos y árboles de directorios.<br><span class="param">/s</span> directorios
+            vacíos · <span class="param">/e</span> directorios y subdirectorios · <span class="param">/h</span> archivos
+            ocultos · <span class="param">/r</span> recursivo</span></div>
+        <div class="cmd-row"><span class="cmd-name">robocopy</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Copia robusta de archivos (reemplaza xcopy).<br><span class="param">/s</span> recursivo
+            · <span class="param">/e</span> todo · <span class="param">/mir</span> espejo · <span
+              class="param">/purge</span> limpiar · <span class="param">/mt:n</span> hilos</span></div>
+        <div class="cmd-row"><span class="cmd-name">attrib</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Muestra o cambia atributos de archivos.<br><span class="param">+r/-r</span> lectura ·
+            <span class="param">+h/-h</span> oculto · <span class="param">+s/-s</span> sistema · <span
+              class="param">/s</span> recursivo</span></div>
       </div>
     </div>
 
@@ -238,10 +111,20 @@
     <div class="section" id="tab-cmd-proc" data-group="cmd-proc">
       <div class="cmd-group">
         <div class="group-title">Gestión de procesos (CMD)</div>
-        <div class="cmd-row"><span class="cmd-name">tasklist</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra procesos en ejecución.<br><span class="param">/fi "filtro"</span> filtrar · <span class="param">/fo formato</span> table, list, csv · <span class="param">/nh</span> sin cabecera · <span class="param">/v</span> verbose</span></div>
-        <div class="cmd-row"><span class="cmd-name">taskkill</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Mata procesos por PID o nombre.<br><span class="param">/pid n</span> por PID · <span class="param">/im nombre</span> por nombre · <span class="param">/f</span> forzar · <span class="param">/t</span> terminar árbol</span></div>
-        <div class="cmd-row"><span class="cmd-name">systeminfo</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra información del sistema.<br><span class="param">/s servidor</span> remoto · <span class="param">/u usuario</span> · <span class="param">/p clave</span></span></div>
-        <div class="cmd-row"><span class="cmd-name">taskmgr</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Abre el Administrador de Tareas (GUI). Sin parámetros.</span></div>
+        <div class="cmd-row"><span class="cmd-name">tasklist</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Muestra procesos en ejecución.<br><span class="param">/fi "filtro"</span> filtrar ·
+            <span class="param">/fo formato</span> table, list, csv · <span class="param">/nh</span> sin cabecera ·
+            <span class="param">/v</span> verbose</span></div>
+        <div class="cmd-row"><span class="cmd-name">taskkill</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Mata procesos por PID o nombre.<br><span class="param">/pid n</span> por PID · <span
+              class="param">/im nombre</span> por nombre · <span class="param">/f</span> forzar · <span
+              class="param">/t</span> terminar árbol</span></div>
+        <div class="cmd-row"><span class="cmd-name">systeminfo</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Muestra información del sistema.<br><span class="param">/s
+              servidor</span> remoto · <span class="param">/u usuario</span> · <span class="param">/p
+              clave</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">taskmgr</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Abre el Administrador de Tareas (GUI). Sin parámetros.</span></div>
       </div>
     </div>
 
@@ -249,12 +132,27 @@
     <div class="section" id="tab-cmd-net" data-group="cmd-net">
       <div class="cmd-group">
         <div class="group-title">Red y conectividad (CMD)</div>
-        <div class="cmd-row"><span class="cmd-name">ipconfig</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra configuración de red.<br><span class="param">/all</span> toda la info · <span class="param">/release</span> liberar DHCP · <span class="param">/renew</span> renovar DHCP · <span class="param">/flushdns</span> limpiar caché DNS</span></div>
-        <div class="cmd-row"><span class="cmd-name">ping</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica conectividad enviando paquetes ICMP.<br><span class="param">-n n</span> nº paquetes · <span class="param">-l n</span> tamaño búfer · <span class="param">-i n</span> TTL · <span class="param">-4</span> IPv4 · <span class="param">-6</span> IPv6</span></div>
-        <div class="cmd-row"><span class="cmd-name">tracert</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra la ruta que toman los paquetes.<br><span class="param">-d</span> no resolver DNS · <span class="param">-h n</span> máximo saltos · <span class="param">-w n</span> espera ms</span></div>
-        <div class="cmd-row"><span class="cmd-name">netstat</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra conexiones de red y puertos.<br><span class="param">-a</span> todas · <span class="param">-b</span> estadísticas · <span class="param">-n</span> numérico · <span class="param">-o</span> procesos · <span class="param">-r</span> rutas</span></div>
-        <div class="cmd-row"><span class="cmd-name">arp</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra o modifica tabla ARP.<br><span class="param">-a</span> toda la tabla · <span class="param">-d</span> eliminar entrada · <span class="param">-s</span> añadir entrada</span></div>
-        <div class="cmd-row"><span class="cmd-name">nslookup</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Consulta servidores DNS.<br><span class="param">nombre</span> buscar dominio · <span class="param">servidor</span> servidor DNS especifico</span></div>
+        <div class="cmd-row"><span class="cmd-name">ipconfig</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Muestra configuración de red.<br><span class="param">/all</span> toda la info · <span
+              class="param">/release</span> liberar DHCP · <span class="param">/renew</span> renovar DHCP · <span
+              class="param">/flushdns</span> limpiar caché DNS</span></div>
+        <div class="cmd-row"><span class="cmd-name">ping</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Verifica conectividad enviando paquetes ICMP.<br><span class="param">-n n</span> nº paquetes
+            · <span class="param">-l n</span> tamaño búfer · <span class="param">-i n</span> TTL · <span
+              class="param">-4</span> IPv4 · <span class="param">-6</span> IPv6</span></div>
+        <div class="cmd-row"><span class="cmd-name">tracert</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Muestra la ruta que toman los paquetes.<br><span class="param">-d</span> no resolver DNS
+            · <span class="param">-h n</span> máximo saltos · <span class="param">-w n</span> espera ms</span></div>
+        <div class="cmd-row"><span class="cmd-name">netstat</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Muestra conexiones de red y puertos.<br><span class="param">-a</span> todas · <span
+              class="param">-b</span> estadísticas · <span class="param">-n</span> numérico · <span
+              class="param">-o</span> procesos · <span class="param">-r</span> rutas</span></div>
+        <div class="cmd-row"><span class="cmd-name">arp</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Muestra o modifica tabla ARP.<br><span class="param">-a</span> toda la tabla · <span
+              class="param">-d</span> eliminar entrada · <span class="param">-s</span> añadir entrada</span></div>
+        <div class="cmd-row"><span class="cmd-name">nslookup</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Consulta servidores DNS.<br><span class="param">nombre</span> buscar dominio · <span
+              class="param">servidor</span> servidor DNS especifico</span></div>
       </div>
     </div>
 
@@ -263,11 +161,25 @@
     <div class="section" id="tab-ps-nav" data-group="ps-nav">
       <div class="cmd-group">
         <div class="group-title">Navegación de directorios (PowerShell)</div>
-        <div class="cmd-row"><span class="cmd-name">Get-ChildItem (ls, dir)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista el contenido de un directorio.<br><span class="param">-Recurse</span> recursivo · <span class="param">-Hidden</span> ocultos · <span class="param">-Name</span> solo nombres · <span class="param">-File</span> solo archivos · <span class="param">-Directory</span> solo directorios</span></div>
-        <div class="cmd-row"><span class="cmd-name">Set-Location (cd)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia al directorio especificado.<br><span class="param">ruta</span> ir a ruta · <span class="param">..</span> subir nivel · <span class="param">\</span> raíz · <span class="param">-PassThru</span> mostrar ubicación</span></div>
-        <div class="cmd-row"><span class="cmd-name">New-Item (md)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Crea directorios o archivos nuevos.<br><span class="param">-ItemType</span> Directory/File · <span class="param">-Name</span> nombre · <span class="param">-Path</span> ruta</span></div>
-        <div class="cmd-row"><span class="cmd-name">Remove-Item (rd, del)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Elimina archivos o directorios.<br><span class="param">-Recurse</span> recursivo · <span class="param">-Force</span> forzar · <span class="param">-Confirm</span> confirmar</span></div>
-        <div class="cmd-row"><span class="cmd-name">Clear-Host (cls)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Limpia la pantalla de la consola. Sin parámetros.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Get-ChildItem (ls, dir)</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Lista el contenido de un directorio.<br><span
+              class="param">-Recurse</span> recursivo · <span class="param">-Hidden</span> ocultos · <span
+              class="param">-Name</span> solo nombres · <span class="param">-File</span> solo archivos · <span
+              class="param">-Directory</span> solo directorios</span></div>
+        <div class="cmd-row"><span class="cmd-name">Set-Location (cd)</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Cambia al directorio especificado.<br><span
+              class="param">ruta</span> ir a ruta · <span class="param">..</span> subir nivel · <span
+              class="param">\</span> raíz · <span class="param">-PassThru</span> mostrar ubicación</span></div>
+        <div class="cmd-row"><span class="cmd-name">New-Item (md)</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Crea directorios o archivos nuevos.<br><span
+              class="param">-ItemType</span> Directory/File · <span class="param">-Name</span> nombre · <span
+              class="param">-Path</span> ruta</span></div>
+        <div class="cmd-row"><span class="cmd-name">Remove-Item (rd, del)</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Elimina archivos o directorios.<br><span
+              class="param">-Recurse</span> recursivo · <span class="param">-Force</span> forzar · <span
+              class="param">-Confirm</span> confirmar</span></div>
+        <div class="cmd-row"><span class="cmd-name">Clear-Host (cls)</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Limpia la pantalla de la consola. Sin parámetros.</span></div>
       </div>
     </div>
 
@@ -275,12 +187,29 @@
     <div class="section" id="tab-ps-files" data-group="ps-files">
       <div class="cmd-group">
         <div class="group-title">Gestión de archivos (PowerShell)</div>
-        <div class="cmd-row"><span class="cmd-name">Copy-Item (copy)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Copia archivos o directorios.<br><span class="param">-Destination</span> destino · <span class="param">-Recurse</span> recursivo · <span class="param">-Force</span> sobrescribir · <span class="param">-PassThru</span> mostrar</span></div>
-        <div class="cmd-row"><span class="cmd-name">Move-Item (move)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Mueve archivos o directorios.<br><span class="param">-Destination</span> destino · <span class="param">-Force</span> sobrescribir · <span class="param">-PassThru</span> mostrar</span></div>
-        <div class="cmd-row"><span class="cmd-name">Get-Content (cat, type)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra el contenido de un archivo.<br><span class="param">-TotalCount n</span> n líneas · <span class="param">-Tail n</span> últimas n · <span class="param">-Delimiter</span> delimitador</span></div>
-        <div class="cmd-row"><span class="cmd-name">Set-Content</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Escribe contenido en un archivo (sobrescribe).<br><span class="param">-Value</span> contenido · <span class="param">-Path</span> archivo · <span class="param">-Force</span> forzar</span></div>
-        <div class="cmd-row"><span class="cmd-name">Select-String (grep)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca patrones en archivos.<br><span class="param">-Pattern</span> expresión · <span class="param">-Path</span> archivo · <span class="param">-CaseSensitive</span> · <span class="param">-Context n</span> líneas contexto</span></div>
-        <div class="cmd-row"><span class="cmd-name">Out-File</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Redirige salida a un archivo.<br><span class="param">-FilePath</span> archivo · <span class="param">-Append</span> añadir · <span class="param">-Encoding</span> codificación</span></div>
+        <div class="cmd-row"><span class="cmd-name">Copy-Item (copy)</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Copia archivos o directorios.<br><span
+              class="param">-Destination</span> destino · <span class="param">-Recurse</span> recursivo · <span
+              class="param">-Force</span> sobrescribir · <span class="param">-PassThru</span> mostrar</span></div>
+        <div class="cmd-row"><span class="cmd-name">Move-Item (move)</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Mueve archivos o directorios.<br><span
+              class="param">-Destination</span> destino · <span class="param">-Force</span> sobrescribir · <span
+              class="param">-PassThru</span> mostrar</span></div>
+        <div class="cmd-row"><span class="cmd-name">Get-Content (cat, type)</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Muestra el contenido de un archivo.<br><span
+              class="param">-TotalCount n</span> n líneas · <span class="param">-Tail n</span> últimas n · <span
+              class="param">-Delimiter</span> delimitador</span></div>
+        <div class="cmd-row"><span class="cmd-name">Set-Content</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Escribe contenido en un archivo (sobrescribe).<br><span
+              class="param">-Value</span> contenido · <span class="param">-Path</span> archivo · <span
+              class="param">-Force</span> forzar</span></div>
+        <div class="cmd-row"><span class="cmd-name">Select-String (grep)</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Busca patrones en archivos.<br><span
+              class="param">-Pattern</span> expresión · <span class="param">-Path</span> archivo · <span
+              class="param">-CaseSensitive</span> · <span class="param">-Context n</span> líneas contexto</span></div>
+        <div class="cmd-row"><span class="cmd-name">Out-File</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Redirige salida a un archivo.<br><span class="param">-FilePath</span> archivo · <span
+              class="param">-Append</span> añadir · <span class="param">-Encoding</span> codificación</span></div>
       </div>
     </div>
 
@@ -288,11 +217,24 @@
     <div class="section" id="tab-ps-proc" data-group="ps-proc">
       <div class="cmd-group">
         <div class="group-title">Gestión de procesos (PowerShell)</div>
-        <div class="cmd-row"><span class="cmd-name">Get-Process (ps, gps)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra procesos en ejecución.<br><span class="param">-Name nombre</span> filtrar por nombre · <span class="param">-Id PID</span> filtrar por PID · <span class="param">-IncludeUserName</span> con usuario</span></div>
-        <div class="cmd-row"><span class="cmd-name">Stop-Process (kill, spps)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Mata procesos por nombre o PID.<br><span class="param">-Name nombre</span> por nombre · <span class="param">-Id PID</span> por PID · <span class="param">-Force</span> forzar</span></div>
-        <div class="cmd-row"><span class="cmd-name">Get-Service (gsv)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra servicios del sistema.<br><span class="param">-Name nombre</span> filtrar · <span class="param">-DependentServices</span> dependencias · <span class="param">-RequiredServices</span> requeridos</span></div>
-        <div class="cmd-row"><span class="cmd-name">Start-Service</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Inicia un servicio.<br><span class="param">-Name nombre</span> servicio · <span class="param">-PassThru</span> mostrar</span></div>
-        <div class="cmd-row"><span class="cmd-name">Stop-Service</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Detiene un servicio.<br><span class="param">-Name nombre</span> servicio · <span class="param">-Force</span> forzar</span></div>
+        <div class="cmd-row"><span class="cmd-name">Get-Process (ps, gps)</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Muestra procesos en ejecución.<br><span class="param">-Name
+              nombre</span> filtrar por nombre · <span class="param">-Id PID</span> filtrar por PID · <span
+              class="param">-IncludeUserName</span> con usuario</span></div>
+        <div class="cmd-row"><span class="cmd-name">Stop-Process (kill, spps)</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Mata procesos por nombre o PID.<br><span class="param">-Name
+              nombre</span> por nombre · <span class="param">-Id PID</span> por PID · <span class="param">-Force</span>
+            forzar</span></div>
+        <div class="cmd-row"><span class="cmd-name">Get-Service (gsv)</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Muestra servicios del sistema.<br><span class="param">-Name
+              nombre</span> filtrar · <span class="param">-DependentServices</span> dependencias · <span
+              class="param">-RequiredServices</span> requeridos</span></div>
+        <div class="cmd-row"><span class="cmd-name">Start-Service</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Inicia un servicio.<br><span class="param">-Name nombre</span>
+            servicio · <span class="param">-PassThru</span> mostrar</span></div>
+        <div class="cmd-row"><span class="cmd-name">Stop-Service</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Detiene un servicio.<br><span class="param">-Name nombre</span>
+            servicio · <span class="param">-Force</span> forzar</span></div>
       </div>
     </div>
 
@@ -300,11 +242,26 @@
     <div class="section" id="tab-ps-net" data-group="ps-net">
       <div class="cmd-group">
         <div class="group-title">Red y conectividad (PowerShell)</div>
-        <div class="cmd-row"><span class="cmd-name">Test-Connection (ping, tnc)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica conectividad de red (ICMP y TCP).<br><span class="param">-TargetName</span> destino · <span class="param">-Ping</span> ICMP · <span class="param">-TcpPort n</span> puerto TCP · <span class="param">-Count n</span> paquetes</span></div>
-        <div class="cmd-row"><span class="cmd-name">Get-NetIPAddress</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra direcciones IP.<br><span class="param">-InterfaceAlias</span> interfaz · <span class="param">-AddressFamily</span> IPv4/IPv6 · <span class="param">-IncludeAllCompartments</span></span></div>
-        <div class="cmd-row"><span class="cmd-name">Get-NetRoute</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra tabla de enrutamiento.<br><span class="param">-InterfaceAlias</span> interfaz · <span class="param">-DestinationPrefix</span> destino · <span class="param">-NextHop</span> siguiente salto</span></div>
-        <div class="cmd-row"><span class="cmd-name">Get-NetAdapter</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra adaptadores de red.<br><span class="param">-Name nombre</span> filtrar · <span class="param">-InterfaceDescription</span> descripción · <span class="param">-Physical</span> solo físicos</span></div>
-        <div class="cmd-row"><span class="cmd-name">Resolve-DnsName (nslookup)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Consulta registros DNS.<br><span class="param">-Name dominio</span> dominio · <span class="param">-Server servidor</span> DNS especifico · <span class="param">-Type</span> tipo registro</span></div>
+        <div class="cmd-row"><span class="cmd-name">Test-Connection (ping, tnc)</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Verifica conectividad de red (ICMP y TCP).<br><span
+              class="param">-TargetName</span> destino · <span class="param">-Ping</span> ICMP · <span
+              class="param">-TcpPort n</span> puerto TCP · <span class="param">-Count n</span> paquetes</span></div>
+        <div class="cmd-row"><span class="cmd-name">Get-NetIPAddress</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Muestra direcciones IP.<br><span
+              class="param">-InterfaceAlias</span> interfaz · <span class="param">-AddressFamily</span> IPv4/IPv6 ·
+            <span class="param">-IncludeAllCompartments</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">Get-NetRoute</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Muestra tabla de enrutamiento.<br><span
+              class="param">-InterfaceAlias</span> interfaz · <span class="param">-DestinationPrefix</span> destino ·
+            <span class="param">-NextHop</span> siguiente salto</span></div>
+        <div class="cmd-row"><span class="cmd-name">Get-NetAdapter</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Muestra adaptadores de red.<br><span class="param">-Name
+              nombre</span> filtrar · <span class="param">-InterfaceDescription</span> descripción · <span
+              class="param">-Physical</span> solo físicos</span></div>
+        <div class="cmd-row"><span class="cmd-name">Resolve-DnsName (nslookup)</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Consulta registros DNS.<br><span class="param">-Name
+              dominio</span> dominio · <span class="param">-Server servidor</span> DNS especifico · <span
+              class="param">-Type</span> tipo registro</span></div>
       </div>
     </div>
   </div>
@@ -312,103 +269,103 @@
 
 <!--  JAVASCRIPT: -->
 <script>
-/**
- * showMainTab(id)
- * - Cambia entre CMD y PowerShell
- * - Muestra las pestañas secundarias correspondientes
- * - Activa la primera pestaña secundaria
- * - Limpia el campo de búsqueda
- */
-function showMainTab(id) {
-  // Ocultar todas las secciones y pestañas principales
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab-main').forEach(t => t.classList.remove('active'));
+  /**
+   * showMainTab(id)
+   * - Cambia entre CMD y PowerShell
+   * - Muestra las pestañas secundarias correspondientes
+   * - Activa la primera pestaña secundaria
+   * - Limpia el campo de búsqueda
+   */
+  function showMainTab(id) {
+    // Ocultar todas las secciones y pestañas principales
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-main').forEach(t => t.classList.remove('active'));
 
-  // Marcar el tab principal activo de forma segura (evita dependencia de 'event' global)
-  if (typeof event !== 'undefined' && event.target) {
-    const btn = event.target.closest('.tab-main');
-    if (btn) btn.classList.add('active');
+    // Marcar el tab principal activo de forma segura (evita dependencia de 'event' global)
+    if (typeof event !== 'undefined' && event.target) {
+      const btn = event.target.closest('.tab-main');
+      if (btn) btn.classList.add('active');
+    }
+
+    // Mostrar/ocultar pestañas secundarios según el tab principal
+    document.getElementById('subtabs-cmd').style.display = (id === 'cmd') ? 'flex' : 'none';
+    document.getElementById('subtabs-powershell').style.display = (id === 'powershell') ? 'flex' : 'none';
+
+    // Activar la primera pestaña secundaria del tab seleccionado
+    const subtabsContainer = document.getElementById('subtabs-' + id);
+    const firstSubtab = subtabsContainer ? subtabsContainer.querySelector('.subtab') : null;
+    // Mapear a la sección inicial correcta (CMD -> tab-cmd-nav, PS -> tab-ps-nav)
+    const firstSection = (id === 'cmd') ? document.getElementById('tab-cmd-nav') : document.getElementById('tab-ps-nav');
+
+    if (firstSubtab) {
+      document.querySelectorAll('.subtab').forEach(st => st.classList.remove('active'));
+      firstSubtab.classList.add('active');
+    }
+
+    if (firstSection) {
+      firstSection.classList.add('active');
+    }
+
+    document.getElementById('searchInput').value = '';
   }
 
-  // Mostrar/ocultar pestañas secundarios según el tab principal
-  document.getElementById('subtabs-cmd').style.display = (id === 'cmd') ? 'block' : 'none';
-  document.getElementById('subtabs-powershell').style.display = (id === 'powershell') ? 'block' : 'none';
+  /**
+   * showSubTab(id)
+   * - Cambia entre secciones secundarias (Navegación, Archivos, etc.)
+   * - Limpia el campo de búsqueda
+   */
+  function showSubTab(id) {
+    // Ocultar todas las secciones y pestañas secundarias
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
 
-  // Activar la primera pestaña secundaria del tab seleccionado
-  const subtabsContainer = document.getElementById('subtabs-' + id);
-  const firstSubtab = subtabsContainer ? subtabsContainer.querySelector('.subtab') : null;
-  // Mapear a la sección inicial correcta (CMD -> tab-cmd-nav, PS -> tab-ps-nav)
-  const firstSection = (id === 'cmd') ? document.getElementById('tab-cmd-nav') : document.getElementById('tab-ps-nav');
-
-  if (firstSubtab) {
-    document.querySelectorAll('.subtab').forEach(st => st.classList.remove('active'));
-    firstSubtab.classList.add('active');
+    // Mostrar sección y tab activos
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+    document.getElementById('searchInput').value = '';
   }
 
-  if (firstSection) {
-    firstSection.classList.add('active');
+  /**
+   * filterCmds(q)
+   * - Filtra comandos y parámetros en tiempo real mientras el usuario escribe
+   * - Si no hay búsqueda (q vacío): muestra la primera pestaña y sección
+   * - Si hay búsqueda: muestra todas las secciones y oculta filas que no coincidan
+   */
+  function filterCmds(q) {
+    q = q.toLowerCase().trim();
+    const sections = document.querySelectorAll('.section');
+    const mainTabs = document.querySelectorAll('.tab-main');
+    const subTabs = document.querySelectorAll('.subtab');
+
+    if (!q) {
+      // Sin búsqueda: resetear a la primera pestaña
+      sections.forEach(s => s.classList.remove('active'));
+      mainTabs.forEach(t => t.classList.remove('active'));
+      subTabs.forEach(t => t.classList.remove('active'));
+
+      // Activar CMD por defecto
+      const firstMainTab = document.querySelector('.tab-main');
+      if (firstMainTab) firstMainTab.classList.add('active');
+
+      // Activar primera pestaña secundaria de CMD
+      const firstSubtab = document.querySelector('#subtabs-cmd .subtab');
+      if (firstSubtab) firstSubtab.classList.add('active');
+
+      const firstSection = document.getElementById('tab-cmd-nav');
+      if (firstSection) firstSection.classList.add('active');
+
+      document.querySelectorAll('.cmd-row').forEach(r => r.classList.remove('hidden'));
+      return;
+    }
+
+    // Con búsqueda: mostrar todas las secciones y filtrar filas
+    sections.forEach(s => s.classList.add('active'));
+    mainTabs.forEach(t => t.classList.add('active'));
+    subTabs.forEach(t => t.classList.add('active'));
+
+    document.querySelectorAll('.cmd-row').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.classList.toggle('hidden', !text.includes(q));
+    });
   }
-
-  document.getElementById('searchInput').value = '';
-}
-
-/**
- * showSubTab(id)
- * - Cambia entre secciones secundarias (Navegación, Archivos, etc.)
- * - Limpia el campo de búsqueda
- */
-function showSubTab(id) {
-  // Ocultar todas las secciones y pestañas secundarias
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
-  
-  // Mostrar sección y tab activos
-  document.getElementById('tab-' + id).classList.add('active');
-  event.target.classList.add('active');
-  document.getElementById('searchInput').value = '';
-}
-
-/**
- * filterCmds(q)
- * - Filtra comandos y parámetros en tiempo real mientras el usuario escribe
- * - Si no hay búsqueda (q vacío): muestra la primera pestaña y sección
- * - Si hay búsqueda: muestra todas las secciones y oculta filas que no coincidan
- */
-function filterCmds(q) {
-  q = q.toLowerCase().trim();
-  const sections = document.querySelectorAll('.section');
-  const mainTabs = document.querySelectorAll('.tab-main');
-  const subTabs = document.querySelectorAll('.subtab');
-  
-  if (!q) {
-    // Sin búsqueda: resetear a la primera pestaña
-    sections.forEach(s => s.classList.remove('active'));
-    mainTabs.forEach(t => t.classList.remove('active'));
-    subTabs.forEach(t => t.classList.remove('active'));
-    
-    // Activar CMD por defecto
-    const firstMainTab = document.querySelector('.tab-main');
-    if (firstMainTab) firstMainTab.classList.add('active');
-    
-    // Activar primera pestaña secundaria de CMD
-    const firstSubtab = document.querySelector('#subtabs-cmd .subtab');
-    if (firstSubtab) firstSubtab.classList.add('active');
-    
-    const firstSection = document.getElementById('tab-cmd-nav');
-    if (firstSection) firstSection.classList.add('active');
-    
-    document.querySelectorAll('.cmd-row').forEach(r => r.classList.remove('hidden'));
-    return;
-  }
-  
-  // Con búsqueda: mostrar todas las secciones y filtrar filas
-  sections.forEach(s => s.classList.add('active'));
-  mainTabs.forEach(t => t.classList.add('active'));
-  subTabs.forEach(t => t.classList.add('active'));
-  
-  document.querySelectorAll('.cmd-row').forEach(row => {
-    const text = row.textContent.toLowerCase();
-    row.classList.toggle('hidden', !text.includes(q));
-  });
-}
 </script>

@@ -1,238 +1,46 @@
-<!--
+﻿<!--
   HOJA DE REFERENCIA: Comandos Linux y Editor vi
   ================================================
   Este documento es una cheat sheet interactiva con pestañas y búsqueda.
-  CSS está embebido (podría moverse a styles.css si crece el proyecto pero es mas funcional asi).
 -->
 
-<style>
-  /* --- VARIABLES CSS --- */
-  :root {
-    --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    --font-mono: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
-    --color-background-primary: #ffffff;
-    --color-background-secondary: #f3f4f6;
-    --color-background-info: #eff6ff;
-    --color-background-success: #ecfdf5;
-    --color-background-warning: #fffbeb;
-    --color-text-primary: #111827;
-    --color-text-secondary: #4b5563;
-    --color-text-tertiary: #9ca3af;
-    --color-text-info: #2563eb;
-    --color-text-success: #059669;
-    --color-text-warning: #d97706;
-    --color-border-primary: #d1d5db;
-    --color-border-secondary: #e5e7eb;
-    --color-border-tertiary: #f3f4f6;
-    --border-radius-md: 6px;
-    --border-radius-lg: 10px;
-  }
-
-  /* --- RESET BÁSICO --- */
-  * { box-sizing: border-box; margin:0; padding:0; }
-
-  /* --- ESTILOS DEL BODY --- */
-  body { font-family: var(--font-sans); background: #f1f5f9; min-height: 100vh; padding: 1rem; }
-
-  /* --- CONTENEDOR PRINCIPAL --- */
-  .main-container {
-    max-width: 900px;
-    margin: 0 auto;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    padding: 2rem;
-  }
-
-  /* --- ACCESIBILIDAD: OCULTAR VISUALMENTE PERO MANTENER PARA LECTORES DE PANTALLA --- */
-  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
-
-  /* --- TÍTULO VISIBLE --- */
-  .main-title { text-align: center; font-size: 2.2rem; font-weight: 700; color: var(--color-text-primary); margin-bottom: 1.5rem; letter-spacing: -0.02em; }
-
-  /* --- PESTAÑAS (Tabs) --- */
-  .tabs { display: flex; gap: 6px; margin-bottom: 1.5rem; flex-wrap: wrap; justify-content: center; }
-  .tab {
-    padding: 6px 16px;
-    border-radius: var(--border-radius-md);
-    border: 0.5px solid var(--color-border-secondary);
-    background: transparent;
-    cursor: pointer;
-    font-size: 13px;
-    color: var(--color-text-secondary);
-    transition: all 0.15s;
-  }
-  .tab.active {
-    background: var(--color-background-secondary);
-    color: var(--color-text-primary);
-    border-color: var(--color-border-primary);
-    font-weight: 500;
-  }
-
-  /* --- SECCIONES (Ocultas por defecto, se muestran con .active) --- */
-  .section { display: none; }
-  .section.active { display: block; }
-
-  /* --- CAJA DE BÚSQUEDA --- */
-  .search-box {
-    width: 100%;
-    padding: 8px 12px;
-    border: 0.5px solid var(--color-border-secondary);
-    border-radius: var(--border-radius-md);
-    font-size: 14px;
-    margin-bottom: 1rem;
-    background: var(--color-background-primary);
-    color: var(--color-text-primary);
-  }
-
-  /* --- GRUPOS DE COMANDOS --- */
-  .cmd-group { margin-bottom: 1.5rem; }
-  .group-title {
-    font-size: 11px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--color-text-tertiary);
-    margin-bottom: 8px;
-    padding-bottom: 4px;
-    border-bottom: 0.5px solid var(--color-border-tertiary);
-  }
-
-  /* --- FILA DE COMANDO: nombre + descripción --- */
-  .cmd-row {
-    display: grid;
-    grid-template-columns: 160px 1fr;
-    gap: 8px;
-    padding: 5px 0;
-    border-bottom: 0.5px solid var(--color-border-tertiary);
-    align-items: start;
-  }
-  .cmd-row:last-child { border-bottom: none; }
-
-  /* --- NOMBRE DEL COMANDO --- */
-  .cmd-name {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--color-text-info);
-    background: var(--color-background-info);
-    padding: 2px 6px;
-    border-radius: 4px;
-    white-space: nowrap;
-    align-self: start;
-  }
-
-  /* --- DESCRIPCIÓN DEL COMANDO --- */
-  .cmd-desc { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
-  .cmd-purpose { font-size: 10px; font-weight: 600; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px; }
-
-  /* --- PARÁMETRO (flags como -l, -a, etc.) --- */
-  .param {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    background: var(--color-background-secondary);
-    padding: 1px 5px;
-    border-radius: 3px;
-    color: var(--color-text-primary);
-    margin-right: 2px;
-    white-space: nowrap;
-    display: inline-block;
-    margin-bottom: 2px;
-  }
-
-  /* --- GRID DE TARJETAS DE VI --- */
-  .vi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
-
-  /* --- TARJETA INDIVIDUAL DE VI --- */
-  .vi-card {
-    background: var(--color-background-primary);
-    border: 0.5px solid var(--color-border-tertiary);
-    border-radius: var(--border-radius-lg);
-    padding: 12px 14px;
-  }
-  .vi-card-title {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--color-text-secondary);
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  /* --- FILA DENTRO DE TARJETA VI --- */
-  .vi-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 3px 0;
-    border-bottom: 0.5px solid var(--color-border-tertiary);
-    font-size: 12px;
-  }
-  .vi-row:last-child { border-bottom: none; }
-
-  /* --- TECLA EN VI --- */
-  .vi-key {
-    font-family: var(--font-mono);
-    color: var(--color-text-info);
-    background: var(--color-background-info);
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-size: 11px;
-  }
-
-  /* --- DESCRIPCIÓN EN VI --- */
-  .vi-desc { color: var(--color-text-secondary); text-align: right; max-width: 55%; }
-
-  /* --- BADGES DE MODO (NORMAL, INSERT, COMMAND) --- */
-  .mode-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: var(--border-radius-md);
-    font-size: 11px;
-    font-weight: 500;
-    margin-bottom: 10px;
-  }
-  .mode-normal { background: var(--color-background-info); color: var(--color-text-info); }
-  .mode-insert { background: var(--color-background-success); color: var(--color-text-success); }
-  .mode-cmd { background: var(--color-background-warning); color: var(--color-text-warning); }
-
-  /* --- UTILIDAD: OCULTAR ELEMENTOS --- */
-  .hidden { display: none !important; }
-</style>
-
+<link rel="stylesheet" href="../styles.css" />
 
 <!-- TÍTULO VISIBLE CENTRADO -->
-<h1 class="main-title">Referencia de Comandos Linux y vi</h1>
+<h1 class="main-title">Comandos Linux y vi</h1>
 
 <!-- TÍTULO ACCESIBLE (solo para lectores de pantalla) -->
 <h2 class="sr-only">Referencia interactiva de comandos Linux y editor vi</h2>
 
-  <!--  CONTENEDOR PRINCIPAL-->
-  <div class="main-container">
-    <!-- BOTÓN VOLVER AL INICIO -->
-    <div style="margin-bottom: 1rem;">
-      <a href="../index.html" style="display: inline-flex; align-items: center; gap: 6px; color: var(--color-text-secondary); text-decoration: none; font-size: 14px; padding: 6px 12px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; cursor: pointer; transition: all 0.15s;">
-        ← Volver al inicio
-      </a>
-    </div>
+<!--  CONTENEDOR PRINCIPAL-->
+<div class="main-container">
+  <!-- BOTÓN VOLVER AL INICIO -->
+  <div style="margin-bottom: 1rem;">
+    <a href="../index.html"
+      style="display: inline-flex; align-items: center; gap: 6px; color: var(--color-text-secondary); text-decoration: none; font-size: 14px; padding: 6px 12px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; cursor: pointer; transition: all 0.15s;">
+      ← Volver al inicio
+    </a>
+  </div>
 
-    <!-- WRAPPER CENTRADO: contiene pestañas y búsqueda -->
-    <div style="text-align: center; margin-bottom: 1.5rem;">
+  <!-- WRAPPER CENTRADO: contiene pestañas y búsqueda -->
+  <div style="text-align: center; margin-bottom: 1.5rem;">
     <!-- CONTENEDOR QUE SE AJUSTA AL ANCHO DE LAS PESTAÑAS -->
     <div style="display: inline-flex; flex-direction: column;">
-       <!-- PESTAÑAS DE NAVEGACIÓN: cada botón carga una sección distinta -->
-       <div class="tabs">
-         <button class="tab active" onclick="showTab('nav')">Navegación</button>
-         <button class="tab" onclick="showTab('files')">Archivos</button>
-         <button class="tab" onclick="showTab('perms')">Permisos</button>
-         <button class="tab" onclick="showTab('proc')">Procesos</button>
-         <button class="tab" onclick="showTab('net')">Red</button>
-         <button class="tab" onclick="showTab('text')">Texto</button>
-         <button class="tab" onclick="showTab('vi')">vi / vim</button>
-         <button class="tab" onclick="showTab('nano')">nano</button>
-       </div>
+      <!-- PESTAÑAS DE NAVEGACIÓN: cada botón carga una sección distinta -->
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('nav')">Navegación</button>
+        <button class="tab" onclick="showTab('files')">Archivos</button>
+        <button class="tab" onclick="showTab('perms')">Permisos</button>
+        <button class="tab" onclick="showTab('proc')">Procesos</button>
+        <button class="tab" onclick="showTab('net')">Red</button>
+        <button class="tab" onclick="showTab('text')">Texto</button>
+        <button class="tab" onclick="showTab('vi')">vi / vim</button>
+        <button class="tab" onclick="showTab('nano')">nano</button>
+      </div>
 
       <!-- CAJA DE BÚSQUEDA: mismo ancho que las pestañas (100% del contenedor) -->
-      <input class="search-box" type="text" placeholder="Buscar comando o parámetro..." oninput="filterCmds(this.value)" id="searchInput" style="width: 100%; margin-top: 0.75rem;" />
+      <input class="search-box" type="text" placeholder="Buscar comando o parámetro..." oninput="filterCmds(this.value)"
+        id="searchInput" style="width: 100%; margin-top: 0.75rem;" />
     </div>
   </div>
 
@@ -241,12 +49,31 @@
     <div class="section active" id="tab-nav" data-group="nav">
       <div class="cmd-group">
         <div class="group-title">Navegación de directorios</div>
-        <div class="cmd-row"><span class="cmd-name">pwd</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra el directorio de trabajo actual (Print Working Directory). Sin parámetros.</span></div>
-        <div class="cmd-row"><span class="cmd-name">ls</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista el contenido de un directorio.<br><span class="param">-l</span> lista larga · <span class="param">-a</span> ocultos · <span class="param">-h</span> tamaño legible · <span class="param">-R</span> recursivo · <span class="param">-t</span> orden por fecha · <span class="param">-S</span> orden por tamaño · <span class="param">-r</span> invertir orden · <span class="param">-1</span> una por línea</span></div>
-        <div class="cmd-row"><span class="cmd-name">cd</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia al directorio especificado.<br><span class="param">ruta</span> ir a ruta · <span class="param">~</span> home · <span class="param">..</span> subir nivel · <span class="param">-</span> directorio anterior</span></div>
-        <div class="cmd-row"><span class="cmd-name">tree</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra la estructura de directorios en forma de árbol.<br><span class="param">-L n</span> niveles de profundidad · <span class="param">-a</span> ocultos · <span class="param">-d</span> solo dirs · <span class="param">-f</span> ruta completa</span></div>
-        <div class="cmd-row"><span class="cmd-name">du</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Estima el espacio en disco usado por archivos.<br><span class="param">-h</span> legible · <span class="param">-s</span> resumen · <span class="param">-d n</span> profundidad · <span class="param">--max-depth=n</span> máx profundidad</span></div>
-        <div class="cmd-row"><span class="cmd-name">df</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra el espacio disponible en disco.<br><span class="param">-h</span> legible · <span class="param">-T</span> tipo FS · <span class="param">-i</span> inodos · <span class="param">--total</span> total al final</span></div>
+        <div class="cmd-row"><span class="cmd-name">pwd</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Muestra el directorio de trabajo actual (Print Working Directory). Sin parámetros.</span>
+        </div>
+        <div class="cmd-row"><span class="cmd-name">ls</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Lista el contenido de un directorio.<br><span class="param">-l</span> lista larga · <span
+              class="param">-a</span> ocultos · <span class="param">-h</span> tamaño legible · <span
+              class="param">-R</span> recursivo · <span class="param">-t</span> orden por fecha · <span
+              class="param">-S</span> orden por tamaño · <span class="param">-r</span> invertir orden · <span
+              class="param">-1</span> una por línea</span></div>
+        <div class="cmd-row"><span class="cmd-name">cd</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Cambia al directorio especificado.<br><span class="param">ruta</span> ir a ruta · <span
+              class="param">~</span> home · <span class="param">..</span> subir nivel · <span class="param">-</span>
+            directorio anterior</span></div>
+        <div class="cmd-row"><span class="cmd-name">tree</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Muestra la estructura de directorios en forma de árbol.<br><span class="param">-L n</span>
+            niveles de profundidad · <span class="param">-a</span> ocultos · <span class="param">-d</span> solo dirs ·
+            <span class="param">-f</span> ruta completa</span></div>
+        <div class="cmd-row"><span class="cmd-name">du</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Estima el espacio en disco usado por archivos.<br><span class="param">-h</span> legible ·
+            <span class="param">-s</span> resumen · <span class="param">-d n</span> profundidad · <span
+              class="param">--max-depth=n</span> máx profundidad</span></div>
+        <div class="cmd-row"><span class="cmd-name">df</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Muestra el espacio disponible en disco.<br><span class="param">-h</span> legible · <span
+              class="param">-T</span> tipo FS · <span class="param">-i</span> inodos · <span
+              class="param">--total</span> total al final</span></div>
       </div>
     </div>
 
@@ -254,17 +81,50 @@
     <div class="section" id="tab-files" data-group="files">
       <div class="cmd-group">
         <div class="group-title">Gestión de archivos y directorios</div>
-        <div class="cmd-row"><span class="cmd-name">cp</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Copia archivos y directorios.<br><span class="param">-r</span> recursivo · <span class="param">-p</span> preservar atributos · <span class="param">-v</span> verbose · <span class="param">-i</span> confirmar sobrescribir · <span class="param">-u</span> solo si más nuevo · <span class="param">-a</span> archivo (equiv. -dpr)</span></div>
-        <div class="cmd-row"><span class="cmd-name">mv</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Mueve o renombra archivos.<br><span class="param">-i</span> confirmar · <span class="param">-v</span> verbose · <span class="param">-u</span> solo si más nuevo · <span class="param">-b</span> backup antes</span></div>
-        <div class="cmd-row"><span class="cmd-name">rm</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Elimina archivos o directorios.<br><span class="param">-r</span> recursivo · <span class="param">-f</span> forzar · <span class="param">-i</span> confirmar · <span class="param">-v</span> verbose · <span class="param">-d</span> dirs vacíos</span></div>
-        <div class="cmd-row"><span class="cmd-name">mkdir</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Crea directorios nuevos.<br><span class="param">-p</span> crear padres · <span class="param">-v</span> verbose · <span class="param">-m 755</span> permisos al crear</span></div>
-        <div class="cmd-row"><span class="cmd-name">rmdir</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Elimina directorios vacíos.<br><span class="param">-p</span> elimina padres vacíos · <span class="param">-v</span> verbose</span></div>
-        <div class="cmd-row"><span class="cmd-name">touch</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Crea archivos vacíos o actualiza timestamps.<br><span class="param">-a</span> solo acceso · <span class="param">-m</span> solo modificación · <span class="param">-t</span> timestamp personalizado · <span class="param">-r</span> ref desde otro archivo</span></div>
-        <div class="cmd-row"><span class="cmd-name">ln</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Crea enlaces entre archivos.<br><span class="param">-s</span> enlace simbólico · <span class="param">-f</span> forzar · <span class="param">-v</span> verbose · <span class="param">-r</span> relativo</span></div>
-        <div class="cmd-row"><span class="cmd-name">find</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca archivos en el sistema de archivos.<br><span class="param">-name</span> por nombre · <span class="param">-type f/d</span> archivo/dir · <span class="param">-size</span> tamaño · <span class="param">-mtime</span> modificación · <span class="param">-exec</span> ejecutar · <span class="param">-iname</span> sin distinción · <span class="param">-maxdepth</span> profundidad</span></div>
-        <div class="cmd-row"><span class="cmd-name">locate</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca archivos por nombre rápidamente (usa base de datos).<br><span class="param">-i</span> sin distinción · <span class="param">-c</span> contar · <span class="param">-l n</span> limitar resultados · <span class="param">-r</span> regex</span></div>
-        <div class="cmd-row"><span class="cmd-name">stat</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra información detallada de archivos.<br><span class="param">-f</span> info sistema ficheros · <span class="param">-c formato</span> formato personalizado · <span class="param">-t</span> terse</span></div>
-        <div class="cmd-row"><span class="cmd-name">file</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Determina el tipo de un archivo.<br><span class="param">-b</span> sin nombre · <span class="param">-i</span> tipo MIME · <span class="param">-z</span> comprimidos · <span class="param">-L</span> seguir symlinks</span></div>
+        <div class="cmd-row"><span class="cmd-name">cp</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Copia archivos y directorios.<br><span class="param">-r</span> recursivo · <span
+              class="param">-p</span> preservar atributos · <span class="param">-v</span> verbose · <span
+              class="param">-i</span> confirmar sobrescribir · <span class="param">-u</span> solo si más nuevo · <span
+              class="param">-a</span> archivo (equiv. -dpr)</span></div>
+        <div class="cmd-row"><span class="cmd-name">mv</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Mueve o renombra archivos.<br><span class="param">-i</span> confirmar · <span
+              class="param">-v</span> verbose · <span class="param">-u</span> solo si más nuevo · <span
+              class="param">-b</span> backup antes</span></div>
+        <div class="cmd-row"><span class="cmd-name">rm</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Elimina archivos o directorios.<br><span class="param">-r</span> recursivo · <span
+              class="param">-f</span> forzar · <span class="param">-i</span> confirmar · <span class="param">-v</span>
+            verbose · <span class="param">-d</span> dirs vacíos</span></div>
+        <div class="cmd-row"><span class="cmd-name">mkdir</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Crea directorios nuevos.<br><span class="param">-p</span> crear padres · <span
+              class="param">-v</span> verbose · <span class="param">-m 755</span> permisos al crear</span></div>
+        <div class="cmd-row"><span class="cmd-name">rmdir</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Elimina directorios vacíos.<br><span class="param">-p</span> elimina padres vacíos ·
+            <span class="param">-v</span> verbose</span></div>
+        <div class="cmd-row"><span class="cmd-name">touch</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Crea archivos vacíos o actualiza timestamps.<br><span class="param">-a</span> solo
+            acceso · <span class="param">-m</span> solo modificación · <span class="param">-t</span> timestamp
+            personalizado · <span class="param">-r</span> ref desde otro archivo</span></div>
+        <div class="cmd-row"><span class="cmd-name">ln</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Crea enlaces entre archivos.<br><span class="param">-s</span> enlace simbólico · <span
+              class="param">-f</span> forzar · <span class="param">-v</span> verbose · <span class="param">-r</span>
+            relativo</span></div>
+        <div class="cmd-row"><span class="cmd-name">find</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Busca archivos en el sistema de archivos.<br><span class="param">-name</span> por nombre ·
+            <span class="param">-type f/d</span> archivo/dir · <span class="param">-size</span> tamaño · <span
+              class="param">-mtime</span> modificación · <span class="param">-exec</span> ejecutar · <span
+              class="param">-iname</span> sin distinción · <span class="param">-maxdepth</span> profundidad</span></div>
+        <div class="cmd-row"><span class="cmd-name">locate</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Busca archivos por nombre rápidamente (usa base de datos).<br><span
+              class="param">-i</span> sin distinción · <span class="param">-c</span> contar · <span class="param">-l
+              n</span> limitar resultados · <span class="param">-r</span> regex</span></div>
+        <div class="cmd-row"><span class="cmd-name">stat</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Muestra información detallada de archivos.<br><span class="param">-f</span> info sistema
+            ficheros · <span class="param">-c formato</span> formato personalizado · <span class="param">-t</span>
+            terse</span></div>
+        <div class="cmd-row"><span class="cmd-name">file</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Determina el tipo de un archivo.<br><span class="param">-b</span> sin nombre · <span
+              class="param">-i</span> tipo MIME · <span class="param">-z</span> comprimidos · <span
+              class="param">-L</span> seguir symlinks</span></div>
       </div>
     </div>
 
@@ -272,16 +132,46 @@
     <div class="section" id="tab-perms" data-group="perms">
       <div class="cmd-group">
         <div class="group-title">Permisos y propietarios</div>
-        <div class="cmd-row"><span class="cmd-name">chmod</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia permisos de archivos/directorios.<br><span class="param">-R</span> recursivo · <span class="param">u/g/o/a</span> usuario/grupo/otros/todos · <span class="param">+/-/=</span> añadir/quitar/asignar · <span class="param">r/w/x</span> lectura/escritura/ejecución · <span class="param">755</span> octal</span></div>
-        <div class="cmd-row"><span class="cmd-name">chown</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia propietario y grupo de archivos.<br><span class="param">-R</span> recursivo · <span class="param">-v</span> verbose · <span class="param">usuario:grupo</span> asignar ambos · <span class="param">--from</span> solo si coincide actual</span></div>
-        <div class="cmd-row"><span class="cmd-name">chgrp</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia el grupo propietario de archivos.<br><span class="param">-R</span> recursivo · <span class="param">-v</span> verbose · <span class="param">--reference</span> copiar grupo de otro archivo</span></div>
-        <div class="cmd-row"><span class="cmd-name">umask</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Define máscara de permisos para archivos nuevos.<br><span class="param">-S</span> formato simbólico · valor en octal para establecer máscara</span></div>
-        <div class="cmd-row"><span class="cmd-name">sudo</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ejecuta comandos con privilegios de superusuario.<br><span class="param">-u usuario</span> como otro usuario · <span class="param">-i</span> shell interactivo root · <span class="param">-s</span> shell actual como root · <span class="param">-l</span> listar permisos · <span class="param">-k</span> invalidar caché</span></div>
-        <div class="cmd-row"><span class="cmd-name">su</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia de usuario (por defecto a root).<br><span class="param">-</span> entorno limpio · <span class="param">-c "cmd"</span> ejecutar comando · <span class="param">-s shell</span> shell específico</span></div>
-        <div class="cmd-row"><span class="cmd-name">passwd</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia contraseñas de usuario.<br><span class="param">-l</span> bloquear cuenta · <span class="param">-u</span> desbloquear · <span class="param">-d</span> borrar contraseña · <span class="param">-e</span> expirar</span></div>
-        <div class="cmd-row"><span class="cmd-name">id</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra UID, GID y grupos del usuario.<br><span class="param">-u</span> UID · <span class="param">-g</span> GID · <span class="param">-G</span> todos los grupos · <span class="param">-n</span> nombre en vez de número</span></div>
-        <div class="cmd-row"><span class="cmd-name">groups</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra los grupos a los que pertenece un usuario. Sin parámetros (muestra grupos del usuario actual). Acepta nombre de usuario como argumento.</span></div>
-        <div class="cmd-row"><span class="cmd-name">who / w</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra usuarios conectados al sistema.<br><span class="param">-a</span> toda la info · <span class="param">-b</span> último arranque · <span class="param">-q</span> solo nombres · <span class="param">-H</span> cabeceras</span></div>
+        <div class="cmd-row"><span class="cmd-name">chmod</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Cambia permisos de archivos/directorios.<br><span class="param">-R</span> recursivo ·
+            <span class="param">u/g/o/a</span> usuario/grupo/otros/todos · <span class="param">+/-/=</span>
+            añadir/quitar/asignar · <span class="param">r/w/x</span> lectura/escritura/ejecución · <span
+              class="param">755</span> octal</span></div>
+        <div class="cmd-row"><span class="cmd-name">chown</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Cambia propietario y grupo de archivos.<br><span class="param">-R</span> recursivo ·
+            <span class="param">-v</span> verbose · <span class="param">usuario:grupo</span> asignar ambos · <span
+              class="param">--from</span> solo si coincide actual</span></div>
+        <div class="cmd-row"><span class="cmd-name">chgrp</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Cambia el grupo propietario de archivos.<br><span class="param">-R</span> recursivo ·
+            <span class="param">-v</span> verbose · <span class="param">--reference</span> copiar grupo de otro
+            archivo</span></div>
+        <div class="cmd-row"><span class="cmd-name">umask</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Define máscara de permisos para archivos nuevos.<br><span class="param">-S</span>
+            formato simbólico · valor en octal para establecer máscara</span></div>
+        <div class="cmd-row"><span class="cmd-name">sudo</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Ejecuta comandos con privilegios de superusuario.<br><span class="param">-u usuario</span>
+            como otro usuario · <span class="param">-i</span> shell interactivo root · <span class="param">-s</span>
+            shell actual como root · <span class="param">-l</span> listar permisos · <span class="param">-k</span>
+            invalidar caché</span></div>
+        <div class="cmd-row"><span class="cmd-name">su</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Cambia de usuario (por defecto a root).<br><span class="param">-</span> entorno limpio ·
+            <span class="param">-c "cmd"</span> ejecutar comando · <span class="param">-s shell</span> shell
+            específico</span></div>
+        <div class="cmd-row"><span class="cmd-name">passwd</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Cambia contraseñas de usuario.<br><span class="param">-l</span> bloquear cuenta · <span
+              class="param">-u</span> desbloquear · <span class="param">-d</span> borrar contraseña · <span
+              class="param">-e</span> expirar</span></div>
+        <div class="cmd-row"><span class="cmd-name">id</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Muestra UID, GID y grupos del usuario.<br><span class="param">-u</span> UID · <span
+              class="param">-g</span> GID · <span class="param">-G</span> todos los grupos · <span
+              class="param">-n</span> nombre en vez de número</span></div>
+        <div class="cmd-row"><span class="cmd-name">groups</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Muestra los grupos a los que pertenece un usuario. Sin parámetros (muestra grupos del
+            usuario actual). Acepta nombre de usuario como argumento.</span></div>
+        <div class="cmd-row"><span class="cmd-name">who / w</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Muestra usuarios conectados al sistema.<br><span class="param">-a</span> toda la info ·
+            <span class="param">-b</span> último arranque · <span class="param">-q</span> solo nombres · <span
+              class="param">-H</span> cabeceras</span></div>
       </div>
     </div>
 
@@ -289,17 +179,47 @@
     <div class="section" id="tab-proc" data-group="proc">
       <div class="cmd-group">
         <div class="group-title">Gestión de procesos</div>
-        <div class="cmd-row"><span class="cmd-name">ps</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra procesos en ejecución.<br><span class="param">aux</span> todos los procesos · <span class="param">-e</span> todos · <span class="param">-f</span> completo · <span class="param">-u usuario</span> filtrar usuario · <span class="param">--forest</span> árbol de procesos</span></div>
-        <div class="cmd-row"><span class="cmd-name">top</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Monitoriza procesos en tiempo real.<br><span class="param">-d seg</span> intervalo · <span class="param">-u usuario</span> filtrar · <span class="param">-p PID</span> proceso concreto · <span class="param">-n n</span> iteraciones y salir</span></div>
-        <div class="cmd-row"><span class="cmd-name">htop</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Monitor de procesos interactivo (mejorado).<br><span class="param">-u usuario</span> filtrar · <span class="param">-d décimas</span> intervalo · <span class="param">-p PID</span> monitorizar PID</span></div>
-        <div class="cmd-row"><span class="cmd-name">kill</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Envía señales a procesos (por defecto termina).<br><span class="param">-9</span> SIGKILL forzado · <span class="param">-15</span> SIGTERM graceful · <span class="param">-l</span> listar señales · <span class="param">-s señal</span> señal por nombre</span></div>
-        <div class="cmd-row"><span class="cmd-name">killall</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Mata procesos por nombre.<br><span class="param">-9</span> forzado · <span class="param">-i</span> confirmar · <span class="param">-u usuario</span> solo ese usuario · <span class="param">-r</span> regex</span></div>
-        <div class="cmd-row"><span class="cmd-name">jobs</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista trabajos en segundo plano.<br><span class="param">-l</span> con PID · <span class="param">-p</span> solo PID · <span class="param">-r</span> solo en ejecución · <span class="param">-s</span> solo detenidos</span></div>
-        <div class="cmd-row"><span class="cmd-name">bg / fg</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ejecuta trabajos en background (bg) o foreground (fg).<br><span class="param">%n</span> número de job · <span class="param">%nombre</span> por nombre de comando</span></div>
-        <div class="cmd-row"><span class="cmd-name">nohup</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ejecuta comandos inmunes a desconexión.<br><span class="param">comando &</span> ejecutar en background sin colgar · redirige a nohup.out por defecto</span></div>
-        <div class="cmd-row"><span class="cmd-name">nice</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ejecuta procesos con prioridad ajustada.<br><span class="param">-n valor</span> prioridad -20 (max) a 19 (min)</span></div>
-        <div class="cmd-row"><span class="cmd-name">renice</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia prioridad de procesos en ejecución.<br><span class="param">-n valor</span> nueva prioridad · <span class="param">-p PID</span> · <span class="param">-u usuario</span></span></div>
-        <div class="cmd-row"><span class="cmd-name">systemctl</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Controla el sistema systemd (servicios, unidades).<br><span class="param">start/stop/restart</span> · <span class="param">enable/disable</span> · <span class="param">status</span> · <span class="param">list-units</span> · <span class="param">--now</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">ps</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Muestra procesos en ejecución.<br><span class="param">aux</span> todos los procesos · <span
+              class="param">-e</span> todos · <span class="param">-f</span> completo · <span class="param">-u
+              usuario</span> filtrar usuario · <span class="param">--forest</span> árbol de procesos</span></div>
+        <div class="cmd-row"><span class="cmd-name">top</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Monitoriza procesos en tiempo real.<br><span class="param">-d seg</span> intervalo · <span
+              class="param">-u usuario</span> filtrar · <span class="param">-p PID</span> proceso concreto · <span
+              class="param">-n n</span> iteraciones y salir</span></div>
+        <div class="cmd-row"><span class="cmd-name">htop</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Monitor de procesos interactivo (mejorado).<br><span class="param">-u usuario</span> filtrar
+            · <span class="param">-d décimas</span> intervalo · <span class="param">-p PID</span> monitorizar PID</span>
+        </div>
+        <div class="cmd-row"><span class="cmd-name">kill</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Envía señales a procesos (por defecto termina).<br><span class="param">-9</span> SIGKILL
+            forzado · <span class="param">-15</span> SIGTERM graceful · <span class="param">-l</span> listar señales ·
+            <span class="param">-s señal</span> señal por nombre</span></div>
+        <div class="cmd-row"><span class="cmd-name">killall</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Mata procesos por nombre.<br><span class="param">-9</span> forzado · <span
+              class="param">-i</span> confirmar · <span class="param">-u usuario</span> solo ese usuario · <span
+              class="param">-r</span> regex</span></div>
+        <div class="cmd-row"><span class="cmd-name">jobs</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Lista trabajos en segundo plano.<br><span class="param">-l</span> con PID · <span
+              class="param">-p</span> solo PID · <span class="param">-r</span> solo en ejecución · <span
+              class="param">-s</span> solo detenidos</span></div>
+        <div class="cmd-row"><span class="cmd-name">bg / fg</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Ejecuta trabajos en background (bg) o foreground (fg).<br><span class="param">%n</span>
+            número de job · <span class="param">%nombre</span> por nombre de comando</span></div>
+        <div class="cmd-row"><span class="cmd-name">nohup</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Ejecuta comandos inmunes a desconexión.<br><span class="param">comando &</span> ejecutar
+            en background sin colgar · redirige a nohup.out por defecto</span></div>
+        <div class="cmd-row"><span class="cmd-name">nice</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Ejecuta procesos con prioridad ajustada.<br><span class="param">-n valor</span> prioridad
+            -20 (max) a 19 (min)</span></div>
+        <div class="cmd-row"><span class="cmd-name">renice</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Cambia prioridad de procesos en ejecución.<br><span class="param">-n valor</span> nueva
+            prioridad · <span class="param">-p PID</span> · <span class="param">-u usuario</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">systemctl</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Controla el sistema systemd (servicios, unidades).<br><span
+              class="param">start/stop/restart</span> · <span class="param">enable/disable</span> · <span
+              class="param">status</span> · <span class="param">list-units</span> · <span
+              class="param">--now</span></span></div>
       </div>
     </div>
 
@@ -307,16 +227,53 @@
     <div class="section" id="tab-net" data-group="net">
       <div class="cmd-group">
         <div class="group-title">Red y conectividad</div>
-        <div class="cmd-row"><span class="cmd-name">ip</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Configura y muestra interfaces de red (reemplaza ifconfig).<br><span class="param">addr</span> interfaces · <span class="param">route</span> rutas · <span class="param">link</span> dispositivos · <span class="param">-4/-6</span> IPv4/IPv6 · <span class="param">-s</span> estadísticas</span></div>
-        <div class="cmd-row"><span class="cmd-name">ping</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica conectividad de red enviando paquetes ICMP.<br><span class="param">-c n</span> nº de paquetes · <span class="param">-i seg</span> intervalo · <span class="param">-s bytes</span> tamaño · <span class="param">-t ttl</span> · <span class="param">-6</span> IPv6</span></div>
-        <div class="cmd-row"><span class="cmd-name">curl</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Transfiere datos con URLs (HTTP, FTP, etc).<br><span class="param">-O</span> guardar archivo · <span class="param">-o nombre</span> nombre personalizado · <span class="param">-L</span> seguir redirecciones · <span class="param">-I</span> solo cabeceras · <span class="param">-X</span> método HTTP · <span class="param">-H</span> cabecera · <span class="param">-d</span> datos POST · <span class="param">-u user:pass</span> auth</span></div>
-        <div class="cmd-row"><span class="cmd-name">wget</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Descarga archivos de la web (no interactivo).<br><span class="param">-O nombre</span> nombre salida · <span class="param">-r</span> recursivo · <span class="param">-q</span> silencioso · <span class="param">-c</span> continuar descarga · <span class="param">--limit-rate</span> limitar velocidad</span></div>
-        <div class="cmd-row"><span class="cmd-name">ssh</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Conexión segura remota mediante protocolo SSH.<br><span class="param">-p puerto</span> · <span class="param">-i clave</span> clave privada · <span class="param">-L</span> túnel local · <span class="param">-R</span> túnel remoto · <span class="param">-v</span> verbose · <span class="param">-N</span> sin shell</span></div>
-        <div class="cmd-row"><span class="cmd-name">scp</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Copia archivos de forma segura entre equipos (SSH).<br><span class="param">-r</span> recursivo · <span class="param">-P puerto</span> · <span class="param">-i clave</span> · <span class="param">-v</span> verbose · <span class="param">-C</span> compresión</span></div>
-        <div class="cmd-row"><span class="cmd-name">netstat</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra conexiones de red, tablas de enrutamiento.<br><span class="param">-t</span> TCP · <span class="param">-u</span> UDP · <span class="param">-l</span> escuchando · <span class="param">-n</span> numérico · <span class="param">-p</span> con proceso · <span class="param">-r</span> rutas</span></div>
-        <div class="cmd-row"><span class="cmd-name">ss</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra conexiones de socket (reemplaza netstat).<br><span class="param">-t</span> TCP · <span class="param">-u</span> UDP · <span class="param">-l</span> escuchando · <span class="param">-n</span> numérico · <span class="param">-p</span> con proceso · <span class="param">-a</span> todos</span></div>
-        <div class="cmd-row"><span class="cmd-name">nmap</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Escanea puertos y descubre servicios de red.<br><span class="param">-p puertos</span> · <span class="param">-sV</span> versión · <span class="param">-O</span> SO · <span class="param">-A</span> agresivo · <span class="param">-sn</span> ping scan · <span class="param">-v</span> verbose</span></div>
-        <div class="cmd-row"><span class="cmd-name">traceroute</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra la ruta que toman los paquetes hasta el destino.<br><span class="param">-n</span> numérico · <span class="param">-I</span> ICMP · <span class="param">-T</span> TCP · <span class="param">-p puerto</span> · <span class="param">-m saltos</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">ip</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Configura y muestra interfaces de red (reemplaza ifconfig).<br><span
+              class="param">addr</span> interfaces · <span class="param">route</span> rutas · <span
+              class="param">link</span> dispositivos · <span class="param">-4/-6</span> IPv4/IPv6 · <span
+              class="param">-s</span> estadísticas</span></div>
+        <div class="cmd-row"><span class="cmd-name">ping</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Verifica conectividad de red enviando paquetes ICMP.<br><span class="param">-c n</span> nº
+            de paquetes · <span class="param">-i seg</span> intervalo · <span class="param">-s bytes</span> tamaño ·
+            <span class="param">-t ttl</span> · <span class="param">-6</span> IPv6</span></div>
+        <div class="cmd-row"><span class="cmd-name">curl</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Transfiere datos con URLs (HTTP, FTP, etc).<br><span class="param">-O</span> guardar archivo
+            · <span class="param">-o nombre</span> nombre personalizado · <span class="param">-L</span> seguir
+            redirecciones · <span class="param">-I</span> solo cabeceras · <span class="param">-X</span> método HTTP ·
+            <span class="param">-H</span> cabecera · <span class="param">-d</span> datos POST · <span class="param">-u
+              user:pass</span> auth</span></div>
+        <div class="cmd-row"><span class="cmd-name">wget</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Descarga archivos de la web (no interactivo).<br><span class="param">-O nombre</span> nombre
+            salida · <span class="param">-r</span> recursivo · <span class="param">-q</span> silencioso · <span
+              class="param">-c</span> continuar descarga · <span class="param">--limit-rate</span> limitar
+            velocidad</span></div>
+        <div class="cmd-row"><span class="cmd-name">ssh</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Conexión segura remota mediante protocolo SSH.<br><span class="param">-p puerto</span> ·
+            <span class="param">-i clave</span> clave privada · <span class="param">-L</span> túnel local · <span
+              class="param">-R</span> túnel remoto · <span class="param">-v</span> verbose · <span
+              class="param">-N</span> sin shell</span></div>
+        <div class="cmd-row"><span class="cmd-name">scp</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Copia archivos de forma segura entre equipos (SSH).<br><span class="param">-r</span>
+            recursivo · <span class="param">-P puerto</span> · <span class="param">-i clave</span> · <span
+              class="param">-v</span> verbose · <span class="param">-C</span> compresión</span></div>
+        <div class="cmd-row"><span class="cmd-name">netstat</span><span class="cmd-desc"><span class="cmd-purpose">Para
+              qué sirve:</span> Muestra conexiones de red, tablas de enrutamiento.<br><span class="param">-t</span> TCP
+            · <span class="param">-u</span> UDP · <span class="param">-l</span> escuchando · <span
+              class="param">-n</span> numérico · <span class="param">-p</span> con proceso · <span
+              class="param">-r</span> rutas</span></div>
+        <div class="cmd-row"><span class="cmd-name">ss</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Muestra conexiones de socket (reemplaza netstat).<br><span class="param">-t</span> TCP ·
+            <span class="param">-u</span> UDP · <span class="param">-l</span> escuchando · <span class="param">-n</span>
+            numérico · <span class="param">-p</span> con proceso · <span class="param">-a</span> todos</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Escanea puertos y descubre servicios de red.<br><span class="param">-p puertos</span> ·
+            <span class="param">-sV</span> versión · <span class="param">-O</span> SO · <span class="param">-A</span>
+            agresivo · <span class="param">-sn</span> ping scan · <span class="param">-v</span> verbose</span></div>
+        <div class="cmd-row"><span class="cmd-name">traceroute</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Muestra la ruta que toman los paquetes hasta el
+            destino.<br><span class="param">-n</span> numérico · <span class="param">-I</span> ICMP · <span
+              class="param">-T</span> TCP · <span class="param">-p puerto</span> · <span class="param">-m
+              saltos</span></span></div>
       </div>
     </div>
 
@@ -324,32 +281,78 @@
     <div class="section" id="tab-text" data-group="text">
       <div class="cmd-group">
         <div class="group-title">Manipulación de texto</div>
-        <div class="cmd-row"><span class="cmd-name">cat</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra el contenido de archivos por pantalla.<br><span class="param">-n</span> numerar líneas · <span class="param">-b</span> numerar no vacías · <span class="param">-A</span> mostrar especiales · <span class="param">-s</span> reducir líneas vacías</span></div>
-        <div class="cmd-row"><span class="cmd-name">less</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Visor de texto página por página (mejor que more).<br><span class="param">-N</span> números de línea · <span class="param">-S</span> no ajustar líneas · <span class="param">-i</span> búsqueda sin distinción · <span class="param">+G</span> ir al final</span></div>
-        <div class="cmd-row"><span class="cmd-name">head</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra las primeras líneas de un archivo.<br><span class="param">-n N</span> primeras N líneas · <span class="param">-c N</span> primeros N bytes · <span class="param">-q</span> sin cabeceras</span></div>
-        <div class="cmd-row"><span class="cmd-name">tail</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra las últimas líneas de un archivo.<br><span class="param">-n N</span> últimas N líneas · <span class="param">-f</span> seguir en tiempo real · <span class="param">-c N</span> últimos N bytes · <span class="param">-F</span> seguir aunque rote</span></div>
-        <div class="cmd-row"><span class="cmd-name">grep</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca patrones de texto en archivos.<br><span class="param">-i</span> sin distinción · <span class="param">-r</span> recursivo · <span class="param">-n</span> nº línea · <span class="param">-v</span> invertir · <span class="param">-c</span> contar · <span class="param">-l</span> solo archivos · <span class="param">-E</span> regex extendida · <span class="param">-A/-B/-C n</span> contexto</span></div>
-        <div class="cmd-row"><span class="cmd-name">sed</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Editor de flujo para transformar texto.<br><span class="param">-i</span> editar en sitio · <span class="param">-n</span> silencioso · <span class="param">-e</span> expresión · <span class="param">-r</span> regex extendida · <span class="param">s/a/b/g</span> sustituir</span></div>
-        <div class="cmd-row"><span class="cmd-name">awk</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Procesa y analiza patrones en texto (lenguaje).<br><span class="param">-F sep</span> separador · <span class="param">-v var=val</span> variable · <span class="param">-f archivo</span> script · <span class="param">{print $N}</span> campo N</span></div>
-        <div class="cmd-row"><span class="cmd-name">sort</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ordena líneas de texto alfabética o numéricamente.<br><span class="param">-n</span> numérico · <span class="param">-r</span> invertir · <span class="param">-k N</span> campo N · <span class="param">-t sep</span> separador · <span class="param">-u</span> únicos · <span class="param">-h</span> tamaños legibles</span></div>
-        <div class="cmd-row"><span class="cmd-name">uniq</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Reporta u omite líneas repetidas adyacentes.<br><span class="param">-c</span> contar · <span class="param">-d</span> solo duplicados · <span class="param">-u</span> solo únicos · <span class="param">-i</span> sin distinción</span></div>
-        <div class="cmd-row"><span class="cmd-name">cut</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Extrae secciones de cada línea de un archivo.<br><span class="param">-d sep</span> delimitador · <span class="param">-f N</span> campo N · <span class="param">-c N</span> carácter N · <span class="param">--complement</span> invertir selección</span></div>
-        <div class="cmd-row"><span class="cmd-name">wc</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cuenta líneas, palabras y bytes en archivos.<br><span class="param">-l</span> líneas · <span class="param">-w</span> palabras · <span class="param">-c</span> bytes · <span class="param">-m</span> caracteres · <span class="param">-L</span> línea más larga</span></div>
-        <div class="cmd-row"><span class="cmd-name">diff</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Compara archivos línea por línea.<br><span class="param">-u</span> formato unificado · <span class="param">-r</span> recursivo · <span class="param">-i</span> sin distinción · <span class="param">-y</span> lado a lado · <span class="param">-q</span> solo si difieren</span></div>
-        <div class="cmd-row"><span class="cmd-name">tr</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Traduce o elimina caracteres en el flujo de entrada.<br><span class="param">-d</span> borrar caracteres · <span class="param">-s</span> comprimir repetidos · <span class="param">-c</span> complemento · <span class="param">[:upper:]</span> clase de caracteres</span></div>
-        <div class="cmd-row"><span class="cmd-name">tee</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lee de entrada y escribe a archivo y pantalla.<br><span class="param">-a</span> añadir en vez de sobreescribir · <span class="param">-i</span> ignorar interrupciones</span></div>
+        <div class="cmd-row"><span class="cmd-name">cat</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Muestra el contenido de archivos por pantalla.<br><span class="param">-n</span> numerar
+            líneas · <span class="param">-b</span> numerar no vacías · <span class="param">-A</span> mostrar especiales
+            · <span class="param">-s</span> reducir líneas vacías</span></div>
+        <div class="cmd-row"><span class="cmd-name">less</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Visor de texto página por página (mejor que more).<br><span class="param">-N</span> números
+            de línea · <span class="param">-S</span> no ajustar líneas · <span class="param">-i</span> búsqueda sin
+            distinción · <span class="param">+G</span> ir al final</span></div>
+        <div class="cmd-row"><span class="cmd-name">head</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Muestra las primeras líneas de un archivo.<br><span class="param">-n N</span> primeras N
+            líneas · <span class="param">-c N</span> primeros N bytes · <span class="param">-q</span> sin
+            cabeceras</span></div>
+        <div class="cmd-row"><span class="cmd-name">tail</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Muestra las últimas líneas de un archivo.<br><span class="param">-n N</span> últimas N
+            líneas · <span class="param">-f</span> seguir en tiempo real · <span class="param">-c N</span> últimos N
+            bytes · <span class="param">-F</span> seguir aunque rote</span></div>
+        <div class="cmd-row"><span class="cmd-name">grep</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Busca patrones de texto en archivos.<br><span class="param">-i</span> sin distinción · <span
+              class="param">-r</span> recursivo · <span class="param">-n</span> nº línea · <span class="param">-v</span>
+            invertir · <span class="param">-c</span> contar · <span class="param">-l</span> solo archivos · <span
+              class="param">-E</span> regex extendida · <span class="param">-A/-B/-C n</span> contexto</span></div>
+        <div class="cmd-row"><span class="cmd-name">sed</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Editor de flujo para transformar texto.<br><span class="param">-i</span> editar en sitio ·
+            <span class="param">-n</span> silencioso · <span class="param">-e</span> expresión · <span
+              class="param">-r</span> regex extendida · <span class="param">s/a/b/g</span> sustituir</span></div>
+        <div class="cmd-row"><span class="cmd-name">awk</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Procesa y analiza patrones en texto (lenguaje).<br><span class="param">-F sep</span>
+            separador · <span class="param">-v var=val</span> variable · <span class="param">-f archivo</span> script ·
+            <span class="param">{print $N}</span> campo N</span></div>
+        <div class="cmd-row"><span class="cmd-name">sort</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Ordena líneas de texto alfabética o numéricamente.<br><span class="param">-n</span> numérico
+            · <span class="param">-r</span> invertir · <span class="param">-k N</span> campo N · <span class="param">-t
+              sep</span> separador · <span class="param">-u</span> únicos · <span class="param">-h</span> tamaños
+            legibles</span></div>
+        <div class="cmd-row"><span class="cmd-name">uniq</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Reporta u omite líneas repetidas adyacentes.<br><span class="param">-c</span> contar · <span
+              class="param">-d</span> solo duplicados · <span class="param">-u</span> solo únicos · <span
+              class="param">-i</span> sin distinción</span></div>
+        <div class="cmd-row"><span class="cmd-name">cut</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Extrae secciones de cada línea de un archivo.<br><span class="param">-d sep</span>
+            delimitador · <span class="param">-f N</span> campo N · <span class="param">-c N</span> carácter N · <span
+              class="param">--complement</span> invertir selección</span></div>
+        <div class="cmd-row"><span class="cmd-name">wc</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Cuenta líneas, palabras y bytes en archivos.<br><span class="param">-l</span> líneas · <span
+              class="param">-w</span> palabras · <span class="param">-c</span> bytes · <span class="param">-m</span>
+            caracteres · <span class="param">-L</span> línea más larga</span></div>
+        <div class="cmd-row"><span class="cmd-name">diff</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Compara archivos línea por línea.<br><span class="param">-u</span> formato unificado · <span
+              class="param">-r</span> recursivo · <span class="param">-i</span> sin distinción · <span
+              class="param">-y</span> lado a lado · <span class="param">-q</span> solo si difieren</span></div>
+        <div class="cmd-row"><span class="cmd-name">tr</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Traduce o elimina caracteres en el flujo de entrada.<br><span class="param">-d</span> borrar
+            caracteres · <span class="param">-s</span> comprimir repetidos · <span class="param">-c</span> complemento ·
+            <span class="param">[:upper:]</span> clase de caracteres</span></div>
+        <div class="cmd-row"><span class="cmd-name">tee</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
+              sirve:</span> Lee de entrada y escribe a archivo y pantalla.<br><span class="param">-a</span> añadir en
+            vez de sobreescribir · <span class="param">-i</span> ignorar interrupciones</span></div>
+      </div>
     </div>
-  </div>
-  
+
     <!-- VI -->
     <div class="section" id="tab-vi" data-group="vi">
       <div style="margin-bottom: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
         <span class="mode-badge mode-normal">NORMAL</span>
-        <span style="font-size: 12px; color: var(--color-text-secondary); align-self: center;">modo por defecto al abrir vi</span>
+        <span style="font-size: 12px; color: var(--color-text-secondary); align-self: center;">modo por defecto al abrir
+          vi</span>
         <span class="mode-badge mode-insert">INSERT</span>
-        <span style="font-size: 12px; color: var(--color-text-secondary); align-self: center;">para escribir texto</span>
+        <span style="font-size: 12px; color: var(--color-text-secondary); align-self: center;">para escribir
+          texto</span>
         <span class="mode-badge mode-cmd">COMMAND</span>
-        <span style="font-size: 12px; color: var(--color-text-secondary); align-self: center;">para guardar, salir, buscar</span>
+        <span style="font-size: 12px; color: var(--color-text-secondary); align-self: center;">para guardar, salir,
+          buscar</span>
       </div>
       <div class="vi-grid">
         <div class="vi-card">
@@ -379,7 +382,8 @@
           <div class="vi-row"><span class="vi-key">0 / $</span><span class="vi-desc">inicio/fin de línea</span></div>
           <div class="vi-row"><span class="vi-key">gg / G</span><span class="vi-desc">inicio/fin de archivo</span></div>
           <div class="vi-row"><span class="vi-key">:N</span><span class="vi-desc">ir a línea N</span></div>
-          <div class="vi-row"><span class="vi-key">Ctrl+f/b</span><span class="vi-desc">página siguiente/anterior</span></div>
+          <div class="vi-row"><span class="vi-key">Ctrl+f/b</span><span class="vi-desc">página siguiente/anterior</span>
+          </div>
           <div class="vi-row"><span class="vi-key">%</span><span class="vi-desc">ir a paréntesis/llave par</span></div>
         </div>
         <div class="vi-card">
@@ -398,7 +402,8 @@
           <div class="vi-card-title">Buscar y reemplazar</div>
           <div class="vi-row"><span class="vi-key">/texto</span><span class="vi-desc">buscar adelante</span></div>
           <div class="vi-row"><span class="vi-key">?texto</span><span class="vi-desc">buscar atrás</span></div>
-          <div class="vi-row"><span class="vi-key">n / N</span><span class="vi-desc">siguiente/anterior resultado</span></div>
+          <div class="vi-row"><span class="vi-key">n / N</span><span class="vi-desc">siguiente/anterior resultado</span>
+          </div>
           <div class="vi-row"><span class="vi-key">:%s/a/b/g</span><span class="vi-desc">reemplazar todo</span></div>
           <div class="vi-row"><span class="vi-key">:%s/a/b/gc</span><span class="vi-desc">con confirmación</span></div>
           <div class="vi-row"><span class="vi-key">:nohl</span><span class="vi-desc">quitar resaltado</span></div>
@@ -411,18 +416,23 @@
           <div class="vi-row"><span class="vi-key">y</span><span class="vi-desc">copiar selección</span></div>
           <div class="vi-row"><span class="vi-key">d</span><span class="vi-desc">borrar selección</span></div>
           <div class="vi-row"><span class="vi-key">></span><span class="vi-desc">indentar</span></div>
-          <div class="vi-row"><span class="vi-key"><</span><span class="vi-desc">des-indentar</span></div>
+          <div class="vi-row"><span class="vi-key">
+              << /span><span class="vi-desc">des-indentar</span></div>
         </div>
         <div class="vi-card">
           <div class="vi-card-title">Varios</div>
           <div class="vi-row"><span class="vi-key">:set nu</span><span class="vi-desc">mostrar nº de línea</span></div>
-          <div class="vi-row"><span class="vi-key">:set nonu</span><span class="vi-desc">ocultar nº de línea</span></div>
-          <div class="vi-row"><span class="vi-key">:set syntax=on</span><span class="vi-desc">resaltado sintaxis</span></div>
+          <div class="vi-row"><span class="vi-key">:set nonu</span><span class="vi-desc">ocultar nº de línea</span>
+          </div>
+          <div class="vi-row"><span class="vi-key">:set syntax=on</span><span class="vi-desc">resaltado sintaxis</span>
+          </div>
           <div class="vi-row"><span class="vi-key">:r archivo</span><span class="vi-desc">insertar archivo</span></div>
-          <div class="vi-row"><span class="vi-key">:! cmd</span><span class="vi-desc">ejecutar comando shell</span></div>
+          <div class="vi-row"><span class="vi-key">:! cmd</span><span class="vi-desc">ejecutar comando shell</span>
+          </div>
           <div class="vi-row"><span class="vi-key">Ctrl+g</span><span class="vi-desc">posición actual</span></div>
           <div class="vi-row"><span class="vi-key">:split</span><span class="vi-desc">dividir ventana</span></div>
-          <div class="vi-row"><span class="vi-key">:e archivo</span><span class="vi-desc">abrir otro archivo</span></div>
+          <div class="vi-row"><span class="vi-key">:e archivo</span><span class="vi-desc">abrir otro archivo</span>
+          </div>
         </div>
       </div>
     </div>
@@ -434,17 +444,20 @@
           Editor de texto básico (solo para emergencias)
         </span>
         <!-- MARCA DE AGUA GRACIOSA -->
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 5rem; font-weight: 900; color: rgba(239, 68, 68, 0.25); pointer-events: none; white-space: nowrap; z-index: 10;">
+        <div
+          style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 5rem; font-weight: 900; color: rgba(239, 68, 68, 0.25); pointer-events: none; white-space: nowrap; z-index: 10;">
           NO USAR
         </div>
-        <div style="position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 2rem; font-weight: 700; color: rgba(239, 68, 68, 0.3); pointer-events: none; white-space: nowrap; z-index: 10;">
+        <div
+          style="position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 2rem; font-weight: 700; color: rgba(239, 68, 68, 0.3); pointer-events: none; white-space: nowrap; z-index: 10;">
           ni aunque sea tu última opción
         </div>
       </div>
       <div class="vi-grid" style="position: relative; z-index: 1;">
         <div class="vi-card">
           <div class="vi-card-title">Comandos básicos</div>
-          <div class="vi-row"><span class="vi-key">nano archivo</span><span class="vi-desc">abrir archivo en nano</span></div>
+          <div class="vi-row"><span class="vi-key">nano archivo</span><span class="vi-desc">abrir archivo en nano</span>
+          </div>
           <div class="vi-row"><span class="vi-key">Ctrl + O</span><span class="vi-desc">guardar (WriteOut)</span></div>
           <div class="vi-row"><span class="vi-key">Ctrl + X</span><span class="vi-desc">salir (Exit)</span></div>
           <div class="vi-row"><span class="vi-key">Ctrl + K</span><span class="vi-desc">cortar línea (Cut)</span></div>
@@ -458,12 +471,15 @@
           <div class="vi-row"><span class="vi-key">Ctrl + E</span><span class="vi-desc">final de línea</span></div>
           <div class="vi-row"><span class="vi-key">Ctrl + Y</span><span class="vi-desc">página anterior</span></div>
           <div class="vi-row"><span class="vi-key">Ctrl + V</span><span class="vi-desc">página siguiente</span></div>
-          <div class="vi-row"><span class="vi-key">Ctrl + _</span><span class="vi-desc">ir a línea específica</span></div>
+          <div class="vi-row"><span class="vi-key">Ctrl + _</span><span class="vi-desc">ir a línea específica</span>
+          </div>
         </div>
         <div class="vi-card">
           <div class="vi-card-title">Edición</div>
-          <div class="vi-row"><span class="vi-key">Ctrl + 6</span><span class="vi-desc">marcar texto (Set mark)</span></div>
-          <div class="vi-row"><span class="vi-key">Ctrl + K</span><span class="vi-desc">cortar texto marcado</span></div>
+          <div class="vi-row"><span class="vi-key">Ctrl + 6</span><span class="vi-desc">marcar texto (Set mark)</span>
+          </div>
+          <div class="vi-row"><span class="vi-key">Ctrl + K</span><span class="vi-desc">cortar texto marcado</span>
+          </div>
           <div class="vi-row"><span class="vi-key">Alt + U</span><span class="vi-desc">deshacer (Undo)</span></div>
           <div class="vi-row"><span class="vi-key">Alt + E</span><span class="vi-desc">rehacer (Redo)</span></div>
           <div class="vi-row"><span class="vi-key">Alt + 3</span><span class="vi-desc">comentar/descomentar</span></div>
@@ -471,8 +487,10 @@
         <div class="vi-card">
           <div class="vi-card-title">Otros</div>
           <div class="vi-row"><span class="vi-key">Ctrl + G</span><span class="vi-desc">ayuda (Get help)</span></div>
-          <div class="vi-row"><span class="vi-key">Ctrl + C</span><span class="vi-desc">mostrar posición del cursor</span></div>
-          <div class="vi-row"><span class="vi-key">Ctrl + T</span><span class="vi-desc">ejecutar comando (To exec)</span></div>
+          <div class="vi-row"><span class="vi-key">Ctrl + C</span><span class="vi-desc">mostrar posición del
+              cursor</span></div>
+          <div class="vi-row"><span class="vi-key">Ctrl + T</span><span class="vi-desc">ejecutar comando (To
+              exec)</span></div>
         </div>
       </div>
     </div>
@@ -482,56 +500,56 @@
 
 <!--  JAVASCRIPT: -->
 <script>
-/**
- * showTab(id)
- * - Oculta todas las secciones y pestañas
- * - Muestra la sección correspondiente al tab clickeado
- * - Limpia el campo de búsqueda
- */
-function showTab(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + id).classList.add('active');
-  event.target.classList.add('active');
-  document.getElementById('searchInput').value = '';
-}
-
-/**
- * filterCmds(q)
- * - Filtra comandos y parámetros en tiempo real mientras el usuario escribe
- * - Si no hay búsqueda (q vacío): muestra la primera pestaña y sección
- * - Si hay búsqueda: muestra todas las secciones y oculta filas que no coincidan
- * - Se aplica tanto a comandos Linux (.cmd-row) como a atajos de vi (.vi-row)
- */
-function filterCmds(q) {
-  q = q.toLowerCase().trim();
-  const sections = document.querySelectorAll('.section');
-  const tabs = document.querySelectorAll('.tab');
-
-  if (!q) {
-    // Sin búsqueda: resetear a la primera pestaña
-    sections.forEach(s => s.classList.remove('active'));
-    tabs.forEach(t => t.classList.remove('active'));
-    const firstTab = document.querySelector('.tab');
-    const firstSection = document.querySelector('.section');
-    if (firstTab) firstTab.classList.add('active');
-    if (firstSection) firstSection.classList.add('active');
-    document.querySelectorAll('.cmd-row, .vi-row').forEach(r => r.classList.remove('hidden'));
-    return;
+  /**
+   * showTab(id)
+   * - Oculta todas las secciones y pestañas
+   * - Muestra la sección correspondiente al tab clickeado
+   * - Limpia el campo de búsqueda
+   */
+  function showTab(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+    document.getElementById('searchInput').value = '';
   }
 
-  // Con búsqueda: mostrar todas las secciones y filtrar filas
-  sections.forEach(s => s.classList.add('active'));
-  tabs.forEach(t => t.classList.add('active'));
+  /**
+   * filterCmds(q)
+   * - Filtra comandos y parámetros en tiempo real mientras el usuario escribe
+   * - Si no hay búsqueda (q vacío): muestra la primera pestaña y sección
+   * - Si hay búsqueda: muestra todas las secciones y oculta filas que no coincidan
+   * - Se aplica tanto a comandos Linux (.cmd-row) como a atajos de vi (.vi-row)
+   */
+  function filterCmds(q) {
+    q = q.toLowerCase().trim();
+    const sections = document.querySelectorAll('.section');
+    const tabs = document.querySelectorAll('.tab');
 
-  document.querySelectorAll('.cmd-row').forEach(row => {
-    const text = row.textContent.toLowerCase();
-    row.classList.toggle('hidden', !text.includes(q));
-  });
+    if (!q) {
+      // Sin búsqueda: resetear a la primera pestaña
+      sections.forEach(s => s.classList.remove('active'));
+      tabs.forEach(t => t.classList.remove('active'));
+      const firstTab = document.querySelector('.tab');
+      const firstSection = document.querySelector('.section');
+      if (firstTab) firstTab.classList.add('active');
+      if (firstSection) firstSection.classList.add('active');
+      document.querySelectorAll('.cmd-row, .vi-row').forEach(r => r.classList.remove('hidden'));
+      return;
+    }
 
-  document.querySelectorAll('.vi-row').forEach(row => {
-    const text = row.textContent.toLowerCase();
-    row.classList.toggle('hidden', !text.includes(q));
-  });
-}
+    // Con búsqueda: mostrar todas las secciones y filtrar filas
+    sections.forEach(s => s.classList.add('active'));
+    tabs.forEach(t => t.classList.add('active'));
+
+    document.querySelectorAll('.cmd-row').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.classList.toggle('hidden', !text.includes(q));
+    });
+
+    document.querySelectorAll('.vi-row').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.classList.toggle('hidden', !text.includes(q));
+    });
+  }
 </script>
