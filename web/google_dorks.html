@@ -1,74 +1,125 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <title>Google Dorks</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="../styles.css" />
-</head>
-<body>
-  <div class="main-container">
-    <h1 class="main-title" style="text-align:center; margin-bottom: 1rem;">Google Dorks</h1>
-    <!-- Botón de regreso al inicio (mismo look que Windows) -->
-    <div style="margin-bottom: 1rem;">
-      <a href="../index.html" class="back-button">← Volver al inicio</a>
-    </div>
+<!--
+  GOOGLE DORKS - Hojas de referencia (Web)
+  ======================================
+  Página de Google Dorks con distribución y estilo idénticos a linux/google_dorks.html
+-->
 
-    <div class="cmd-group">
-      <div class="group-title">Google Dorks</div>
-      <div class="cmd-row">
-        <span class="cmd-name">site:</span>
-        <span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Limita la búsqueda a un dominio concreto.<br><span class="param">- Ej.: site:ejemplo.com</span></span>
-      </div>
-      <div class="cmd-row">
-        <span class="cmd-name">inurl:</span>
-        <span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca URL que contengan términos específicos.<br><span class="param">- Ej.: inurl:login</span></span>
-      </div>
-      <div class="cmd-row">
-        <span class="cmd-name">intitle:</span>
-        <span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca dentro del título de la página.<br><span class="param">- Ej.: intitle:"dashboard"</span></span>
-      </div>
-      <div class="cmd-row">
-        <span class="cmd-name">intext:</span>
-        <span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca texto en el cuerpo de la página.<br><span class="param">- Ej.: intext:password</span></span>
-      </div>
-      <div class="cmd-row">
-        <span class="cmd-name">filetype:</span>
-        <span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Filtra por tipo de archivo.<br><span class="param">- Ej.: filetype:pdf</span></span>
-      </div>
-      <div class="cmd-row">
-        <span class="cmd-name">allinurl:</span>
-        <span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca todos los términos en la URL.<br><span class="param">- Ej.: allinurl:admin</span></span>
-      </div>
-      <div class="cmd-row">
-        <span class="cmd-name">allintitle:</span>
-        <span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca todos los términos en el título de la página.<br><span class="param">- Ej.: allintitle:login admin</span></span>
-      </div>
-      <div class="cmd-row">
-        <span class="cmd-name">allintext:</span>
-        <span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca todos los términos dentro del cuerpo de la página.<br><span class="param">- Ej.: allintext:password</span></span>
-      </div>
-      <div class="cmd-row">
-        <span class="cmd-name">inanchor:</span>
-        <span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca palabras dentro del texto de los anchors de enlaces.<br><span class="param">- Ej.: inanchor:login</span></span>
-      </div>
-      <div class="cmd-row">
-        <span class="cmd-name">define:</span>
-        <span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Proporciona definiciones de un término.<br><span class="param">- Ej.: define:cryptography</span></span>
-      </div>
-      <div class="cmd-row">
-        <span class="cmd-name">cache:</span>
-        <span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra la versión en caché de una página.<br><span class="param">- Ej.: cache:example.com</span></span>
-      </div>
-      <div class="cmd-row">
-        <span class="cmd-name">link:</span>
-        <span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra páginas que enlazan a una URL dada.<br><span class="param">- Ej.: link:example.com</span></span>
-      </div>
-      <div class="cmd-row">
-        <span class="cmd-name">related:</span>
-        <span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra páginas relacionadas con la URL especificada.<br><span class="param">- Ej.: related:example.com</span></span>
+<style>
+  /* --- VARIABLES CSS --- */
+  :root {
+    --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    --color-background-primary: #ffffff;
+    --color-background-secondary: #f3f4f6;
+    --color-background-info: #eff6ff;
+    --color-background-success: #ecfdf5;
+    --color-background-warning: #fffbeb;
+    --color-text-primary: #111827;
+    --color-text-secondary: #4b5563;
+    --color-text-tertiary: #9ca3af;
+    --color-text-info: #2563eb;
+    --color-text-success: #059669;
+    --color-text-warning: #d97706;
+    --color-border-primary: #d1d5db;
+    --color-border-secondary: #e5e7eb;
+    --color-border-tertiary: #f3f4f6;
+    --border-radius-md: 6px;
+    --border-radius-lg: 10px;
+  }
+
+  /* --- RESET BÁSICO --- */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* --- ESTILOS DEL BODY --- */
+  body { font-family: var(--font-sans); background: #f1f5f9; min-height: 100vh; padding: 1rem; }
+
+  /* --- CONTENEDOR PRINCIPAL --- */
+  .main-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 2rem;
+  }
+
+  /* --- ACCESIBILIDAD: OCULTAR VISUALMENTE PERO MANTENER PARA LECTORES DE PANTALLA --- */
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+  /* --- TÍTULO VISIBLE --- */
+  .main-title { text-align: center; font-size: 2.2rem; font-weight: 700; color: var(--color-text-primary); margin-bottom: 1.5rem; letter-spacing: -0.02em; }
+
+  /* --- GLOBALES (Caja, búsquedas, etc.) --- */
+  .cmd-group { margin-bottom: 1.5rem; }
+  .group-title {
+    font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--color-text-tertiary); margin-bottom: 8px; padding-bottom: 4px;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+  .search-box { width: 100%; padding: 8px 12px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); font-size: 14px; margin-bottom: 1rem; background: var(--color-background-primary); color: var(--color-text-primary); }
+
+  /* --- FILA DE COMANDO: nombre + descripción --- */
+  .cmd-row { display: grid; grid-template-columns: 160px 1fr; gap: 8px; padding: 5px 0; border-bottom: 0.5px solid var(--color-border-tertiary); align-items: start; }
+  .cmd-row:last-child { border-bottom: none; }
+  .cmd-name { font-family: var(--font-mono); font-size: 12px; color: var(--color-text-info); background: var(--color-background-info); padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+  .cmd-desc { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+  .cmd-purpose { font-size: 10px; font-weight: 600; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px; }
+  .param { font-family: var(--font-mono); font-size: 11px; background: var(--color-background-secondary); padding: 1px 5px; border-radius: 3px; color: var(--color-text-primary); margin-right: 2px; white-space: nowrap; display: inline-block; margin-bottom: 2px; }
+
+  .hidden { display: none !important; }
+</style>
+
+
+<!-- TÍTULO PRINCIPAL (fuera de la caja) -->
+<h1 class="main-title">Google Dorks</h1>
+<!-- CONTENEDOR PRINCIPAL -->
+<div class="main-container">
+  <div style="margin-bottom: 1rem;">
+    <a href="../index.html" style="display: inline-flex; align-items: center; gap: 6px; color: var(--color-text-secondary); text-decoration: none; font-size: 14px; padding: 6px 12px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; cursor: pointer; transition: all 0.15s;">
+      ← Volver al inicio
+    </a>
+  </div>
+
+  <!-- CAJA DE BÚSQUEDA -->
+  <input class="search-box" type="text" placeholder="Buscar término..." id="searchInput" oninput="filterCmds(this.value)" />
+
+  <div id="allCmds">
+    <!-- GOOGLE DORKS O BOX DE EJEMPLOS -->
+    <div class="section active" id="tab-dorks" data-group="dorks">
+      <div class="cmd-group">
+        
+        <div class="cmd-row"><span class="cmd-name">site</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Restringe búsquedas a un dominio. <br><span class="param">site:ejemplo.com</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">inurl</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca palabras en la URL. <br><span class="param">inurl:login</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">intitle</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca palabras en el título. <br><span class="param">intitle:admin</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">intext</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca palabras en el texto de la página. <br><span class="param">intext:password</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">filetype</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca por tipo de archivo. <br><span class="param">filetype:pdf</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">ext</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Alias de filetype para extensiones. <br><span class="param">ext:log</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">allinurl</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca palabras en la URL de todos los términos. <br><span class="param">allinurl:admin login</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">allintext</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca palabras en el texto de la página. <br><span class="param">allintext:password cuenta</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">inanchor</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca palabras en los anchors. <br><span class="param">inanchor:login</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">cache</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra la versión en caché de una página. <br><span class="param">cache:example.com</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">related</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca sitios relacionados con una URL. <br><span class="param">related:example.com</span></span></div>
       </div>
     </div>
   </div>
-</body>
-</html>
+</div>
+
+<!-- JS: filtrado básico (inspirado en linux) -->
+<script>
+function filterCmds(q) {
+  q = q.toLowerCase().trim();
+  const sections = document.querySelectorAll('.section');
+  if (!q) {
+    sections.forEach(s => s.classList.remove('active'));
+    const first = document.querySelector('.section');
+    if (first) first.classList.add('active');
+    document.querySelectorAll('.cmd-row').forEach(r => r.classList.remove('hidden'));
+    return;
+  }
+  sections.forEach(s => s.classList.add('active'));
+  document.querySelectorAll('.cmd-row').forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.classList.toggle('hidden', !text.includes(q));
+  });
+}
+</script>
