@@ -41,22 +41,5 @@
   </div>
 </div>
 
-<!-- JS: filtrado básico (inspirado en linux) -->
-<script>
-function filterCmds(q) {
-  q = q.toLowerCase().trim();
-  const sections = document.querySelectorAll('.section');
-  if (!q) {
-    sections.forEach(s => s.classList.remove('active'));
-    const first = document.querySelector('.section');
-    if (first) first.classList.add('active');
-    document.querySelectorAll('.cmd-row').forEach(r => r.classList.remove('hidden'));
-    return;
-  }
-  sections.forEach(s => s.classList.add('active'));
-  document.querySelectorAll('.cmd-row').forEach(row => {
-    const text = row.textContent.toLowerCase();
-    row.classList.toggle('hidden', !text.includes(q));
-  });
-}
-</script>
+<!-- JS: lógica unificada en scripts.js -->
+<script src="../scripts.js"></script>
