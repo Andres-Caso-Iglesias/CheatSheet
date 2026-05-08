@@ -10,7 +10,7 @@ El objetivo de este proyecto es proporcionar una interfaz web sencilla y eficien
 
 El repositorio está organizado en tres categorías principales que cubren los pilares fundamentales del entorno de trabajo de un desarrollador:
 
-*   **Linux**: Documentación y guías enfocadas en sistemas operativos basados en Unix y sus comandos de terminal.
+*   **Linux**: Documentación y guías enfocadas en sistemas operativos basados en Unix, sus comandos de terminal y herramientas de análisis forense y esteganografía.
 *   **Web**: Referencias específicas para el desarrollo frontend y tecnologías relacionadas con la web.
 *   **Windows**: Atajos, herramientas y configuraciones para el ecosistema de Microsoft.
 
@@ -41,7 +41,8 @@ Para utilizar este recurso en un entorno local:
 
 ## Actualizaciones Recientes
 
-El proyecto ha sido actualizado recientemente para mejorar la **disposición de los elementos en pantalla** y el diseño visual, asegurando que la información sea legible en diferentes dispositivos y tamaños de monitor.
+*   Se ha añadido una nueva sección de **Forense y Esteganografía** dentro del apartado de Linux, incorporando herramientas clave como `strings`, `exiftool`, `binwalk`, `steghide`, `stegseek` y `md5sum`.
+*   El proyecto ha sido actualizado para mejorar la **disposición de los elementos en pantalla** y el diseño visual, asegurando que la información sea legible en diferentes dispositivos y tamaños de monitor.
 
 ## Créditos
 
