@@ -1,7 +1,7 @@
 <!--
-  HOJA DE REFERENCIA: Comandos Windows (CMD y PowerShell)
-  ================================================
-  Este documento es una cheat sheet interactiva con pestañas y búsqueda.
+   HOJA DE REFERENCIA: Comandos Windows (CMD y PowerShell)
+   ================================================
+   Este documento es una cheat sheet interactiva con pestañas y búsqueda.
 -->
 
 <link rel="stylesheet" href="../styles.css" />
@@ -28,13 +28,14 @@
     <button class="tab-main" onclick="showMainTab('powershell')">PowerShell</button>
   </div>
 
-  <!-- PESTAÑAS SECUNDARIAS: Navegación, Archivos, Procesos, Red -->
+  <!-- PESTAÑAS SECUNDARIAS: Navegación, Archivos, Procesos, Red, Usuarios -->
   <div id="subtabs-cmd" class="subtabs">
     <div class="inner">
       <button class="subtab active" onclick="showSubTab('cmd-nav')">Navegación</button>
       <button class="subtab" onclick="showSubTab('cmd-files')">Archivos</button>
       <button class="subtab" onclick="showSubTab('cmd-proc')">Procesos</button>
       <button class="subtab" onclick="showSubTab('cmd-net')">Red</button>
+      <button class="subtab" onclick="showSubTab('cmd-users')">Usuarios</button>
     </div>
   </div>
 
@@ -153,6 +154,21 @@
         <div class="cmd-row"><span class="cmd-name">nslookup</span><span class="cmd-desc"><span class="cmd-purpose">Para
               qué sirve:</span> Consulta servidores DNS.<br><span class="param">nombre</span> buscar dominio · <span
               class="param">servidor</span> servidor DNS especifico</span></div>
+        <div class="cmd-row"><span class="cmd-name">net view</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra equipos en el dominio o grupo de trabajo.<br><span class="param">\\computadora</span> ver recursos · <span class="param">/domain</span> dominio</span></div>
+        <div class="cmd-row"><span class="cmd-name">net use</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Conecta o desconecta de recursos compartidos.<br><span class="param">letra: \\servidor\recurso</span> mapear unidad · <span class="param">/delete</span> desconectar · <span class="param">/persistent:yes</span> persistente</span></div>
+      </div>
+    </div>
+
+    <!-- CMD - USUARIOS -->
+    <div class="section" id="tab-cmd-users" data-group="cmd-users">
+      <div class="cmd-group">
+        <div class="group-title">Gestión de usuarios y grupos (CMD)</div>
+        <div class="cmd-row"><span class="cmd-name">net user</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Gestiona cuentas de usuario.<br><span class="param">nombre</span> ver usuario · <span class="param">/add</span> crear · <span class="param">/delete</span> eliminar · <span class="param">/active:yes/no</span> activar/desactivar</span></div>
+        <div class="cmd-row"><span class="cmd-name">net localgroup</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Gestiona grupos locales.<br><span class="param">nombre</span> ver grupo · <span class="param">/add</span> crear · <span class="param">/delete</span> eliminar · <span class="param">usuario /add</span> añadir usuario</span></div>
+        <div class="cmd-row"><span class="cmd-name">net accounts</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Configura políticas de cuentas.<br><span class="param">/forcelogoff:time</span> tiempo desconexión · <span class="param">/minpwlen:n</span> longitud mínima · <span class="param">/maxpwage:n</span> caducidad</span></div>
+        <div class="cmd-row"><span class="cmd-name">net share</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Gestiona recursos compartidos.<br><span class="param">nombre=ruta</span> crear · <span class="param">/delete</span> eliminar · <span class="param">nombre</span> ver</span></div>
+        <div class="cmd-row"><span class="cmd-name">net session</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista o desconecta sesiones.<br><span class="param">/delete</span> desconectar · <span class="param">\\computadora</span> sesiones de equipo</span></div>
+        <div class="cmd-row"><span class="cmd-name">net start/stop</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Inicia o detiene servicios.<br><span class="param">servicio</span> nombre del servicio · <span class="param">net pause</span> pausar · <span class="param">net continue</span> reanudar</span></div>
       </div>
     </div>
 
@@ -207,9 +223,8 @@
               class="cmd-purpose">Para qué sirve:</span> Busca patrones en archivos.<br><span
               class="param">-Pattern</span> expresión · <span class="param">-Path</span> archivo · <span
               class="param">-CaseSensitive</span> · <span class="param">-Context n</span> líneas contexto</span></div>
-        <div class="cmd-row"><span class="cmd-name">Out-File</span><span class="cmd-desc"><span class="cmd-purpose">Para
-              qué sirve:</span> Redirige salida a un archivo.<br><span class="param">-FilePath</span> archivo · <span
-              class="param">-Append</span> añadir · <span class="param">-Encoding</span> codificación</span></div>
+        <div class="cmd-row"><span class="cmd-name">Out-File</span><span class="cmd-desc"><span
+              class="cmd-purpose">Para qué sirve:</span> Redirige salida a un archivo.<br><span class="param">-FilePath</span> archivo · <span class="param">-Append</span> añadir · <span class="param">-Encoding</span> codificación</span></div>
       </div>
     </div>
 
