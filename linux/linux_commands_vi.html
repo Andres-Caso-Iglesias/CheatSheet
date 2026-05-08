@@ -1,4 +1,4 @@
-﻿<!--
+<!--
   HOJA DE REFERENCIA: Comandos Linux y Editor vi
   ================================================
   Este documento es una cheat sheet interactiva con pestañas y búsqueda.
@@ -34,6 +34,7 @@
         <button class="tab" onclick="showTab('proc')">Procesos</button>
         <button class="tab" onclick="showTab('net')">Red</button>
         <button class="tab" onclick="showTab('text')">Texto</button>
+        <button class="tab" onclick="showTab('forensics')">Forense</button>
         <button class="tab" onclick="showTab('vi')">vi / vim</button>
         <button class="tab" onclick="showTab('nano')">nano</button>
       </div>
@@ -338,6 +339,19 @@
         <div class="cmd-row"><span class="cmd-name">tee</span><span class="cmd-desc"><span class="cmd-purpose">Para qué
               sirve:</span> Lee de entrada y escribe a archivo y pantalla.<br><span class="param">-a</span> añadir en
             vez de sobreescribir · <span class="param">-i</span> ignorar interrupciones</span></div>
+      </div>
+    </div>
+
+    <!-- FORENSE -->
+    <div class="section" id="tab-forensics" data-group="forensics">
+      <div class="cmd-group">
+        <div class="group-title">Forense y Esteganografía</div>
+        <div class="cmd-row"><span class="cmd-name">strings</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca y extrae cadenas de texto legibles dentro de archivos binarios.<br><span class="param">-n N</span> longitud mínima de N caracteres · <span class="param">-e</span> especificar codificación · <span class="param">-a</span> escanear todo el archivo</span></div>
+        <div class="cmd-row"><span class="cmd-name">exiftool</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lee, escribe y manipula metadatos en una gran variedad de archivos (imágenes, PDFs, etc).<br><span class="param">archivo</span> muestra todos los metadatos · <span class="param">-all=</span> elimina todos los metadatos · <span class="param">-Tag=valor</span> modifica un tag</span></div>
+        <div class="cmd-row"><span class="cmd-name">binwalk</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Analiza, extrae y hace ingeniería inversa a imágenes o archivos binarios buscando archivos ocultos.<br><span class="param">-e</span> extraer archivos automáticamente · <span class="param">-B</span> buscar firmas · <span class="param">-M</span> escaneo recursivo</span></div>
+        <div class="cmd-row"><span class="cmd-name">steghide</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Oculta o extrae datos dentro de imágenes (JPEG, BMP) o archivos de audio (WAV, AU).<br><span class="param">embed -cf img.jpg -ef sec.txt</span> ocultar · <span class="param">extract -sf img.jpg</span> extraer · <span class="param">info img.jpg</span> mostrar info</span></div>
+        <div class="cmd-row"><span class="cmd-name">stegseek</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Herramienta rápida para romper esteganografía de steghide mediante fuerza bruta.<br><span class="param">archivo.jpg wordlist.txt</span> fuerza bruta con diccionario · <span class="param">--seed</span> usar semillas precalculadas</span></div>
+        <div class="cmd-row"><span class="cmd-name">md5sum</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Calcula y verifica el hash MD5 de un archivo (comprobar integridad).<br><span class="param">archivo</span> calcula el hash · <span class="param">-c hashes.txt</span> verifica hashes contra los archivos locales</span></div>
       </div>
     </div>
 
