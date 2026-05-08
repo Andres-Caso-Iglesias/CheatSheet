@@ -14,9 +14,9 @@ function showTab(id) {
   const section = document.getElementById('tab-' + id);
   if (section) section.classList.add('active');
   
-  if (event && event.target) {
-    event.target.classList.add('active');
-  }
+  const activeTab = Array.from(document.querySelectorAll('.tab'))
+    .find(t => t.getAttribute('onclick') && t.getAttribute('onclick').includes(`'${id}'`));
+  if (activeTab) activeTab.classList.add('active');
   
   const searchInput = document.getElementById('searchInput');
   if (searchInput) searchInput.value = '';
@@ -30,10 +30,9 @@ function showMainTab(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab-main').forEach(t => t.classList.remove('active'));
 
-  if (typeof event !== 'undefined' && event && event.target) {
-    const btn = event.target.closest('.tab-main');
-    if (btn) btn.classList.add('active');
-  }
+  const activeBtn = Array.from(document.querySelectorAll('.tab-main'))
+    .find(t => t.getAttribute('onclick') && t.getAttribute('onclick').includes(`'${id}'`));
+  if (activeBtn) activeBtn.classList.add('active');
 
   // Ocultar subpestañas y mostrar la del id seleccionado
   const allSubtabs = document.querySelectorAll('.subtabs');
@@ -72,9 +71,9 @@ function showSubTab(id) {
   const section = document.getElementById('tab-' + id);
   if (section) section.classList.add('active');
 
-  if (typeof event !== 'undefined' && event && event.target) {
-    event.target.classList.add('active');
-  }
+  const activeBtn = Array.from(document.querySelectorAll('.subtab'))
+    .find(t => t.getAttribute('onclick') && t.getAttribute('onclick').includes(`'${id}'`));
+  if (activeBtn) activeBtn.classList.add('active');
 
   const searchInput = document.getElementById('searchInput');
   if (searchInput) searchInput.value = '';
