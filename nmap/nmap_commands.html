@@ -1,0 +1,343 @@
+<!--
+  HOJA DE REFERENCIA: Comandos Nmap
+  ================================================
+  Este documento es una cheat sheet interactiva con pestañas y búsqueda.
+-->
+
+<link rel="stylesheet" href="../styles.css" />
+
+<!-- TÍTULO VISIBLE CENTRADO -->
+<h1 class="main-title">Comandos Nmap</h1>
+
+<!-- TÍTULO ACCESIBLE (solo para lectores de pantalla) -->
+<h2 class="sr-only">Referencia interactiva de comandos Nmap para escaneo de red</h2>
+
+<!--  CONTENEDOR PRINCIPAL-->
+<div class="main-container">
+  <!-- BOTÓN VOLVER AL INICIO -->
+  <div style="margin-bottom: 1rem;">
+    <a href="../index.html"
+      style="display: inline-flex; align-items: center; gap: 6px; color: var(--color-text-secondary); text-decoration: none; font-size: 14px; padding: 6px 12px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; cursor: pointer; transition: all 0.15s;">
+      ← Volver al inicio
+    </a>
+  </div>
+
+  <!-- PESTAÑAS PRINCIPALES: Básico, Avanzado, Scripts, Output -->
+  <div class="tabs-main">
+    <button class="tab-main active" onclick="showMainTab('basic')">Básico</button>
+    <button class="tab-main" onclick="showMainTab('advanced')">Avanzado</button>
+    <button class="tab-main" onclick="showMainTab('scripts')">Scripts NSE</button>
+    <button class="tab-main" onclick="showMainTab('output')">Output</button>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Básico -->
+  <div id="subtabs-basic" class="subtabs">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('basic-discovery')">Descubrimiento</button>
+      <button class="subtab" onclick="showSubTab('basic-ports')">Puertos</button>
+      <button class="subtab" onclick="showSubTab('basic-services')">Servicios/OS</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Avanzado -->
+  <div id="subtabs-advanced" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('adv-stealth')">Stealth</button>
+      <button class="subtab" onclick="showSubTab('adv-firewall')">Firewall/IDS</button>
+      <button class="subtab" onclick="showSubTab('adv-performance')">Rendimiento</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Scripts -->
+  <div id="subtabs-scripts" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('scripts-vuln')">Vulnerabilidades</button>
+      <button class="subtab" onclick="showSubTab('scripts-info')">Información</button>
+      <button class="subtab" onclick="showSubTab('scripts-brute')">Fuerza Bruta</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Output -->
+  <div id="subtabs-output" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('out-formats')">Formatos</button>
+      <button class="subtab" onclick="showSubTab('out-options')">Opciones</button>
+    </div>
+  </div>
+
+  <!-- CAJA DE BÚSQUEDA: mismo ancho que las pestañas -->
+  <input class="search-box" type="text" placeholder="Buscar comando o parámetro..." oninput="filterCmds(this.value)"
+    id="searchInput" />
+
+  <div id="allCmds">
+    <!-- #################### BÁSICO #################### -->
+    <!-- BÁSICO - DESCUBRIMIENTO -->
+    <div class="section active" id="tab-basic-discovery" data-group="basic-discovery">
+      <div class="cmd-group">
+        <div class="group-title">Descubrimiento de hosts (Nmap)</div>
+        <div class="cmd-row"><span class="cmd-name">nmap -sn &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ping scan — descubre hosts sin escanear puertos.<br><span class="param">-sn</span> solo ping · <span class="param">target</span> IP/rango/CIDR</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -sP &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Alias de -sn (versiones antiguas).<br><span class="param">-sP</span> ping scan legacy</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -sL &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista de escaneo — resuelve DNS sin enviar paquetes.<br><span class="param">-sL</span> solo listar · <span class="param">-n</span> sin DNS</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -PR &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> ARP ping scan (red local).<br><span class="param">-PR</span> ARP ping · más rápido en LAN</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -PE -PP -PM &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Tipos de ping ICMP.<br><span class="param">-PE</span> echo · <span class="param">-PP</span> timestamp · <span class="param">-PM</span> netmask</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -PS&lt;puertos&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> TCP SYN ping scan.<br><span class="param">-PS80,443</span> puertos SYN · <span class="param">-PA</span> ACK ping · <span class="param">-PU</span> UDP ping</span></div>
+      </div>
+    </div>
+
+    <!-- BÁSICO - PUERTOS -->
+    <div class="section" id="tab-basic-ports" data-group="basic-ports">
+      <div class="cmd-group">
+        <div class="group-title">Escaneo de puertos (Nmap)</div>
+        <div class="cmd-row"><span class="cmd-name">nmap &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Escaneo por defecto — 1000 puertos TCP más comunes.<br><span class="param">target</span> IP/hostname</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p &lt;puertos&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Escanear puertos específicos.<br><span class="param">-p 80</span> un puerto · <span class="param">-p 80-443</span> rango · <span class="param">-p 80,443,8080</span> lista</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p- &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Escanear TODOS los puertos (1-65535).<br><span class="param">-p-</span> todos los puertos · lento pero completo</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -sS &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> TCP SYN scan (half-open) — el más común.<br><span class="param">-sS</span> SYN scan · no completa handshake · más rápido</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -sT &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> TCP Connect scan — completa handshake.<br><span class="param">-sT</span> connect scan · sin privilegios root</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -sU &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> UDP scan — descubre servicios UDP.<br><span class="param">-sU</span> UDP scan · lento · <span class="param">-sS -sU</span> combinado</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --top-ports &lt;n&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Escanear los n puertos más comunes.<br><span class="param">--top-ports 100</span> 100 más usados · <span class="param">--top-ports 1000</span> default</span></div>
+      </div>
+    </div>
+
+    <!-- BÁSICO - SERVICIOS/OS -->
+    <div class="section" id="tab-basic-services" data-group="basic-services">
+      <div class="cmd-group">
+        <div class="group-title">Detección de servicios y OS (Nmap)</div>
+        <div class="cmd-row"><span class="cmd-name">nmap -sV &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Detección de versión de servicios.<br><span class="param">-sV</span> version scan · <span class="param">--version-intensity &lt;n&gt;</span> 0-9</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -O &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Detección de sistema operativo.<br><span class="param">-O</span> OS detection · requiere root</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -A &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Escaneo agresivo — OS + versiones + scripts + traceroute.<br><span class="param">-A</span> agresivo · combina -sV -O -sC --traceroute</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -sV --version-all &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Máxima intensidad de detección de versiones.<br><span class="param">--version-all</span> todas las pruebas · <span class="param">--version-trace</span> debug</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --traceroute &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Traceroute al objetivo.<br><span class="param">--traceroute</span> mostrar ruta · usa TTL</span></div>
+      </div>
+    </div>
+
+    <!-- #################### AVANZADO #################### -->
+    <!-- AVANZADO - STEALTH -->
+    <div class="section" id="tab-adv-stealth" data-group="adv-stealth">
+      <div class="cmd-group">
+        <div class="group-title">Escaneo stealth y evasión (Nmap)</div>
+        <div class="cmd-row"><span class="cmd-name">nmap -sN &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> NULL scan — sin flags TCP.<br><span class="param">-sN</span> NULL scan · evade firewalls simples</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -sF &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> FIN scan — solo flag FIN.<br><span class="param">-sF</span> FIN scan · similar a NULL</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -sX &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Xmas scan — flags FIN+PSH+URG.<br><span class="param">-sX</span> Xmas tree scan</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -sA &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> ACK scan — mapear reglas de firewall.<br><span class="param">-sA</span> ACK scan · no descubre puertos abiertos</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -sW &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Window scan — detecta puertos abiertos vía window size.<br><span class="param">-sW</span> window scan</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --scanflags &lt;flags&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Flags TCP personalizados.<br><span class="param">--scanflags URGPSHACK</span> flags custom · <span class="param">URG ACK FIN</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -D &lt;decoys&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Decoy scan — IPs falsas para confundir.<br><span class="param">-D RND:10</span> 10 decoys aleatorios · <span class="param">-D IP1,IP2,ME</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -f &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Fragmentación de paquetes.<br><span class="param">-f</span> 8 bytes · <span class="param">-ff</span> 16 bytes · <span class="param">-mtu &lt;n&gt;</span> MTU custom</span></div>
+      </div>
+    </div>
+
+    <!-- AVANZADO - FIREWALL/IDS -->
+    <div class="section" id="tab-adv-firewall" data-group="adv-firewall">
+      <div class="cmd-group">
+        <div class="group-title">Evasión de firewall e IDS (Nmap)</div>
+        <div class="cmd-row"><span class="cmd-name">nmap --source-port &lt;puerto&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Usar puerto fuente específico.<br><span class="param">--source-port 53</span> DNS · <span class="param">--source-port 80</span> HTTP</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --data-length &lt;n&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Añadir datos aleatorios a paquetes.<br><span class="param">--data-length 25</span> payload random · evasión IDS</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --randomize-hosts &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Aleatorizar orden de hosts.<br><span class="param">--randomize-hosts</span> orden random · no secuencial</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --spoof-mac &lt;mac&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Spoofing de dirección MAC.<br><span class="param">--spoof-mac 0</span> MAC aleatoria · <span class="param">--spoof-mac AA:BB:CC:DD:EE:FF</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --badsum &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Checksums inválidos — detectar firewalls/IPS.<br><span class="param">--badsum</span> checksums rotos · respuestas revelan IPS</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -g &lt;puerto&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Puerto fuente (alias de --source-port).<br><span class="param">-g 53</span> puerto fuente 53</span></div>
+      </div>
+    </div>
+
+    <!-- AVANZADO - RENDIMIENTO -->
+    <div class="section" id="tab-adv-performance" data-group="adv-performance">
+      <div class="cmd-group">
+        <div class="group-title">Control de rendimiento (Nmap)</div>
+        <div class="cmd-row"><span class="cmd-name">nmap -T&lt;0-5&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Template de timing.<br><span class="param">-T0</span> paranoico · <span class="param">-T3</span> normal · <span class="param">-T4</span> agresivo · <span class="param">-T5</span> insane</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --min-rate &lt;n&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Velocidad mínima de paquetes/seg.<br><span class="param">--min-rate 1000</span> 1000 pps mínimo</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --max-rate &lt;n&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Velocidad máxima de paquetes/seg.<br><span class="param">--max-rate 100</span> máximo 100 pps</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --min-parallelism &lt;n&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Sondeos paralelos mínimos.<br><span class="param">--min-parallelism 100</span> 100 sondeos simultáneos</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --host-timeout &lt;tiempo&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Tiempo máximo por host.<br><span class="param">--host-timeout 30m</span> 30 minutos · <span class="param">--host-timeout 1h</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -iL &lt;archivo&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Escanear hosts desde archivo.<br><span class="param">-iL targets.txt</span> lista de IPs · un host por línea</span></div>
+      </div>
+    </div>
+
+    <!-- #################### SCRIPTS NSE #################### -->
+    <!-- SCRIPTS - VULNERABILIDADES -->
+    <div class="section" id="tab-scripts-vuln" data-group="scripts-vuln">
+      <div class="cmd-group">
+        <div class="group-title">Scripts de vulnerabilidades (NSE)</div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script vuln &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Corre ~200 scripts de la categoría "vuln" de una vez. Útil para auditorías completas, pero lento.<br><span class="param">-sV</span> recomendado con detección de versión · <span class="param">-p-</span> todos los puertos</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script smb-vuln* &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Revisa múltiples CVEs en SMB de una sola pasada: MS08-067, MS17-010, MS10-061, etc.<br><span class="param">-p 445</span> · devuelve VULNERABLE/SAFE por cada CVE encontrado</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script ssl-heartbleed &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Envía un heartbeat malformado y verifica si el servidor devuelve memoria sensible (CVE-2014-0160).<br><span class="param">-p 443,8443</span> · si es vulnerable, muestra datos filtrados en hex</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script http-shellshock &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Inyecta `() { :; }; echo vulnerable` en headers User-Agent/Referer contra endpoints CGI.<br><span class="param">-p 80,443</span> · <span class="param">--script-args http-shellshock.uri=/cgi-bin/test.cgi</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script http-sql-injection &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Crawlea la web e inyecta payloads SQL en parámetros GET/POST para detectar errores de base de datos.<br><span class="param">-p 80,443</span> · <span class="param">--script-args httpspider.maxdepth=3</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script smb-vuln-ms17-010 &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica si el target es vulnerable a EternalBlue (el exploit de WannaCry). Chequea si SMBv1 está habilitado y si el parche KB4013389 está ausente.<br><span class="param">-p 445</span> · resultado: VULNERABLE / SAFE / UNKNOWN</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script broadcast &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Envía paquetes broadcast/multicast para descubrir servicios en la red local sin apuntar a IPs específicas.<br><span class="param">--script broadcast-dhcp-discover</span> obtiene IP del DHCP · <span class="param">broadcast-dns-service-discovery</span> encuentra servicios mDNS</span></div>
+      </div>
+    </div>
+
+    <!-- SCRIPTS - INFORMACIÓN -->
+    <div class="section" id="tab-scripts-info" data-group="scripts-info">
+      <div class="cmd-group">
+        <div class="group-title">Scripts de información y enumeración (NSE)</div>
+        <div class="cmd-row"><span class="cmd-name">nmap -sC &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Corre los scripts de la categoría "default" — los considerados seguros y no intrusivos. Ideal como primer paso antes de escanear más a fondo.<br><span class="param">-sC</span> equivalente a --script default · no explota nada</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script http-enum &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Hace fuzzing de paths comunes (/admin, /login, /phpinfo, /backup, /.git) y reporta los que devuelven 200/403.<br><span class="param">-p 80,443</span> · <span class="param">--script-args http-enum.basepath=/app/</span> path base</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script dns-brute &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Resuelve DNS contra una wordlist de subdominios (www, mail, ftp, dev, staging, etc.) para mapear la infraestructura.<br><span class="param">-p 53</span> · <span class="param">--script-args dns-brute.threads=20</span> · <span class="param">dns-brute.hosts=wordlist.txt</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script smb-enum-users &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Extrae la lista de usuarios locales del target vía RPC/SMB sin necesidad de credenciales (si el target lo permite).<br><span class="param">-p 445</span> · <span class="param">--script-args smbuser=,smbpass=</span> si necesita auth</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script smb-enum-shares &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista todos los shares SMB y sus permisos de acceso (READ, WRITE, NONE). Útil para encontrar shares abiertos sin password.<br><span class="param">-p 445</span> · muestra ADMIN$, C$, IPC$, print$, etc.</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script snmp-sysdescr &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Consulta la comunidad SNMP "public" (default) para obtener hostname, OS, uptime y descripción del dispositivo.<br><span class="param">-sU -p 161</span> UDP · <span class="param">--script-args snmpcommunity=public</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script http-headers &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Hace un GET y muestra todos los headers de respuesta. Revela Server, X-Powered-By, X-Frame-Options, CSP, cookies sin secure/httpOnly.<br><span class="param">-p 80,443</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script ssl-cert &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Descarga y parsea el certificado SSL/TLS del servidor. Muestra Common Name, SANs, fecha de expiración, algoritmo de firma y si es self-signed.<br><span class="param">-p 443</span></span></div>
+      </div>
+    </div>
+
+    <!-- SCRIPTS - FUERZA BRUTA -->
+    <div class="section" id="tab-scripts-brute" data-group="scripts-brute">
+      <div class="cmd-group">
+        <div class="group-title">Scripts de fuerza bruta (NSE)</div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script ftp-brute &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Prueba credenciales contra el servicio FTP usando wordlists por defecto de Nmap. Si encuentra login válido, muestra los permisos del usuario.<br><span class="param">-p 21</span> · <span class="param">--script-args userdb=/usr/share/wordlists/ftp-users.txt,passdb=rockyou.txt</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script ssh-brute &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Intenta loguearse por SSH con combinaciones user:pass. Lento pero útil si el target tiene contraseñas débiles.<br><span class="param">-p 22</span> · <span class="param">--script-args brute.credfile=creds.txt</span> archivo con user:pass por línea</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script http-brute &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ataca formularios de login HTTP Basic o Digest authentication. Detecta el método de auth automáticamente.<br><span class="param">-p 80,443</span> · <span class="param">--script-args http-brute.path=/admin/,http-brute.method=POST</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script mysql-brute &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Prueba credenciales MySQL. Por defecto intenta root:root, root:password, admin:admin antes de usar wordlists.<br><span class="param">-p 3306</span> · <span class="param">--script-args mysqluser=root,mysqlpass=wordlist.txt</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script smb-brute &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Fuerza bruta contra autenticación SMB de Windows. Útil para encontrar cuentas locales con contraseñas débiles o sin password.<br><span class="param">-p 445</span> · <span class="param">--script-args smbbasic=true,smbdomain=WORKGROUP</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --script pgsql-brute &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Prueba credenciales PostgreSQL. Intenta primero el usuario default "postgres" sin password (configuración común en dev).<br><span class="param">-p 5432</span> · <span class="param">--script-args pgsqluser=postgres,pgsqldb=template1</span></span></div>
+      </div>
+    </div>
+
+    <!-- #################### OUTPUT #################### -->
+    <!-- OUTPUT - FORMATOS -->
+    <div class="section" id="tab-out-formats" data-group="out-formats">
+      <div class="cmd-group">
+        <div class="group-title">Formatos de salida (Nmap)</div>
+        <div class="cmd-row"><span class="cmd-name">nmap -oN &lt;archivo&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Output normal (texto legible).<br><span class="param">-oN output.txt</span> archivo normal</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -oX &lt;archivo&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Output XML (para parsers).<br><span class="param">-oX output.xml</span> archivo XML</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -oG &lt;archivo&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Output grepable (para grep/awk).<br><span class="param">-oG output.gnmap</span> archivo grepable</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -oA &lt;base&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Output en todos los formatos.<br><span class="param">-oA output</span> genera .nmap .xml .gnmap</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --open &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Mostrar solo puertos abiertos.<br><span class="param">--open</span> filtra closed/filtered</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -v &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Output verboso.<br><span class="param">-v</span> verbose · <span class="param">-vv</span> más verbose · <span class="param">-d</span> debug</span></div>
+      </div>
+    </div>
+
+    <!-- OUTPUT - OPCIONES -->
+    <div class="section" id="tab-out-options" data-group="out-options">
+      <div class="cmd-group">
+        <div class="group-title">Opciones de output y utilidad (Nmap)</div>
+        <div class="cmd-row"><span class="cmd-name">nmap --reason &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Mostrar razón del estado del puerto.<br><span class="param">--reason</span> syn-ack, reset, etc.</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --packet-trace &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Mostrar paquetes enviados/recibidos.<br><span class="param">--packet-trace</span> debug de red · muy verboso</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap --iflist</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Listar interfaces y rutas disponibles.<br><span class="param">--iflist</span> sin target · muestra interfaces</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -e &lt;interfaz&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Especificar interfaz de red.<br><span class="param">-e eth0</span> interfaz · <span class="param">-e wlan0</span> WiFi</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -S &lt;IP&gt; &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Spoofing de IP fuente.<br><span class="param">-S 192.168.1.100</span> IP falsa · <span class="param">-e</span> interfaz requerida</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -n / -R &lt;target&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Control de resolución DNS.<br><span class="param">-n</span> sin DNS · más rápido · <span class="param">-R</span> siempre DNS</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--  JAVASCRIPT: -->
+<script>
+  /**
+   * showMainTab(id)
+   * - Cambia entre pestañas principales: Básico, Avanzado, Scripts, Output
+   * - Muestra las pestañas secundarias correspondientes
+   * - Activa la primera pestaña secundaria
+   * - Limpia el campo de búsqueda
+   */
+  function showMainTab(id) {
+    // Ocultar todas las secciones y pestañas principales
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-main').forEach(t => t.classList.remove('active'));
+
+    // Marcar el tab principal activo de forma segura (evita dependencia de 'event' global)
+    if (typeof event !== 'undefined' && event.target) {
+      const btn = event.target.closest('.tab-main');
+      if (btn) btn.classList.add('active');
+    }
+
+    // Ocultar todos los subtabs
+    document.querySelectorAll('[id^="subtabs-"]').forEach(el => el.style.display = 'none');
+
+    // Mostrar pestañas secundarias del tab seleccionado
+    const subtabsContainer = document.getElementById('subtabs-' + id);
+    if (subtabsContainer) {
+      subtabsContainer.style.display = 'flex';
+
+      // Activar la primera pestaña secundaria del tab seleccionado
+      const firstSubtab = subtabsContainer.querySelector('.subtab');
+      // Mapear a la sección inicial correcta
+      const sectionMap = {
+        'basic': 'tab-basic-discovery',
+        'advanced': 'tab-adv-stealth',
+        'scripts': 'tab-scripts-vuln',
+        'output': 'tab-out-formats'
+      };
+      const firstSection = sectionMap[id] ? document.getElementById(sectionMap[id]) : null;
+
+      if (firstSubtab) {
+        document.querySelectorAll('.subtab').forEach(st => st.classList.remove('active'));
+        firstSubtab.classList.add('active');
+      }
+
+      if (firstSection) {
+        firstSection.classList.add('active');
+      }
+    }
+
+    document.getElementById('searchInput').value = '';
+  }
+
+  /**
+   * showSubTab(id)
+   * - Cambia entre secciones secundarias (Descubrimiento, Puertos, etc.)
+   * - Limpia el campo de búsqueda
+   */
+  function showSubTab(id) {
+    // Ocultar todas las secciones y pestañas secundarias
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
+
+    // Mostrar sección y tab activos
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+    document.getElementById('searchInput').value = '';
+  }
+
+  /**
+   * filterCmds(q)
+   * - Filtra comandos y parámetros en tiempo real mientras el usuario escribe
+   * - Si no hay búsqueda (q vacío): muestra la primera pestaña y sección
+   * - Si hay búsqueda: muestra todas las secciones y oculta filas que no coincidan
+   */
+  function filterCmds(q) {
+    q = q.toLowerCase().trim();
+    const sections = document.querySelectorAll('.section');
+    const mainTabs = document.querySelectorAll('.tab-main');
+    const subTabs = document.querySelectorAll('.subtab');
+
+    if (!q) {
+      // Sin búsqueda: resetear a la primera pestaña
+      sections.forEach(s => s.classList.remove('active'));
+      mainTabs.forEach(t => t.classList.remove('active'));
+      subTabs.forEach(t => t.classList.remove('active'));
+
+      // Activar Básico por defecto
+      const firstMainTab = document.querySelector('.tab-main');
+      if (firstMainTab) firstMainTab.classList.add('active');
+
+      // Activar primera pestaña secundaria de Básico
+      const firstSubtab = document.querySelector('#subtabs-basic .subtab');
+      if (firstSubtab) firstSubtab.classList.add('active');
+
+      // Mostrar solo subtabs de Básico
+      document.querySelectorAll('[id^="subtabs-"]').forEach(el => el.style.display = 'none');
+      document.getElementById('subtabs-basic').style.display = 'flex';
+
+      const firstSection = document.getElementById('tab-basic-discovery');
+      if (firstSection) firstSection.classList.add('active');
+
+      document.querySelectorAll('.cmd-row').forEach(r => r.classList.remove('hidden'));
+      return;
+    }
+
+    // Con búsqueda: mostrar todas las secciones y filtrar filas
+    sections.forEach(s => s.classList.add('active'));
+    mainTabs.forEach(t => t.classList.add('active'));
+    subTabs.forEach(t => t.classList.add('active'));
+    document.querySelectorAll('[id^="subtabs-"]').forEach(el => el.style.display = 'flex');
+
+    document.querySelectorAll('.cmd-row').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.classList.toggle('hidden', !text.includes(q));
+    });
+  }
+</script>

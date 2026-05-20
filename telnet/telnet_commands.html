@@ -1,0 +1,279 @@
+<!--
+  HOJA DE REFERENCIA: Comandos Telnet
+  ================================================
+  Este documento es una cheat sheet interactiva con pestañas y búsqueda.
+-->
+
+<link rel="stylesheet" href="../styles.css" />
+
+<!-- TÍTULO VISIBLE CENTRADO -->
+<h1 class="main-title">Comandos Telnet</h1>
+
+<!-- TÍTULO ACCESIBLE (solo para lectores de pantalla) -->
+<h2 class="sr-only">Referencia interactiva de comandos Telnet</h2>
+
+<!--  CONTENEDOR PRINCIPAL-->
+<div class="main-container">
+  <!-- BOTÓN VOLVER AL INICIO -->
+  <div style="margin-bottom: 1rem;">
+    <a href="../index.html"
+      style="display: inline-flex; align-items: center; gap: 6px; color: var(--color-text-secondary); text-decoration: none; font-size: 14px; padding: 6px 12px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; cursor: pointer; transition: all 0.15s;">
+      ← Volver al inicio
+    </a>
+  </div>
+
+  <!-- PESTAÑAS PRINCIPALES -->
+  <div class="tabs-main">
+    <button class="tab-main active" onclick="showMainTab('basic')">Básico</button>
+    <button class="tab-main" onclick="showMainTab('modes')">Modos/Debug</button>
+    <button class="tab-main" onclick="showMainTab('testing')">Testing</button>
+    <button class="tab-main" onclick="showMainTab('install')">Instalación</button>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Básico -->
+  <div id="subtabs-basic" class="subtabs">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('basic-connect')">Conexión</button>
+      <button class="subtab" onclick="showSubTab('basic-escape')">Escape/Comandos</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Modos/Debug -->
+  <div id="subtabs-modes" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('modes-debug')">Debug</button>
+      <button class="subtab" onclick="showSubTab('modes-options')">Opciones Telnet</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Testing -->
+  <div id="subtabs-testing" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('test-ports')">Puertos comunes</button>
+      <button class="subtab" onclick="showSubTab('test-protocols')">Protocolos</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Instalación -->
+  <div id="subtabs-install" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('inst-windows')">Windows</button>
+      <button class="subtab" onclick="showSubTab('inst-linux')">Linux</button>
+    </div>
+  </div>
+
+  <!-- CAJA DE BÚSQUEDA -->
+  <input class="search-box" type="text" placeholder="Buscar comando o parámetro..." oninput="filterCmds(this.value)"
+    id="searchInput" />
+
+  <div id="allCmds">
+    <!-- #################### BÁSICO #################### -->
+    <!-- BÁSICO - CONEXIÓN -->
+    <div class="section active" id="tab-basic-connect" data-group="basic-connect">
+      <div class="cmd-group">
+        <div class="group-title">Conexión básica (Telnet)</div>
+        <div class="cmd-row"><span class="cmd-name">telnet &lt;host&gt; &lt;puerto&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Abre una conexión TCP al puerto especificado. Si el puerto está abierto, la pantalla se queda en blanco o muestra un banner del servicio. Si falla, dice "Connection refused" o timeout.<br><span class="param">telnet 192.168.1.1 80</span> · <span class="param">telnet example.com 443</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">telnet &lt;host&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Conecta al puerto 23 (Telnet por defecto). La mayoría de servidores modernos rechazan esto porque Telnet es inseguro (texto plano).<br><span class="param">telnet 192.168.1.1</span> → puerto 23 automático</span></div>
+        <div class="cmd-row"><span class="cmd-name">telnet -l &lt;usuario&gt; &lt;host&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Especifica el nombre de usuario para login automático al conectarse. Envía el comando USER al servidor Telnet antes de pedir contraseña.<br><span class="param">telnet -l admin 192.168.1.1</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">open &lt;host&gt; &lt;puerto&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Comando interno de la consola Telnet para abrir una conexión sin salir del cliente. Útil para probar múltiples hosts/port sin reiniciar.<br><span class="param">telnet</span> → <span class="param">open 10.0.0.1 22</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">close</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cierra la conexión Telnet activa pero mantiene el cliente abierto. Puedes volver a conectar con open sin salir de la consola.<br><span class="param">close</span> → vuelve al prompt telnet&gt;</span></div>
+        <div class="cmd-row"><span class="cmd-name">quit / exit</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cierra la conexión y sale del cliente Telnet completamente. Vuelves al prompt del sistema.<br><span class="param">quit</span> · <span class="param">exit</span> alias</span></div>
+      </div>
+    </div>
+
+    <!-- BÁSICO - ESCAPE/COMANDOS -->
+    <div class="section" id="tab-basic-escape" data-group="basic-escape">
+      <div class="cmd-group">
+        <div class="group-title">Modo escape y comandos internos</div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl + ]</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Entra al modo de escape de Telnet. Cambia el prompt a telnet&gt; donde puedes ejecutar comandos internos sin cerrar la conexión. Esencial para debug y control.<br><span class="param">telnet&gt;</span> prompt de escape · <span class="param">?</span> ayuda</span></div>
+        <div class="cmd-row"><span class="cmd-name">status</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra el estado actual de la conexión: host, puerto, estado (Connected/Closed), opciones negociadas y modo de terminal.<br><span class="param">status</span> en prompt telnet&gt;</span></div>
+        <div class="cmd-row"><span class="cmd-name">send &lt;secuencia&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Envía secuencias de control especiales al servidor remoto. Útil para enviar break, IP (Interrupt Process), AO (Abort Output), etc.<br><span class="param">send ip</span> interrupt · <span class="param">send ao</span> abort output · <span class="param">send ec</span> erase character</span></div>
+        <div class="cmd-row"><span class="cmd-name">set / unset &lt;opción&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Configura opciones del cliente Telnet: echo, crlf, binary, skip. Modifica cómo se procesa la entrada/salida localmente.<br><span class="param">set echo</span> eco local · <span class="param">set crlf</span> convierte LF a CRLF</span></div>
+        <div class="cmd-row"><span class="cmd-name">toggle &lt;opción&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Alterna una opción entre on/off. Más rápido que set/unset. Opciones comunes: echo, crlf, binary, skip, crlfmod.<br><span class="param">toggle echo</span> cambia estado · <span class="param">toggle crlf</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">display &lt;opción&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra el valor actual de una opción del cliente. Útil para verificar configuración antes de debuggear problemas de terminal.<br><span class="param">display echo</span> · <span class="param">display crlf</span> · <span class="param">display all</span></span></div>
+      </div>
+    </div>
+
+    <!-- #################### MODOS/DEBUG #################### -->
+    <!-- MODOS - DEBUG -->
+    <div class="section" id="tab-modes-debug" data-group="modes-debug">
+      <div class="cmd-group">
+        <div class="group-title">Modo debug y logging (Telnet)</div>
+        <div class="cmd-row"><span class="cmd-name">telnet -d &lt;host&gt; &lt;puerto&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Inicia Telnet con debug activado desde el arranque. Muestra toda la negociación de opciones Telnet (WILL, WONT, DO, DONT) y datos hex.<br><span class="param">-d</span> debug mode · muestra negociación de opciones</span></div>
+        <div class="cmd-row"><span class="cmd-name">toggle options</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Activa/desactiva la visualización de la negociación de opciones Telnet en tiempo real. Útil dentro de la sesión para ver WILL/WONT/DO/DONT.<br><span class="param">telnet&gt; toggle options</span> muestra opciones negociadas</span></div>
+        <div class="cmd-row"><span class="cmd-name">toggle trace</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra los datos que se envían y reciben en formato hexadecimal. Útil para analizar el tráfico de la conexión y ver caracteres de control.<br><span class="param">telnet&gt; toggle trace</span> hex dump del tráfico</span></div>
+        <div class="cmd-row"><span class="cmd-name">toggle prettydump</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Similar a trace pero con formato más legible. Muestra los datos ASCII junto al hex. Útil para ver qué caracteres se envían realmente.<br><span class="param">telnet&gt; toggle prettydump</span> hex + ASCII</span></div>
+        <div class="cmd-row"><span class="cmd-name">log &lt;archivo&gt;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Guarda toda la sesión (entrada y salida) en un archivo de texto. Útil para documentar troubleshooting o analizar interacciones posteriores.<br><span class="param">telnet&gt; log session.log</span> guarda en archivo</span></div>
+        <div class="cmd-row"><span class="cmd-name">z</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Suspende la sesión Telnet y vuelve al shell del sistema. La conexión se mantiene abierta. Vuelve con el comando fg (foreground).<br><span class="param">telnet&gt; z</span> suspende · <span class="param">fg</span> reanuda</span></div>
+      </div>
+    </div>
+
+    <!-- MODOS - OPCIONES TELNET -->
+    <div class="section" id="tab-modes-options" data-group="modes-options">
+      <div class="cmd-group">
+        <div class="group-title">Opciones del protocolo Telnet</div>
+        <div class="cmd-row"><span class="cmd-name">WILL / WONT</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> El servidor anuncia que quiere (WILL) o no quiere (WONT) usar una opción. El cliente responde con DO (acepta) o DONT (rechaza). Parte de la negociación RFC 854.<br><span class="param">WILL ECHO</span> servidor quiere hacer echo</span></div>
+        <div class="cmd-row"><span class="cmd-name">DO / DONT</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> El cliente pide (DO) o rechaza (DONT) que el servidor use una opción. El servidor responde con WILL (acepta) o WONT (rechaza).<br><span class="param">DO ECHO</span> cliente pide echo al servidor</span></div>
+        <div class="cmd-row"><span class="cmd-name">SB / SE (Subnegotiation)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Inicio (SB) y fin (SE) de subnegociación. Permite negociar parámetros específicos de una opción como tamaño de terminal, velocidad o tipo de terminal.<br><span class="param">SB TERMINAL-TYPE ... SE</span> negocia tipo terminal</span></div>
+        <div class="cmd-row"><span class="cmd-name">IAC (Interpret As Command)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Byte 255 (0xFF) que indica que el siguiente byte es un comando Telnet, no datos. Si quieres enviar 0xFF como dato, se envía como IAC IAC.<br><span class="param">0xFF</span> byte IAC · <span class="param">IAC IAC</span> FF literal</span></div>
+      </div>
+    </div>
+
+    <!-- #################### TESTING #################### -->
+    <!-- TESTING - PUERTOS COMUNES -->
+    <div class="section" id="tab-test-ports" data-group="test-ports">
+      <div class="cmd-group">
+        <div class="group-title">Testing de puertos comunes con Telnet</div>
+        <div class="cmd-row"><span class="cmd-name">telnet &lt;host&gt; 80</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica si un servidor web HTTP está escuchando. Si conecta, puedes enviar comandos HTTP manuales: GET / HTTP/1.1 + Host: + doble Enter.<br><span class="param">GET / HTTP/1.1</span> · <span class="param">Host: ejemplo.com</span> · Enter x2</span></div>
+        <div class="cmd-row"><span class="cmd-name">telnet &lt;host&gt; 25</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Prueba conectividad SMTP. Si conecta, el servidor muestra su banner. Puedes enviar comandos SMTP manuales: EHLO, MAIL FROM, RCPT TO.<br><span class="param">EHLO test.com</span> · <span class="param">MAIL FROM: test@test.com</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">telnet &lt;host&gt; 110</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica servidor POP3. Si conecta, muestra +OK banner. Comandos: USER, PASS, LIST, RETR, QUIT. Útil para debug de correo entrante.<br><span class="param">USER admin</span> · <span class="param">PASS password</span> · <span class="param">LIST</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">telnet &lt;host&gt; 143</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica servidor IMAP. Si conecta, muestra * OK banner. Comandos: a LOGIN, a LIST, a SELECT INBOX, a LOGOUT.<br><span class="param">a LOGIN user pass</span> · <span class="param">a LIST "" "*"</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">telnet &lt;host&gt; 21</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Prueba servidor FTP. Si conecta, muestra banner 220. Comandos: USER, PASS, LIST, PWD, CWD, QUIT. Útil para verificar FTP sin cliente.<br><span class="param">USER anonymous</span> · <span class="param">PASS guest@</span> · <span class="param">LIST</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">telnet &lt;host&gt; 53</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica si DNS está escuchando en TCP (no UDP). La mayoría de consultas DNS usan UDP, pero las transferencias de zona (AXFR) usan TCP.<br><span class="param">telnet dns-server 53</span> prueba TCP DNS</span></div>
+        <div class="cmd-row"><span class="cmd-name">telnet &lt;host&gt; 3306</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica si MySQL está escuchando y accesible desde tu red. Si conecta, muestra un banner con la versión. Si no, firewall o bind-address.<br><span class="param">telnet db-server 3306</span> prueba MySQL</span></div>
+        <div class="cmd-row"><span class="cmd-name">Connection refused vs Timeout</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> "Connection refused" = el host existe pero nadie escucha en ese puerto. "Timeout" = el host no responde (firewall bloquea, host caído, routing roto). Diagnóstico rápido de red.<br><span class="param">refused</span> puerto cerrado · <span class="param">timeout</span> firewall/caído</span></div>
+      </div>
+    </div>
+
+    <!-- TESTING - PROTOCOLOS -->
+    <div class="section" id="tab-test-protocols" data-group="test-protocols">
+      <div class="cmd-group">
+        <div class="group-title">Interacción manual con protocolos</div>
+        <div class="cmd-row"><span class="cmd-name">GET / HTTP/1.1 + Host: + Enter x2</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Envía una petición HTTP GET manual via Telnet. Debes presionar Enter dos veces al final (línea vacía requerida por HTTP). Devuelve headers + body.<br><span class="param">GET / HTTP/1.1</span> → <span class="param">Host: target</span> → Enter x2</span></div>
+        <div class="cmd-row"><span class="cmd-name">HEAD / HTTP/1.1 + Host: + Enter x2</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Igual que GET pero solo devuelve headers, sin body. Útil para verificar status code, Server, Content-Type, etc. sin descargar contenido.<br><span class="param">HEAD / HTTP/1.1</span> → headers solo</span></div>
+        <div class="cmd-row"><span class="cmd-name">EHLO dominio.com</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Comando SMTP extendido (ESMTP). El servidor responde con sus capacidades: SIZE, 8BITMIME, STARTTLS, AUTH. Útil para verificar si el servidor soporta TLS o autenticación.<br><span class="param">EHLO test.com</span> → lista capacidades</span></div>
+        <div class="cmd-row"><span class="cmd-name">VRFY usuario</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica si un usuario existe en el servidor SMTP. Muchos servidores lo deshabilitan por seguridad (evita enumeración de emails). Si responde 250, el usuario existe.<br><span class="param">VRFY root</span> → 250 o 550</span></div>
+        <div class="cmd-row"><span class="cmd-name">HELP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Comando genérico disponible en SMTP, FTP y otros protocolos. Devuelve la lista de comandos soportados por el servidor. Útil para descubrir funcionalidades ocultas.<br><span class="param">HELP</span> en SMTP/FTP → lista comandos</span></div>
+        <div class="cmd-row"><span class="cmd-name">QUIT</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cierra la conexión de forma limpia en la mayoría de protocolos (SMTP, FTP, POP3, IMAP). El servidor responde con un mensaje de despedida antes de cerrar.<br><span class="param">QUIT</span> → 221 Bye (SMTP) · 221 Goodbye (FTP)</span></div>
+      </div>
+    </div>
+
+    <!-- #################### INSTALACIÓN #################### -->
+    <!-- INSTALACIÓN - WINDOWS -->
+    <div class="section" id="tab-inst-windows" data-group="inst-windows">
+      <div class="cmd-group">
+        <div class="group-title">Instalación en Windows</div>
+        <div class="cmd-row"><span class="cmd-name">dism /online /Enable-Feature /FeatureName:TelnetClient</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Instala el cliente Telnet en Windows 10/11/Server via DISM. Requiere ejecutar CMD como Administrador. No instala el servidor, solo el cliente.<br><span class="param">/online</span> sistema actual · <span class="param">/FeatureName:TelnetClient</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">pkgmgr /iu:"TelnetClient"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Método alternativo para Windows 7/8. DISM es el preferido en Windows 10+. pkgmgr está deprecated pero aún funciona en versiones antiguas.<br><span class="param">/iu</span> install update · <span class="param">TelnetClient</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">Get-WindowsOptionalFeature -Online -FeatureName TelnetClient</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica si Telnet está instalado en Windows via PowerShell. Devuelve estado: Enabled o Disabled.<br><span class="param">-Online</span> sistema actual · <span class="param">State</span> Enabled/Disabled</span></div>
+        <div class="cmd-row"><span class="cmd-name">Enable-WindowsOptionalFeature -Online -FeatureName TelnetClient</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Instala Telnet via PowerShell (equivalente al DISM). Requiere PowerShell como Administrador. Más legible que DISM.<br><span class="param">-Online</span> · <span class="param">-NoRestart</span> sin reiniciar</span></div>
+        <div class="cmd-row"><span class="cmd-name">telnet</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica que Telnet funciona tras la instalación. Debe abrir el prompt telnet&gt;. Si dice "no se reconoce", la instalación falló o necesitas reiniciar la consola.<br><span class="param">telnet&gt;</span> prompt correcto · nueva ventana CMD</span></div>
+      </div>
+    </div>
+
+    <!-- INSTALACIÓN - LINUX -->
+    <div class="section" id="tab-inst-linux" data-group="inst-linux">
+      <div class="cmd-group">
+        <div class="group-title">Instalación en Linux</div>
+        <div class="cmd-row"><span class="cmd-name">apt install telnet</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Instala el cliente Telnet en Debian/Ubuntu/Kali. El paquete se llama "telnet" o "inetutils-telnet". No instala el servidor por defecto.<br><span class="param">sudo apt install telnet</span> · cliente</span></div>
+        <div class="cmd-row"><span class="cmd-name">yum install telnet</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Instala Telnet en CentOS/RHEL/Fedora. En versiones modernas usa dnf en lugar de yum. El paquete es "telnet" para el cliente.<br><span class="param">sudo yum install telnet</span> · <span class="param">sudo dnf install telnet</span></span></div>
+        <div class="cmd-row"><span class="cmd-name">pacman -S inetutils</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Instala Telnet en Arch Linux/Manjaro. El paquete "inetutils" incluye telnet, ftp, ping, traceroute y otras herramientas de red.<br><span class="param">sudo pacman -S inetutils</span> · incluye telnet</span></div>
+        <div class="cmd-row"><span class="cmd-name">apt install telnetd xinetd</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Instala el SERVIDOR Telnet (no recomendado en producción). telnetd es el daemon, xinetd es el super-servidor que lo gestiona. Solo para labs/testing.<br><span class="param">NUNCA en producción</span> · texto plano sin cifrar</span></div>
+        <div class="cmd-row"><span class="cmd-name">which telnet / whereis telnet</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica si Telnet está instalado y dónde está el binario. Si no devuelve ruta, no está instalado.<br><span class="param">which telnet</span> /usr/bin/telnet · vacío = no instalado</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--  JAVASCRIPT: -->
+<script>
+  /**
+   * showMainTab(id)
+   * - Cambia entre pestañas principales
+   * - Muestra las pestañas secundarias correspondientes
+   * - Activa la primera pestaña secundaria
+   * - Limpia el campo de búsqueda
+   */
+  function showMainTab(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-main').forEach(t => t.classList.remove('active'));
+
+    if (typeof event !== 'undefined' && event.target) {
+      const btn = event.target.closest('.tab-main');
+      if (btn) btn.classList.add('active');
+    }
+
+    document.querySelectorAll('[id^="subtabs-"]').forEach(el => el.style.display = 'none');
+
+    const subtabsContainer = document.getElementById('subtabs-' + id);
+    if (subtabsContainer) {
+      subtabsContainer.style.display = 'flex';
+
+      const firstSubtab = subtabsContainer.querySelector('.subtab');
+      const sectionMap = {
+        'basic': 'tab-basic-connect',
+        'modes': 'tab-modes-debug',
+        'testing': 'tab-test-ports',
+        'install': 'tab-inst-windows'
+      };
+      const firstSection = sectionMap[id] ? document.getElementById(sectionMap[id]) : null;
+
+      if (firstSubtab) {
+        document.querySelectorAll('.subtab').forEach(st => st.classList.remove('active'));
+        firstSubtab.classList.add('active');
+      }
+
+      if (firstSection) {
+        firstSection.classList.add('active');
+      }
+    }
+
+    document.getElementById('searchInput').value = '';
+  }
+
+  /**
+   * showSubTab(id)
+   * - Cambia entre secciones secundarias
+   * - Limpia el campo de búsqueda
+   */
+  function showSubTab(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
+
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+    document.getElementById('searchInput').value = '';
+  }
+
+  /**
+   * filterCmds(q)
+   * - Filtra comandos y parámetros en tiempo real
+   */
+  function filterCmds(q) {
+    q = q.toLowerCase().trim();
+    const sections = document.querySelectorAll('.section');
+    const mainTabs = document.querySelectorAll('.tab-main');
+    const subTabs = document.querySelectorAll('.subtab');
+
+    if (!q) {
+      sections.forEach(s => s.classList.remove('active'));
+      mainTabs.forEach(t => t.classList.remove('active'));
+      subTabs.forEach(t => t.classList.remove('active'));
+
+      const firstMainTab = document.querySelector('.tab-main');
+      if (firstMainTab) firstMainTab.classList.add('active');
+
+      const firstSubtab = document.querySelector('#subtabs-basic .subtab');
+      if (firstSubtab) firstSubtab.classList.add('active');
+
+      document.querySelectorAll('[id^="subtabs-"]').forEach(el => el.style.display = 'none');
+      document.getElementById('subtabs-basic').style.display = 'flex';
+
+      const firstSection = document.getElementById('tab-basic-connect');
+      if (firstSection) firstSection.classList.add('active');
+
+      document.querySelectorAll('.cmd-row').forEach(r => r.classList.remove('hidden'));
+      return;
+    }
+
+    sections.forEach(s => s.classList.add('active'));
+    mainTabs.forEach(t => t.classList.add('active'));
+    subTabs.forEach(t => t.classList.add('active'));
+    document.querySelectorAll('[id^="subtabs-"]').forEach(el => el.style.display = 'flex');
+
+    document.querySelectorAll('.cmd-row').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.classList.toggle('hidden', !text.includes(q));
+    });
+  }
+</script>
