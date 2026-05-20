@@ -27,7 +27,6 @@
     <button class="tab-main active" onclick="showMainTab('basic')">Básico</button>
     <button class="tab-main" onclick="showMainTab('modes')">Modos/Debug</button>
     <button class="tab-main" onclick="showMainTab('testing')">Testing</button>
-    <button class="tab-main" onclick="showMainTab('install')">Instalación</button>
   </div>
 
   <!-- PESTAÑAS SECUNDARIAS: Básico -->
@@ -51,14 +50,6 @@
     <div class="inner">
       <button class="subtab active" onclick="showSubTab('test-ports')">Puertos comunes</button>
       <button class="subtab" onclick="showSubTab('test-protocols')">Protocolos</button>
-    </div>
-  </div>
-
-  <!-- PESTAÑAS SECUNDARIAS: Instalación -->
-  <div id="subtabs-install" class="subtabs" style="display: none;">
-    <div class="inner">
-      <button class="subtab active" onclick="showSubTab('inst-windows')">Windows</button>
-      <button class="subtab" onclick="showSubTab('inst-linux')">Linux</button>
     </div>
   </div>
 
@@ -147,31 +138,6 @@
         <div class="cmd-row"><span class="cmd-name">QUIT</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cierra la conexión de forma limpia en la mayoría de protocolos (SMTP, FTP, POP3, IMAP). El servidor responde con un mensaje de despedida antes de cerrar.<br><span class="param">QUIT</span> → 221 Bye (SMTP) · 221 Goodbye (FTP)</span></div>
       </div>
     </div>
-
-    <!-- #################### INSTALACIÓN #################### -->
-    <!-- INSTALACIÓN - WINDOWS -->
-    <div class="section" id="tab-inst-windows" data-group="inst-windows">
-      <div class="cmd-group">
-        <div class="group-title">Instalación en Windows</div>
-        <div class="cmd-row"><span class="cmd-name">dism /online /Enable-Feature /FeatureName:TelnetClient</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Instala el cliente Telnet en Windows 10/11/Server via DISM. Requiere ejecutar CMD como Administrador. No instala el servidor, solo el cliente.<br><span class="param">/online</span> sistema actual · <span class="param">/FeatureName:TelnetClient</span></span></div>
-        <div class="cmd-row"><span class="cmd-name">pkgmgr /iu:"TelnetClient"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Método alternativo para Windows 7/8. DISM es el preferido en Windows 10+. pkgmgr está deprecated pero aún funciona en versiones antiguas.<br><span class="param">/iu</span> install update · <span class="param">TelnetClient</span></span></div>
-        <div class="cmd-row"><span class="cmd-name">Get-WindowsOptionalFeature -Online -FeatureName TelnetClient</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica si Telnet está instalado en Windows via PowerShell. Devuelve estado: Enabled o Disabled.<br><span class="param">-Online</span> sistema actual · <span class="param">State</span> Enabled/Disabled</span></div>
-        <div class="cmd-row"><span class="cmd-name">Enable-WindowsOptionalFeature -Online -FeatureName TelnetClient</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Instala Telnet via PowerShell (equivalente al DISM). Requiere PowerShell como Administrador. Más legible que DISM.<br><span class="param">-Online</span> · <span class="param">-NoRestart</span> sin reiniciar</span></div>
-        <div class="cmd-row"><span class="cmd-name">telnet</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica que Telnet funciona tras la instalación. Debe abrir el prompt telnet&gt;. Si dice "no se reconoce", la instalación falló o necesitas reiniciar la consola.<br><span class="param">telnet&gt;</span> prompt correcto · nueva ventana CMD</span></div>
-      </div>
-    </div>
-
-    <!-- INSTALACIÓN - LINUX -->
-    <div class="section" id="tab-inst-linux" data-group="inst-linux">
-      <div class="cmd-group">
-        <div class="group-title">Instalación en Linux</div>
-        <div class="cmd-row"><span class="cmd-name">apt install telnet</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Instala el cliente Telnet en Debian/Ubuntu/Kali. El paquete se llama "telnet" o "inetutils-telnet". No instala el servidor por defecto.<br><span class="param">sudo apt install telnet</span> · cliente</span></div>
-        <div class="cmd-row"><span class="cmd-name">yum install telnet</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Instala Telnet en CentOS/RHEL/Fedora. En versiones modernas usa dnf en lugar de yum. El paquete es "telnet" para el cliente.<br><span class="param">sudo yum install telnet</span> · <span class="param">sudo dnf install telnet</span></span></div>
-        <div class="cmd-row"><span class="cmd-name">pacman -S inetutils</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Instala Telnet en Arch Linux/Manjaro. El paquete "inetutils" incluye telnet, ftp, ping, traceroute y otras herramientas de red.<br><span class="param">sudo pacman -S inetutils</span> · incluye telnet</span></div>
-        <div class="cmd-row"><span class="cmd-name">apt install telnetd xinetd</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Instala el SERVIDOR Telnet (no recomendado en producción). telnetd es el daemon, xinetd es el super-servidor que lo gestiona. Solo para labs/testing.<br><span class="param">NUNCA en producción</span> · texto plano sin cifrar</span></div>
-        <div class="cmd-row"><span class="cmd-name">which telnet / whereis telnet</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verifica si Telnet está instalado y dónde está el binario. Si no devuelve ruta, no está instalado.<br><span class="param">which telnet</span> /usr/bin/telnet · vacío = no instalado</span></div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -203,8 +169,7 @@
       const sectionMap = {
         'basic': 'tab-basic-connect',
         'modes': 'tab-modes-debug',
-        'testing': 'tab-test-ports',
-        'install': 'tab-inst-windows'
+        'testing': 'tab-test-ports'
       };
       const firstSection = sectionMap[id] ? document.getElementById(sectionMap[id]) : null;
 
