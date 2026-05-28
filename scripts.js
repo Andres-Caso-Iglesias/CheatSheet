@@ -36,11 +36,11 @@ function showMainTab(id) {
 
   // Ocultar subpestañas y mostrar la del id seleccionado
   const allSubtabs = document.querySelectorAll('.subtabs');
-  allSubtabs.forEach(st => st.style.display = 'none');
+  allSubtabs.forEach(st => st.classList.add('hidden'));
   
   const targetSubtabs = document.getElementById('subtabs-' + id);
   if (targetSubtabs) {
-    targetSubtabs.style.display = 'flex';
+    targetSubtabs.classList.remove('hidden');
   }
 
   // Activar la primera subpestaña y su sección correspondiente

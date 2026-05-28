@@ -40,7 +40,7 @@
   </div>
 
   <!-- PESTAÑAS SECUNDARIAS: Exploits -->
-  <div id="subtabs-exploits" class="subtabs" style="display: none;">
+  <div id="subtabs-exploits" class="subtabs hidden">
     <div class="inner">
       <button class="subtab active" onclick="showSubTab('exp-select')">Selección</button>
       <button class="subtab" onclick="showSubTab('exp-options')">Opciones</button>
@@ -49,7 +49,7 @@
   </div>
 
   <!-- PESTAÑAS SECUNDARIAS: Payloads -->
-  <div id="subtabs-payloads" class="subtabs" style="display: none;">
+  <div id="subtabs-payloads" class="subtabs hidden">
     <div class="inner">
       <button class="subtab active" onclick="showSubTab('pay-types')">Tipos</button>
       <button class="subtab" onclick="showSubTab('pay-generate')">msfvenom</button>
@@ -58,7 +58,7 @@
   </div>
 
   <!-- PESTAÑAS SECUNDARIAS: Meterpreter -->
-  <div id="subtabs-meterpreter" class="subtabs" style="display: none;">
+  <div id="subtabs-meterpreter" class="subtabs hidden">
     <div class="inner">
       <button class="subtab active" onclick="showSubTab('met-basic')">Comandos básicos</button>
       <button class="subtab" onclick="showSubTab('met-files')">Archivos</button>
@@ -68,7 +68,7 @@
   </div>
 
   <!-- PESTAÑAS SECUNDARIAS: Avanzado -->
-  <div id="subtabs-advanced" class="subtabs" style="display: none;">
+  <div id="subtabs-advanced" class="subtabs hidden">
     <div class="inner">
       <button class="subtab active" onclick="showSubTab('adv-db')">Base de datos</button>
       <button class="subtab" onclick="showSubTab('adv-evasion')">Evasión</button>
@@ -308,11 +308,11 @@
       if (btn) btn.classList.add('active');
     }
 
-    document.querySelectorAll('[id^="subtabs-"]').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('[id^="subtabs-"]').forEach(el => el.classList.add('hidden'));
 
     const subtabsContainer = document.getElementById('subtabs-' + id);
     if (subtabsContainer) {
-      subtabsContainer.style.display = 'flex';
+      subtabsContainer.classList.remove('hidden');
 
       const firstSubtab = subtabsContainer.querySelector('.subtab');
       const sectionMap = {
@@ -372,8 +372,8 @@
       const firstSubtab = document.querySelector('#subtabs-basic .subtab');
       if (firstSubtab) firstSubtab.classList.add('active');
 
-      document.querySelectorAll('[id^="subtabs-"]').forEach(el => el.style.display = 'none');
-      document.getElementById('subtabs-basic').style.display = 'flex';
+      document.querySelectorAll('[id^="subtabs-"]').forEach(el => el.classList.add('hidden'));
+      document.getElementById('subtabs-basic').classList.remove('hidden');
 
       const firstSection = document.getElementById('tab-basic-start');
       if (firstSection) firstSection.classList.add('active');
@@ -385,7 +385,7 @@
     sections.forEach(s => s.classList.add('active'));
     mainTabs.forEach(t => t.classList.add('active'));
     subTabs.forEach(t => t.classList.add('active'));
-    document.querySelectorAll('[id^="subtabs-"]').forEach(el => el.style.display = 'flex');
+    document.querySelectorAll('[id^="subtabs-"]').forEach(el => el.classList.remove('hidden'));
 
     document.querySelectorAll('.cmd-row').forEach(row => {
       const text = row.textContent.toLowerCase();
