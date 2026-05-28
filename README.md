@@ -11,6 +11,7 @@ Proyecto web estatico que agrupa guias de referencia interactivas con pestanas, 
 ### Sistemas Operativos
 - **Linux** (`linux/`): Comandos de terminal, gestion de archivos, permisos, procesos, red, manipulacion de texto, herramientas forenses y esteganografia, editor vi/vim y nano
 - **Windows** (`windows/`): CMD y PowerShell - navegacion, archivos, procesos, red, usuarios y grupos
+- **Tmux** (`tmux/`): Terminal multiplexer - sesiones, ventanas, paneles, copy mode, layouts y configuracion
 
 ### Herramientas de Red y Seguridad
 - **Nmap** (`nmap/`): Escaneo de red, descubrimiento de hosts, puertos, servicios, evasion de firewall y scripts NSE
@@ -40,6 +41,8 @@ comandos/
 │   └── linux_commands_vi.html
 ├── windows/
 │   └── windows_commands.html
+├── tmux/
+│   └── tmux_commands.html
 ├── nmap/
 │   └── nmap_commands.html
 ├── metasploit/

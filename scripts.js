@@ -24,7 +24,7 @@ function showTab(id) {
 
 /**
  * showMainTab(id)
- * Para pestañas de nivel principal (ej. Windows: CMD vs PowerShell)
+ * Para pestañas de nivel principal (ej. Windows: CMD vs PowerShell, Tmux, Nmap)
  */
 function showMainTab(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -45,15 +45,20 @@ function showMainTab(id) {
 
   // Activar la primera subpestaña y su sección correspondiente
   const firstSubtab = targetSubtabs ? targetSubtabs.querySelector('.subtab') : null;
-  const firstSection = (id === 'cmd') ? document.getElementById('tab-cmd-nav') : document.getElementById('tab-ps-nav');
 
   if (firstSubtab) {
     document.querySelectorAll('.subtab').forEach(st => st.classList.remove('active'));
     firstSubtab.classList.add('active');
-  }
 
-  if (firstSection) {
-    firstSection.classList.add('active');
+    // Activar la sección de la primera subpestaña
+    const onclickAttr = firstSubtab.getAttribute('onclick');
+    if (onclickAttr) {
+      const match = onclickAttr.match(/showSubTab\('([^']+)'\)/);
+      if (match) {
+        const firstSection = document.getElementById('tab-' + match[1]);
+        if (firstSection) firstSection.classList.add('active');
+      }
+    }
   }
 
   const searchInput = document.getElementById('searchInput');

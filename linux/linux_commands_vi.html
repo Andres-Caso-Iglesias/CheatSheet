@@ -15,16 +15,16 @@
 <!--  CONTENEDOR PRINCIPAL-->
 <div class="main-container">
   <!-- BOTÓN VOLVER AL INICIO -->
-  <div style="margin-bottom: 1rem;">
+  <div class="back-wrapper">
     <a href="../index.html" class="back-link">
       &larr; Volver al inicio
     </a>
   </div>
 
   <!-- WRAPPER CENTRADO: contiene pestañas y búsqueda -->
-  <div style="text-align: center; margin-bottom: 1.5rem;">
+  <div>
     <!-- CONTENEDOR QUE SE AJUSTA AL ANCHO DE LAS PESTAÑAS -->
-    <div style="display: inline-flex; flex-direction: column;">
+    <div>
       <!-- PESTAÑAS DE NAVEGACIÓN: cada botón carga una sección distinta -->
       <div class="tabs">
         <button class="tab active" onclick="showTab('nav')">Navegación</button>
@@ -40,7 +40,7 @@
 
       <!-- CAJA DE BÚSQUEDA: mismo ancho que las pestañas (100% del contenedor) -->
       <input class="search-box" type="text" placeholder="Buscar comando o parámetro..." oninput="filterCmds(this.value)"
-        id="searchInput" style="width: 100%; margin-top: 0.75rem;" />
+        id="searchInput" />
     </div>
   </div>
 
@@ -356,16 +356,13 @@
 
     <!-- VI -->
     <div class="section" id="tab-vi" data-group="vi">
-      <div style="margin-bottom: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
+      <div class="vi-badges">
         <span class="mode-badge mode-normal">NORMAL</span>
-        <span style="font-size: 12px; color: var(--color-text-secondary); align-self: center;">modo por defecto al abrir
-          vi</span>
+        <span class="vi-badge-text">modo por defecto al abrir vi</span>
         <span class="mode-badge mode-insert">INSERT</span>
-        <span style="font-size: 12px; color: var(--color-text-secondary); align-self: center;">para escribir
-          texto</span>
+        <span class="vi-badge-text">para escribir texto</span>
         <span class="mode-badge mode-cmd">COMMAND</span>
-        <span style="font-size: 12px; color: var(--color-text-secondary); align-self: center;">para guardar, salir,
-          buscar</span>
+        <span class="vi-badge-text">para guardar, salir, buscar</span>
       </div>
       <div class="vi-grid">
         <div class="vi-card">
@@ -452,21 +449,15 @@
 
     <!-- NANO -->
     <div class="section" id="tab-nano" data-group="nano">
-      <div style="margin-bottom: 14px; display: flex; gap: 8px; flex-wrap: wrap; position: relative;">
-        <span style="font-size: 12px; color: var(--color-text-secondary); align-self: center; font-style: italic;">
+      <div class="vi-badges vi-badges--relative">
+        <span class="vi-badge-text vi-badge-text--italic">
           Editor de texto básico (solo para emergencias)
         </span>
         <!-- MARCA DE AGUA GRACIOSA -->
-        <div
-          style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 5rem; font-weight: 900; color: rgba(239, 68, 68, 0.25); pointer-events: none; white-space: nowrap; z-index: 10;">
-          NO USAR
-        </div>
-        <div
-          style="position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 2rem; font-weight: 700; color: rgba(239, 68, 68, 0.3); pointer-events: none; white-space: nowrap; z-index: 10;">
-          ni aunque sea tu última opción
-        </div>
+        <div class="nano-watermark">NO USAR</div>
+        <div class="nano-watermark-sub">ni aunque sea tu última opción</div>
       </div>
-      <div class="vi-grid" style="position: relative; z-index: 1;">
+      <div class="vi-grid nano-container">
         <div class="vi-card">
           <div class="vi-card-title">Comandos básicos</div>
           <div class="vi-row"><span class="vi-key">nano archivo</span><span class="vi-desc">abrir archivo en nano</span>

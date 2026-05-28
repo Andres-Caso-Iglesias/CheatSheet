@@ -50,6 +50,65 @@ body {
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 .hidden { display: none !important; }
 
+/* Back button wrapper */
+.back-wrapper {
+  margin-bottom: var(--space-md);
+}
+
+/* VI mode badges row */
+.vi-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.vi-badges--relative {
+  position: relative;
+}
+
+.vi-badge-text {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  align-self: center;
+}
+
+.vi-badge-text--italic {
+  font-style: italic;
+}
+
+/* Nano watermark */
+.nano-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 5rem;
+  font-weight: 900;
+  color: rgba(239, 68, 68, 0.25);
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.nano-watermark-sub {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 2rem;
+  font-weight: 700;
+  color: rgba(239, 68, 68, 0.3);
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.nano-container {
+  position: relative;
+  z-index: 1;
+}
+
 
 /* ============================================
    MOBILE BASE (< 640px)
@@ -72,11 +131,12 @@ body.index-page {
 }
 
 .main-title {
-  font-size: 1.75rem;
+  font-size: 2.20rem;
   font-weight: 800;
   color: var(--color-text);
   letter-spacing: -0.03em;
   margin-bottom: var(--space-sm);
+  text-align: center;
 }
 
 .subtitle {
@@ -84,6 +144,7 @@ body.index-page {
   color: var(--color-text-muted);
   margin-bottom: var(--space-xl);
   line-height: 1.5;
+  display: none;
 }
 
 /* Cards: 1 column on mobile */
@@ -118,13 +179,18 @@ body.index-page {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-primary);
-  background: var(--color-primary-light);
   padding: 2px 8px;
   border-radius: 100px;
   display: inline-block;
   align-self: flex-start;
 }
+
+/* Label colors by category */
+.label-sistema { color: #0369a1; background: #e0f2fe; }
+.label-red { color: #047857; background: #ecfdf5; }
+.label-seguridad { color: #b91c1c; background: #fef2f2; }
+.label-terminal { color: #7c3aed; background: #f5f3ff; }
+.label-web { color: #c2410c; background: #fff7ed; }
 
 .card-title {
   font-size: 1.1rem;
@@ -147,39 +213,51 @@ body.index-page {
 
 .footer a { color: var(--color-primary); text-decoration: none; }
 
-/* --- CHEAT SHEET PAGES --- */
-.main-container {
-  max-width: 100%;
-  margin: 0 auto;
-  background: transparent;
-  border-radius: 0;
-  box-shadow: none;
-  border: none;
-  padding: 0;
-}
-
-.main-container .main-title {
-  font-size: 1.5rem;
+/* Legend */
+.legend {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: var(--space-xl);
   margin-bottom: var(--space-md);
 }
 
+/* --- CHEAT SHEET PAGES --- */
+.main-container {
+  max-width: 100% !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.main-container .main-title {
+  font-size: 2.10rem;
+  margin-bottom: var(--space-md);
+  text-align: center;
+}
+
 .back-link {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   color: var(--color-text-muted);
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 2.2rem;
   font-weight: 500;
-  padding: 12px;
+  padding: 4px 12px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   cursor: pointer;
   transition: all 0.15s;
   margin-bottom: var(--space-md);
-  width: 100%;
+  margin-left: var(--space-md);
+  margin-right: var(--space-md);
 }
 
 .back-link:hover { background: var(--color-border-light); color: var(--color-text); }
@@ -191,8 +269,10 @@ body.index-page {
   flex-wrap: nowrap;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  justify-content: flex-start;
+  justify-content: center;
   margin-bottom: var(--space-sm);
+  margin-left: var(--space-md);
+  margin-right: var(--space-md);
   padding-bottom: var(--space-xs);
   scrollbar-width: none;
 }
@@ -205,7 +285,7 @@ body.index-page {
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 1.2rem;
   font-weight: 500;
   color: var(--color-text-muted);
   transition: all 0.15s;
@@ -223,14 +303,16 @@ body.index-page {
   flex-wrap: nowrap;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
   margin-bottom: var(--space-md);
+  margin-left: var(--space-md);
+  margin-right: var(--space-md);
   padding-bottom: var(--space-xs);
   scrollbar-width: none;
 }
 .subtabs::-webkit-scrollbar { display: none; }
-.subtabs .inner { display: flex; gap: 6px; width: auto; max-width: none; }
+.subtabs .inner { display: flex; gap: 6px; width: auto; max-width: none; justify-content: center; }
 
 .subtab {
   flex: 0 0 auto;
@@ -239,7 +321,7 @@ body.index-page {
   border: 1px solid var(--color-border-light);
   background: var(--color-surface);
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 1.1rem;
   font-weight: 500;
   color: var(--color-text-faint);
   transition: all 0.15s;
@@ -252,11 +334,13 @@ body.index-page {
 
 /* Search */
 .search-box {
-  width: 100%;
-  padding: 10px 14px;
+  width: calc(100% - 32px);
+  margin-left: var(--space-md);
+  margin-right: var(--space-md);
+  padding: 12px 16px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  font-size: 0.85rem;
+  font-size: 1.2rem;
   margin-bottom: var(--space-md);
   background: var(--color-surface);
   color: var(--color-text);
@@ -271,7 +355,15 @@ body.index-page {
 .section.active { display: block; }
 
 /* Commands: stacked on mobile */
-.cmd-group { margin-bottom: var(--space-lg); }
+.cmd-group {
+  margin-bottom: var(--space-lg);
+  margin-left: var(--space-md);
+  margin-right: var(--space-md);
+}
+
+#allCmds {
+  font-size: 2.20rem;
+}
 
 .group-title {
   font-size: 0.75rem;
@@ -295,24 +387,24 @@ body.index-page {
 
 .cmd-name {
   font-family: var(--font-mono);
-  font-size: 0.9rem;
+  font-size: inherit;
   font-weight: 500;
   color: var(--color-primary);
   background: var(--color-primary-light);
-  padding: 6px 12px;
+  padding: 8px 14px;
   border-radius: var(--radius-sm);
   word-break: break-word;
   align-self: flex-start;
 }
 
 .cmd-desc {
-  font-size: 0.9rem;
+  font-size: inherit;
   color: var(--color-text-muted);
   line-height: 1.6;
 }
 
 .cmd-purpose {
-  font-size: 0.7rem;
+  font-size: 0.6em;
   font-weight: 700;
   color: var(--color-text-faint);
   text-transform: uppercase;
@@ -322,10 +414,10 @@ body.index-page {
 
 .param {
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.7em;
   font-weight: 500;
   background: var(--color-border-light);
-  padding: 2px 6px;
+  padding: 3px 8px;
   border-radius: 4px;
   color: var(--color-text);
   margin-right: 2px;
@@ -341,6 +433,8 @@ body.index-page {
   -webkit-overflow-scrolling: touch;
   gap: var(--space-md);
   padding-bottom: var(--space-sm);
+  margin-left: var(--space-md);
+  margin-right: var(--space-md);
   scrollbar-width: none;
 }
 .vi-grid::-webkit-scrollbar { display: none; }
@@ -355,7 +449,7 @@ body.index-page {
 }
 
 .vi-card-title {
-  font-size: 0.75rem;
+  font-size: 0.75em;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -371,7 +465,7 @@ body.index-page {
   align-items: baseline;
   padding: 5px 0;
   border-bottom: 1px solid var(--color-border-light);
-  font-size: 0.85rem;
+  font-size: 0.8em;
   gap: var(--space-sm);
 }
 .vi-row:last-child { border-bottom: none; }
@@ -380,17 +474,17 @@ body.index-page {
   font-family: var(--font-mono);
   color: var(--color-primary);
   background: var(--color-primary-light);
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: 0.75em;
   font-weight: 500;
   flex-shrink: 0;
 }
 
-.vi-desc { color: var(--color-text-muted); text-align: right; font-size: 0.8rem; }
+.vi-desc { color: var(--color-text-muted); text-align: right; font-size: 0.75em; }
 
 /* Mode badges */
-.mode-badge { display: inline-block; padding: 4px 12px; border-radius: 100px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-sm); }
+.mode-badge { display: inline-block; padding: 4px 12px; border-radius: 100px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-sm); margin-left: var(--space-md); }
 .mode-normal { background: var(--color-primary-light); color: var(--color-primary); }
 .mode-insert { background: #ecfdf5; color: #059669; }
 .mode-cmd { background: #fffbeb; color: #d97706; }
@@ -405,6 +499,8 @@ body.index-page {
   body.index-page { padding: var(--space-2xl); }
 
   .container { max-width: 900px; }
+
+  .subtitle { display: block; }
 
   .main-title { font-size: 2rem; }
   .subtitle { font-size: 1rem; }
@@ -421,13 +517,19 @@ body.index-page {
     padding: var(--space-xl);
   }
 
-  .back-link { justify-content: flex-start; width: auto; margin-bottom: var(--space-lg); }
+  .back-link { justify-content: flex-start; margin-bottom: var(--space-lg); font-size: 0.9rem; padding: 4px 10px; }
 
   .tabs, .tabs-main { flex-wrap: wrap; justify-content: center; overflow-x: visible; }
   .subtabs { flex-wrap: wrap; justify-content: center; overflow-x: visible; }
   .subtabs .inner { max-width: 760px; width: min(100%, 760px); }
 
-  /* Commands: 2-column grid */
+  #allCmds { font-size: 1rem; }
+
+  .tab, .tab-main { font-size: 0.9rem; padding: 8px 16px; }
+  .subtab { font-size: 0.8rem; padding: 6px 12px; }
+  .search-box { font-size: 0.9rem; padding: 10px 14px; width: 100%; margin-left: 0; margin-right: 0; }
+
+  /* Commands: 2-column grid, smaller fonts */
   .cmd-row {
     display: grid;
     grid-template-columns: minmax(140px, 30%) 1fr;
@@ -435,12 +537,23 @@ body.index-page {
     padding: 8px 0;
   }
 
+  .group-title { font-size: 0.75rem; }
+  .cmd-name { font-size: 0.85rem; padding: 5px 10px; }
+  .cmd-desc { font-size: 0.85rem; }
+  .cmd-purpose { font-size: 0.7rem; }
+  .param { font-size: 0.75rem; padding: 2px 6px; }
+
   .vi-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     overflow-x: visible;
   }
   .vi-card { min-width: auto; }
+  .vi-card-title { font-size: 0.75rem; }
+  .vi-row { font-size: 0.8rem; }
+  .vi-key { font-size: 0.75rem; padding: 2px 8px; }
+  .vi-desc { font-size: 0.75rem; }
+  .mode-badge { font-size: 0.7rem; }
 }
 
 
@@ -462,6 +575,13 @@ body.index-page {
     max-width: 1024px;
     padding: var(--space-2xl);
   }
+
+  .back-link { font-size: 0.85rem; padding: 4px 10px; }
+  .tab, .tab-main { font-size: 0.85rem; }
+  .subtab { font-size: 0.8rem; }
+  .search-box { font-size: 0.85rem; }
+
+  #allCmds { font-size: 1rem; }
 
   .cmd-row {
     grid-template-columns: minmax(180px, 35%) 1fr;
@@ -487,4 +607,71 @@ body.index-page {
   }
 
   .vi-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+
+/* ============================================
+   SMALL MOBILE (< 450px)
+   Extra large fonts for tiny screens
+   ============================================ */
+@media (max-width: 449px) {
+  .main-title { font-size: 3rem; }
+  .subtitle { font-size: 1.8rem; }
+  .card-title { font-size: 2.2rem; }
+  .card-desc { font-size: 1.6rem; }
+  .card-label { font-size: 1.2rem; }
+
+  .back-link { font-size: 1.8rem; padding: 4px 14px; }
+  .tab, .tab-main { font-size: 1.8rem; padding: 14px 22px; }
+  .subtab { font-size: 1.6rem; padding: 12px 18px; }
+  .search-box { font-size: 1.8rem; padding: 14px 18px; }
+
+  .main-container .main-title { font-size: 2.6rem; }
+
+  .group-title { font-size: 1.5rem; }
+  .cmd-name { font-size: 1.8rem; padding: 10px 16px; }
+  .cmd-desc { font-size: 1.8rem; }
+  .cmd-purpose { font-size: 1.4rem; }
+  .param { font-size: 1.6rem; padding: 4px 10px; }
+
+  .vi-card-title { font-size: 1.5rem; }
+  .vi-row { font-size: 1.7rem; }
+  .vi-key { font-size: 1.6rem; padding: 5px 14px; }
+  .vi-desc { font-size: 1.6rem; }
+
+  .mode-badge { font-size: 1.4rem; padding: 8px 16px; }
+  .footer { font-size: 1.5rem; }
+}
+
+
+/* ============================================
+   LARGE DESKTOP (≥ 2500px)
+   Bigger fonts for large screens
+   ============================================ */
+@media (min-width: 2500px) {
+  .main-title { font-size: 3.5rem; }
+  .subtitle { font-size: 1.6rem; }
+  .card-title { font-size: 1.8rem; }
+  .card-desc { font-size: 1.3rem; }
+
+  .back-link { font-size: 1.3rem; padding: 4px 12px; }
+  .tab, .tab-main { font-size: 1.3rem; padding: 12px 24px; }
+  .subtab { font-size: 1.2rem; padding: 10px 18px; }
+  .search-box { font-size: 1.3rem; padding: 14px 18px; }
+
+  .main-container .main-title { font-size: 2.6rem; }
+
+  .group-title { font-size: 1.1rem; }
+  .cmd-name { font-size: 1.3rem; padding: 8px 16px; }
+  .cmd-desc { font-size: 1.3rem; }
+  .cmd-purpose { font-size: 1rem; }
+  .param { font-size: 1.2rem; padding: 4px 10px; }
+
+  .vi-card-title { font-size: 1.1rem; }
+  .vi-row { font-size: 1.25rem; }
+  .vi-key { font-size: 1.2rem; padding: 5px 14px; }
+  .vi-desc { font-size: 1.2rem; }
+
+  .mode-badge { font-size: 1rem; padding: 6px 16px; }
+  .footer { font-size: 1.15rem; }
 }

@@ -1,0 +1,261 @@
+<!--
+  HOJA DE REFERENCIA: Tmux - Terminal Multiplexer
+  ================================================
+  Este documento es una cheat sheet interactiva con pestañas y búsqueda.
+-->
+
+<link rel="stylesheet" href="../styles.css" />
+
+<!-- TÍTULO VISIBLE CENTRADO -->
+<h1 class="main-title">Tmux</h1>
+
+<!-- TÍTULO ACCESIBLE (solo para lectores de pantalla) -->
+<h2 class="sr-only">Referencia interactiva de comandos Tmux - Terminal Multiplexer</h2>
+
+<!--  CONTENEDOR PRINCIPAL-->
+<div class="main-container">
+  <!-- BOTÓN VOLVER AL INICIO -->
+  <div class="back-wrapper">
+    <a href="../index.html" class="back-link">
+      &larr; Volver al inicio
+    </a>
+  </div>
+
+  <!-- PESTAÑAS PRINCIPALES -->
+  <div class="tabs-main">
+    <button class="tab-main active" onclick="showMainTab('sessions')">Sesiones</button>
+    <button class="tab-main" onclick="showMainTab('windows')">Ventanas</button>
+    <button class="tab-main" onclick="showMainTab('panes')">Paneles</button>
+    <button class="tab-main" onclick="showMainTab('copy')">Copy Mode</button>
+    <button class="tab-main" onclick="showMainTab('misc')">Misc</button>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Sesiones -->
+  <div id="subtabs-sessions" class="subtabs">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('sess-create')">Crear/Gestionar</button>
+      <button class="subtab" onclick="showSubTab('sess-nav')">Navegación</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Ventanas -->
+  <div id="subtabs-windows" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('win-create')">Crear/Gestionar</button>
+      <button class="subtab" onclick="showSubTab('win-nav')">Navegación</button>
+      <button class="subtab" onclick="showSubTab('win-layout')">Layouts</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Paneles -->
+  <div id="subtabs-panes" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('pane-split')">Crear/Dividir</button>
+      <button class="subtab" onclick="showSubTab('pane-nav')">Navegación</button>
+      <button class="subtab" onclick="showSubTab('pane-resize')">Redimensionar</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Copy Mode -->
+  <div id="subtabs-copy" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('copy-enter')">Entrar/Salir</button>
+      <button class="subtab" onclick="showSubTab('copy-nav')">Navegar</button>
+      <button class="subtab" onclick="showSubTab('copy-mark')">Selección</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Misc -->
+  <div id="subtabs-misc" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('misc-config')">Configuración</button>
+      <button class="subtab" onclick="showSubTab('misc-status')">Status Bar</button>
+    </div>
+  </div>
+
+  <!-- CAJA DE BÚSQUEDA -->
+  <input class="search-box" type="text" placeholder="Buscar comando o parámetro..." oninput="filterCmds(this.value)"
+    id="searchInput" />
+
+  <div id="allCmds">
+
+    <!-- #################### SESIONES #################### -->
+    <!-- SESIONES - CREAR/GESTIONAR -->
+    <div class="section active" id="tab-sess-create" data-group="sess-create">
+      <div class="cmd-group">
+        <div class="group-title">Crear y gestionar sesiones</div>
+        <div class="cmd-row"><span class="cmd-name">tmux</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Crea una nueva sesión tmux con nombre por defecto (0, 1, 2...). Si ya existe una sesión, crea otra con el siguiente número.</span></div>
+        <div class="cmd-row"><span class="cmd-name">tmux new -s nombre</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Crea una nueva sesión con un nombre específico. Más fácil de recordar que los números por defecto.<br><span class="param">-d</span> crear en background (sin adjuntar)</span></div>
+        <div class="cmd-row"><span class="cmd-name">tmux ls</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Lista todas las sesiones tmux activas con su nombre y número de clientes conectados.</span></div>
+        <div class="cmd-row"><span class="cmd-name">tmux kill-session -t nombre</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Elimina una sesión específica por nombre. Cierra todas las ventanas y paneles de esa sesión.<br><span class="param">-a</span> matar todas excepto la especificada</span></div>
+        <div class="cmd-row"><span class="cmd-name">tmux kill-server</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Elimina el servidor tmux y todas sus sesiones. Útil para limpiar todo de una vez.</span></div>
+      </div>
+    </div>
+
+    <!-- SESIONES - NAVEGACIÓN -->
+    <div class="section" id="tab-sess-nav" data-group="sess-nav">
+      <div class="cmd-group">
+        <div class="group-title">Navegación entre sesiones</div>
+        <div class="cmd-row"><span class="cmd-name">tmux a</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Se adjunta a la última sesión activa. Si hay múltiples, elige la más reciente.</span></div>
+        <div class="cmd-row"><span class="cmd-name">tmux a -t nombre</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Se adjunta a una sesión específica por nombre o número.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b d</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Se desadjunta de la sesión actual (la sesión sigue corriendo en background). Vuelves al shell normal.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b s</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra el listado de sesiones para navegar entre ellas. Usa las flechas para seleccionar.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b (</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia a la sesión anterior.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b )</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia a la sesión siguiente.</span></div>
+      </div>
+    </div>
+
+    <!-- #################### VENTANAS #################### -->
+    <!-- VENTANAS - CREAR/GESTIONAR -->
+    <div class="section" id="tab-win-create" data-group="win-create">
+      <div class="cmd-group">
+        <div class="group-title">Crear y gestionar ventanas</div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b c</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Crea una nueva ventana en la sesión actual. Se numera automáticamente.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b ,</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Renombra la ventana actual. Escribe el nuevo nombre y presiona Enter.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b &</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cierra la ventana actual (con confirmación). También puedes usar exit.</span></div>
+        <div class="cmd-row"><span class="cmd-name">exit</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cierra la ventana actual desde la línea de comandos. Si es la última ventana, cierra la sesión.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b w</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra el listado de ventanas para navegar entre ellas con las flechas.</span></div>
+      </div>
+    </div>
+
+    <!-- VENTANAS - NAVEGACIÓN -->
+    <div class="section" id="tab-win-nav" data-group="win-nav">
+      <div class="cmd-group">
+        <div class="group-title">Navegación entre ventanas</div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b n</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia a la siguiente ventana (por número).</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b p</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia a la ventana anterior (por número).</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b 0-9</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia directamente a la ventana número 0-9.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b l</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Alterna entre la ventana actual y la última ventana activa.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b f</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca una ventana por nombre. Escribe el nombre y presiona Enter.</span></div>
+      </div>
+    </div>
+
+    <!-- VENTANAS - LAYOUTS -->
+    <div class="section" id="tab-win-layout" data-group="win-layout">
+      <div class="cmd-group">
+        <div class="group-title">Layouts de ventanas</div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b Space</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Alterna entre los layouts predefinidos de paneles.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b Alt+1</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Layout horizontal (paneles uno encima del otro).</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b Alt+2</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Layout vertical (paneles lado a lado).</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b Alt+3</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Layout principal + panel principal a la izquierda.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b z</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Zoom del panel actual (maximiza). Vuelve a pulsar para restaurar.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b {</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Intercambia el panel actual con el anterior.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b }</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Intercambia el panel actual con el siguiente.</span></div>
+      </div>
+    </div>
+
+    <!-- #################### PANELES #################### -->
+    <!-- PANELES - CREAR/DIVIDIR -->
+    <div class="section" id="tab-pane-split" data-group="pane-split">
+      <div class="cmd-group">
+        <div class="group-title">Crear y dividir paneles</div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b %</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Divide el panel actual verticalmente (panel izquierdo y derecho).</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b "</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Divide el panel actual horizontalmente (panel superior e inferior).</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b x</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cierra el panel actual (con confirmación).</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b !</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Convierte el panel actual en una ventana (rompe el panel).</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b q</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra los números de los paneles brevemente. Pulsa un número para cambiar a ese panel.</span></div>
+      </div>
+    </div>
+
+    <!-- PANELES - NAVEGACIÓN -->
+    <div class="section" id="tab-pane-nav" data-group="pane-nav">
+      <div class="cmd-group">
+        <div class="group-title">Navegación entre paneles</div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b o</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia al siguiente panel.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b Alt+o</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia al panel anterior.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b ;</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia al último panel activo.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b方向键</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Navega entre paneles con las flechas del cursor (si está configurado).</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b {</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Mueve el panel actual a la izquierda.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b }</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Mueve el panel actual a la derecha.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b Space</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Alterna entre los layouts predefinidos de paneles.</span></div>
+      </div>
+    </div>
+
+    <!-- PANELES - REDIMENSIONAR -->
+    <div class="section" id="tab-pane-resize" data-group="pane-resize">
+      <div class="cmd-group">
+        <div class="group-title">Redimensionar paneles</div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b Ctrl+方向键</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Redimensiona el panel actual en la dirección de la flecha (1 celda por vez).</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b Alt+方向键</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Redimensiona el panel actual en la dirección de la flecha (5 celdas por vez).</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b Alt+1</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Distribuye los paneles en layout horizontal igualado.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b Alt+2</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Distribuye los paneles en layout vertical igualado.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b Alt+3</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Distribuye los paneles con el principal más grande a la izquierda.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b Space</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Alterna entre los layouts predefinidos.</span></div>
+      </div>
+    </div>
+
+    <!-- #################### COPY MODE #################### -->
+    <!-- COPY MODE - ENTRAR/SALIR -->
+    <div class="section" id="tab-copy-enter" data-group="copy-enter">
+      <div class="cmd-group">
+        <div class="group-title">Entrar y salir de Copy Mode</div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b [</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Entra en Copy Mode. Puedes navegar por el historial de la terminal con las flechas.</span></div>
+        <div class="cmd-row"><span class="cmd-name">q o Esc</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Sale de Copy Mode sin copiar nada.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Enter</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> En Copy Mode, copia el texto seleccionado y sale.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b ]</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Pega el texto copiado del buffer de tmux.</span></div>
+      </div>
+    </div>
+
+    <!-- COPY MODE - NAVEGAR -->
+    <div class="section" id="tab-copy-nav" data-group="copy-nav">
+      <div class="cmd-group">
+        <div class="group-title">Navegar en Copy Mode</div>
+        <div class="cmd-row"><span class="cmd-name">h j k l</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Navega izquierda, abajo, arriba, derecha (como vim).</span></div>
+        <div class="cmd-row"><span class="cmd-name">w / b</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Salta palabra adelante / atrás.</span></div>
+        <div class="cmd-row"><span class="cmd-name">0 / $</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Inicio / fin de línea.</span></div>
+        <div class="cmd-row"><span class="cmd-name">g / G</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Inicio / fin del historial.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+f / Ctrl+b</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Página siguiente / anterior.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Space</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Marca el inicio de la selección.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Enter</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Copia la selección y sale de Copy Mode.</span></div>
+        <div class="cmd-row"><span class="cmd-name">q</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cancela la selección y sale.</span></div>
+      </div>
+    </div>
+
+    <!-- COPY MODE - SELECCIÓN -->
+    <div class="section" id="tab-copy-mark" data-group="copy-mark">
+      <div class="cmd-group">
+        <div class="group-title">Selección avanzada en Copy Mode</div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+v</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Modo de selección en bloque (columna).</span></div>
+        <div class="cmd-row"><span class="cmd-name">V</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Selecciona la línea completa actual.</span></div>
+        <div class="cmd-row"><span class="cmd-name">y</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Copia la selección (modo normal, sin Enter).</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+a</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ve al inicio de la línea.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+e</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ve al final de la línea.</span></div>
+        <div class="cmd-row"><span class="cmd-name">n / N</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Siguiente / anterior resultado de búsqueda.</span></div>
+        <div class="cmd-row"><span class="cmd-name">? / /</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca hacia atrás / adelante en Copy Mode.</span></div>
+      </div>
+    </div>
+
+    <!-- #################### MISC #################### -->
+    <!-- MISC - CONFIGURACIÓN -->
+    <div class="section" id="tab-misc-config" data-group="misc-config">
+      <div class="cmd-group">
+        <div class="group-title">Configuración y utilidades</div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b :</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Abre el prompt de comandos de tmux. Puedes ejecutar cualquier comando tmux desde ahí.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b ?</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra todos los atajos de teclado configurados.</span></div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b t</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra el reloj (timestamp) en el panel actual.</span></div>
+        <div class="cmd-row"><span class="cmd-name">tmux source ~/.tmux.conf</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Recarga la configuración de tmux sin reiniciar el servidor.</span></div>
+        <div class="cmd-row"><span class="cmd-name">~/.tmux.conf</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Archivo de configuración principal de tmux. Define prefix, atajos, colores, etc.</span></div>
+        <div class="cmd-row"><span class="cmd-name">set -g prefix C-a</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia el prefix de Ctrl+b a Ctrl+a (común en configs personales).</span></div>
+        <div class="cmd-row"><span class="cmd-name">set -g mouse on</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Habilita el uso del ratón en tmux (selección, scroll, cambio de paneles).</span></div>
+      </div>
+    </div>
+
+    <!-- MISC - STATUS BAR -->
+    <div class="section" id="tab-misc-status" data-group="misc-status">
+      <div class="cmd-group">
+        <div class="group-title">Status Bar y personalización</div>
+        <div class="cmd-row"><span class="cmd-name">Ctrl+b :</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Abre el prompt de tmux para comandos de configuración.</span></div>
+        <div class="cmd-row"><span class="cmd-name">set -g status-position top</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Mueve la status bar arriba (por defecto).</span></div>
+        <div class="cmd-row"><span class="cmd-name">set -g status-position bottom</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Mueve la status bar abajo.</span></div>
+        <div class="cmd-row"><span class="cmd-name">set -g status-style bg=colour235</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambia el color de fondo de la status bar.</span></div>
+        <div class="cmd-row"><span class="cmd-name">set -g status-left "#S"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra solo el nombre de la sesión en el lado izquierdo.</span></div>
+        <div class="cmd-row"><span class="cmd-name">set -g status-right "#H"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra el nombre del host en el lado derecho.</span></div>
+        <div class="cmd-row"><span class="cmd-name">setw -g window-status-current-style bold</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Pone en negrita la ventana actual en la status bar.</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!--  JAVASCRIPT: lógica unificada -->
+<script src="../scripts.js"></script>
