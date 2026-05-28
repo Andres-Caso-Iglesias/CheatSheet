@@ -1,49 +1,75 @@
-# CheatSheet
+# Cheat Sheets - Comandos
 
-Este repositorio, desarrollado por **Andres-Caso-Iglesias**, funciona como una biblioteca centralizada de hojas de trucos (cheat sheets) diseñadas para facilitar el acceso rápido a comandos y configuraciones esenciales en diversos entornos tecnológicos.
+Biblioteca centralizada de hojas de referencia (cheat sheets) enfocada en ciberseguridad, administracion de sistemas y herramientas de red. Disenada para acceso rapido a comandos esenciales sin necesidad de navegar por multiples fuentes.
 
-## Descripción del Proyecto
+## Descripcion
 
-El objetivo de este proyecto es proporcionar una interfaz web sencilla y eficiente donde se agrupan guías de referencia para administradores de sistemas y desarrolladores. La estructura permite una consulta ágil de información técnica crítica sin necesidad de navegar por múltiples fuentes externas.
+Proyecto web estatico que agrupa guias de referencia interactivas con pestanas, busqueda en tiempo real y diseno responsive. Cada cheat sheet cubre un tema especifico con comandos organizados por categorias, sus parametros mas usados y una descripcion concisa.
 
-## Áreas de Contenido
+## Contenido
 
-El repositorio está organizado en tres categorías principales que cubren los pilares fundamentales del entorno de trabajo de un desarrollador:
+### Sistemas Operativos
+- **Linux** (`linux/`): Comandos de terminal, gestion de archivos, permisos, procesos, red, manipulacion de texto, herramientas forenses y esteganografia, editor vi/vim y nano
+- **Windows** (`windows/`): CMD y PowerShell - navegacion, archivos, procesos, red, usuarios y grupos
 
-*   **Linux**: Documentación y guías enfocadas en sistemas operativos basados en Unix, sus comandos de terminal y herramientas de análisis forense y esteganografía.
-*   **Web**: Referencias específicas para el desarrollo frontend y tecnologías relacionadas con la web.
-*   **Windows**: Atajos, herramientas y configuraciones para el ecosistema de Microsoft.
+### Herramientas de Red y Seguridad
+- **Nmap** (`nmap/`): Escaneo de red, descubrimiento de hosts, puertos, servicios, evasion de firewall y scripts NSE
+- **Metasploit** (`metasploit/`): msfconsole, exploits, msfvenom, Meterpreter, post-explotacion y evasión
+- **Hydra** (`hydra/`): Fuerza bruta de credenciales, formularios web, servicios remotos y bases de datos
+- **Telnet** (`telnet/`): Conexion, debug, testing de puertos e interaccion manual con protocolos
 
-## Tecnologías Utilizadas
+### Web
+- **Google Dorks** (`web/`): Busquedas web avanzadas para investigacion y descubrimiento de informacion
 
-La plataforma está construida utilizando estándares web básicos para garantizar la máxima compatibilidad y velocidad de carga:
+## Caracteristicas
 
-*   **HTML (90.4%)**: Utilizado para la estructura de las hojas de trucos y la organización del contenido.
-*   **CSS (9.6%)**: Empleado para la presentación visual y la optimización de la disposición de los elementos en pantalla.
+- **Diseno responsive**: Se adapta a movil, tablet, PC y pantallas ultrawide
+- **Busqueda en tiempo real**: Filtra comandos y parametros al instante
+- **Pestanas organizadas**: Navegacion por categorias dentro de cada cheat sheet
+- **Sin dependencias**: HTML, CSS y JavaScript vanilla - maxima compatibilidad
+- **Accesibilidad**: Incluye atributos ARIA y clases sr-only para lectores de pantalla
 
-## Estructura del Repositorio
+## Estructura
 
-El proyecto mantiene una jerarquía de archivos clara para facilitar su mantenimiento y escalabilidad:
+```
+comandos/
+├── index.html          # Pagina principal con acceso a todas las cheat sheets
+├── styles.css          # Estilos globales y responsive
+├── scripts.js          # Logica de pestanas y busqueda
+├── linux/
+│   └── linux_commands_vi.html
+├── windows/
+│   └── windows_commands.html
+├── nmap/
+│   └── nmap_commands.html
+├── metasploit/
+│   └── metasploit_commands.html
+├── hydra/
+│   └── hydra_commands.html
+├── telnet/
+│   └── telnet_commands.html
+└── web/
+    └── google_dorks.html
+```
 
-*   **/linux**: Directorio que contiene los recursos de Linux.
-*   **/web**: Directorio que contiene las guías de desarrollo web.
-*   **/windows**: Directorio que contiene los manuales de Windows.
-*   **index.html**: El punto de entrada principal que conecta todas las secciones.
-*   **styles.css**: Hoja de estilos global que define la apariencia del sitio.
+## Tecnologias
 
-## Instrucciones de Uso
+- **HTML5**: Estructura semantica
+- **CSS3**: Variables CSS, Grid, Flexbox, media queries
+- **JavaScript**: Vanilla JS sin frameworks
 
-Para utilizar este recurso en un entorno local:
+## Uso
 
-1.  Descargue o clone el repositorio en su equipo.
-2.  Localice el archivo **index.html** en la raíz del proyecto.
-3.  Abra dicho archivo en cualquier navegador web moderno para visualizar las hojas de trucos.
+1. Clonar o descargar el repositorio
+2. Abrir `index.html` en cualquier navegador moderno
+3. Seleccionar la cheat sheet deseada
+4. Usar las pestanas para navegar por categorias
+5. Escribir en el buscador para filtrar comandos
 
-## Actualizaciones Recientes
+## Colaborar
 
-*   Se ha añadido una nueva sección de **Forense y Esteganografía** dentro del apartado de Linux, incorporando herramientas clave como `strings`, `exiftool`, `binwalk`, `steghide`, `stegseek` y `md5sum`.
-*   El proyecto ha sido actualizado para mejorar la **disposición de los elementos en pantalla** y el diseño visual, asegurando que la información sea legible en diferentes dispositivos y tamaños de monitor.
+Si quieres contribuir, visita el [repositorio en GitHub](https://github.com/Andres-Caso-Iglesias/CheatSheet).
 
-## Créditos
+## Creditos
 
-*   **Autor**: Andres-Caso-Iglesias
+- **Autor**: Andres-Caso-Iglesias
