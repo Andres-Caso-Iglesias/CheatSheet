@@ -1,0 +1,209 @@
+<!--
+  HOJA DE REFERENCIA: FFUF - Web Fuzzer
+  =======================================
+  Este documento es una cheat sheet interactiva con pestañas y búsqueda.
+-->
+
+<link rel="stylesheet" href="../styles.css" />
+
+<!-- TÍTULO VISIBLE CENTRADO -->
+<h1 class="main-title">FFUF</h1>
+
+<!-- TÍTULO ACCESIBLE (solo para lectores de pantalla) -->
+<h2 class="sr-only">Referencia interactiva de comandos FFUF - Web Fuzzer</h2>
+
+<!--  CONTENEDOR PRINCIPAL-->
+<div class="main-container">
+  <!-- BOTÓN VOLVER AL INICIO -->
+  <div class="back-wrapper">
+    <a href="../index.html" class="back-link">
+      &larr; Volver al inicio
+    </a>
+  </div>
+
+  <!-- PESTAÑAS PRINCIPALES -->
+  <div class="tabs-main">
+    <button class="tab-main active" onclick="showMainTab('basic')">Básico</button>
+    <button class="tab-main" onclick="showMainTab('wordlists')">Wordlists</button>
+    <button class="tab-main" onclick="showMainTab('filters')">Filtros</button>
+    <button class="tab-main" onclick="showMainTab('advanced')">Avanzado</button>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Básico -->
+  <div id="subtabs-basic" class="subtabs">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('basic-syntax')">Sintaxis</button>
+      <button class="subtab" onclick="showSubTab('basic-dir')">Directorios</button>
+      <button class="subtab" onclick="showSubTab('basic-param')">Parámetros</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Wordlists -->
+  <div id="subtabs-wordlists" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('wl-common')">Comunes</button>
+      <button class="subtab" onclick="showSubTab('wl-opts')">Opciones</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Filtros -->
+  <div id="subtabs-filters" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('filt-status')">Status Code</button>
+      <button class="subtab" onclick="showSubTab('filt-size')">Tamaño</button>
+      <button class="subtab" onclick="showSubTab('filt-words')">Palabras/Líneas</button>
+    </div>
+  </div>
+
+  <!-- PESTAÑAS SECUNDARIAS: Avanzado -->
+  <div id="subtabs-advanced" class="subtabs" style="display: none;">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('adv-auth')">Autenticación</button>
+      <button class="subtab" onclick="showSubTab('adv-proxy')">Proxy/Headers</button>
+      <button class="subtab" onclick="showSubTab('adv-recursion')">Recursión</button>
+    </div>
+  </div>
+
+  <!-- CAJA DE BÚSQUEDA -->
+  <input class="search-box" type="text" placeholder="Buscar comando o parámetro..." oninput="filterCmds(this.value)"
+    id="searchInput" />
+
+  <div id="allCmds">
+
+    <!-- #################### BÁSICO #################### -->
+    <!-- BÁSICO - SINTAXIS -->
+    <div class="section active" id="tab-basic-syntax" data-group="basic-syntax">
+      <div class="cmd-group">
+        <div class="group-title">Sintaxis básica (FFUF)</div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL -w wordlist</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Fuerza bruta de directorios/archivos en un servidor web. La URL debe contener FUZZ donde se insertará cada palabra de la wordlist.<br><span class="param">-u</span> URL objetivo · <span class="param">-w</span> wordlist a usar</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u http://target/FUZZ -w /usr/share/wordlists/dirb/common.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Fuerza bruta básica de directorios. Sustituye FUZZ por cada palabra de la wordlist common.txt.<br><span class="param">/usr/share/wordlists/dirb/common.txt</span> wordlist por defecto en Kali</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u http://target/?param=FUZZ -w /usr/share/wordlists/raft-small-words.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Fuerza bruta de parámetros GET. Prueba cada palabra como valor del parámetro.<br><span class="param">FUZZ</span> se sustituye en la posición del parámetro</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -h</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra ayuda completa con todas las opciones disponibles.<br><span class="param">ffuf -h</span> lista completa de flags</span></div>
+      </div>
+    </div>
+
+    <!-- BÁSICO - DIRECTORIOS -->
+    <div class="section" id="tab-basic-dir" data-group="basic-dir">
+      <div class="cmd-group">
+        <div class="group-title">Fuerza bruta de directorios y archivos</div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u http://target/FUZZ -w wordlist.txt -mc 200</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca directorios que devuelvan status 200 (OK). Filtra por código de respuesta.<br><span class="param">-mc 200</span> match status code 200</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u http://target/FUZZ -w wordlist.txt -mc 200,301,302</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca directorios con status 200, 301 y 302 (redirecciones).<br><span class="param">-mc 200,301,302</span> match múltiples códigos</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u http://target/FUZZ -w wordlist.txt -fc 404</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Filtra y oculta las respuestas con status 404 (Not Found).<br><span class="param">-fc 404</span> filter status code 404</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u http://target/FUZZ -w wordlist.txt -e .php,.html,.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Añade extensiones a cada palabra de la wordlist. PruebaFUZZ.php, FUZZ.html, FUZZ.txt.<br><span class="param">-e</span> extensiones a probar</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u http://target/FUZZ -w wordlist.txt -recursion -recursion-depth 2</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca directorios recursivamente. Si encuentra uno, busca dentro de él.<br><span class="param">-recursion</span> activar recursión · <span class="param">-recursion-depth</span> profundidad máxima</span></div>
+      </div>
+    </div>
+
+    <!-- BÁSICO - PARÁMETROS -->
+    <div class="section" id="tab-basic-param" data-group="basic-param">
+      <div class="cmd-group">
+        <div class="group-title">Fuerza bruta de parámetros</div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u http://target/?FUZZ=test -w wordlist.txt -mc 200</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Descubre parámetros GET ocultos. Prueba cada palabra como nombre de parámetro.<br><span class="param">FUZZ</span> se sustituye en la posición del parámetro</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u http://target/ -X POST -d 'FUZZ=test' -w wordlist.txt -mc 200</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Descubre parámetros POST. Envía cada palabra como nombre del campo.<br><span class="param">-X POST</span> método HTTP · <span class="param">-d</span> datos POST</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u http://target/?id=FUZZ -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt -mc 200</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Fuzzing de valores de parámetros. Prueba diferentes valores en el parámetro id.<br><span class="param">-w</span> wordlist de parámetros comunes</span></div>
+      </div>
+    </div>
+
+    <!-- #################### WORDLISTS #################### -->
+    <!-- WORDLISTS - COMUNES -->
+    <div class="section" id="tab-wl-common" data-group="wl-common">
+      <div class="cmd-group">
+        <div class="group-title">Wordlists recomendadas</div>
+        <div class="cmd-row"><span class="cmd-name">/usr/share/wordlists/dirb/common.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Wordlist básica de directorios comunes. Buen punto de partida para fuzzing rápido.<br><span class="param">~4600 palabras</span> · rápida pero limitada</span></div>
+        <div class="cmd-row"><span class="cmd-name">/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Wordlist media de DirBuster. Más completa que common.txt.<br><span class="param">~220000 palabras</span> · buen equilibrio velocidad/cobertura</span></div>
+        <div class="cmd-row"><span class="cmd-name">/usr/share/seclists/Discovery/Web-Content/raft-small-directories.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Raft small - directorios comunes encontrados en producción.<br><span class="param">~6200 palabras</span> · resultados reales</span></div>
+        <div class="cmd-row"><span class="cmd-name">/usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Raft large - la más completa para fuzzing exhaustivo.<br><span class="param">~62000 palabras</span> · lenta pero cubre todo</span></div>
+        <div class="cmd-row"><span class="cmd-name">/usr/share/seclists/Discovery/Web-Content/common.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Seclists common - alternativa a dirb common, actualizada.<br><span class="param">~4700 palabras</span> · buena para empezar</span></div>
+        <div class="cmd-row"><span class="cmd-name">/usr/share/seclists/Discovery/Web-Content/api/api-endpoints.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Wordlist específica para descubrir endpoints de APIs REST.<br><span class="param">~2400 palabras</span> · enfocada en APIs</span></div>
+      </div>
+    </div>
+
+    <!-- WORDLISTS - OPCIONES -->
+    <div class="section" id="tab-wl-opts" data-group="wl-opts">
+      <div class="cmd-group">
+        <div class="group-title">Opciones de wordlists</div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL -w wordlist.txt:FUZZ</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Asigna un nombre específico a la wordlist. Útil cuando usas múltiples wordlists.<br><span class="param">:FUZZ</span> nombre del placeholder</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL -w wordlist1.txt:FUZZ1 -w wordlist2.txt:FUZZ2</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Usa dos wordlists simultáneamente. Cada una con su placeholder.<br><span class="param">-w</span> se puede repetir para múltiples wordlists</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u http://target/FUZZ -w wordlist.txt -ic</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ignora comentarios en la wordlist (líneas que empiezan por #).<br><span class="param">-ic</span> ignore comments</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL -w wordlist.txt -fs 4242</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Filtra por tamaño de respuesta. Oculta respuestas de 4242 bytes.<br><span class="param">-fs</span> filter size</span></div>
+      </div>
+    </div>
+
+    <!-- #################### FILTROS #################### -->
+    <!-- FILTROS - STATUS CODE -->
+    <div class="section" id="tab-filt-status" data-group="filt-status">
+      <div class="cmd-group">
+        <div class="group-title">Filtros por código de estado</div>
+        <div class="cmd-row"><span class="cmd-name">-mc 200</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra solo respuestas con status 200 (OK). El filtro más básico y común.<br><span class="param">-mc</span> match code</span></div>
+        <div class="cmd-row"><span class="cmd-name">-mc 200,301,302,403</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra respuestas con múltiples códigos de estado.<br><span class="param">-mc</span> acepta lista separada por comas</span></div>
+        <div class="cmd-row"><span class="cmd-name">-fc 404</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Oculta respuestas con status 404 (Not Found). Elimina el ruido.<br><span class="param">-fc</span> filter code</span></div>
+        <div class="cmd-row"><span class="cmd-name">-fc 400,401,403,404,500,502,503</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Oculta todos los códigos de error comunes. Filtra agresivamente.<br><span class="param">-fc</span> filter code - múltiples valores</span></div>
+        <div class="cmd-row"><span class="cmd-name">-ac</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Auto-calibra los filtros. Detecta automáticamente el código de error más frecuente y lo filtra.<br><span class="param">-ac</span> auto-calibrate</span></div>
+      </div>
+    </div>
+
+    <!-- FILTROS - TAMAÑO -->
+    <div class="section" id="tab-filt-size" data-group="filt-size">
+      <div class="cmd-group">
+        <div class="group-title">Filtros por tamaño de respuesta</div>
+        <div class="cmd-row"><span class="cmd-name">-fs 0</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Oculta respuestas vacías (0 bytes). Útil para eliminar endpoints que no devuelven contenido.<br><span class="param">-fs</span> filter size</span></div>
+        <div class="cmd-row"><span class="cmd-name">-fs 4242</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Oculta todas las respuestas de 4242 bytes. Para filtrar un tamaño específico.<br><span class="param">-fs</span> filter size - valor exacto</span></div>
+        <div class="cmd-row"><span class="cmd-name">-fs 400-500</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Oculta respuestas con tamaño entre 400 y 500 bytes.<br><span class="param">-fs</span> filter size - rango</span></div>
+        <div class="cmd-row"><span class="cmd-name">-ms 100-200</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra solo respuestas con tamaño entre 100 y 200 bytes.<br><span class="param">-ms</span> match size</span></div>
+        <div class="cmd-row"><span class="cmd-name">-mc 200 -fs 0</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Combinación: muestra solo 200 pero oculta las respuestas vacías.<br><span class="param">-mc</span> + <span class="param">-fs</span> se pueden combinar</span></div>
+      </div>
+    </div>
+
+    <!-- FILTROS - PALABRAS/LÍNEAS -->
+    <div class="section" id="tab-filt-words" data-group="filt-words">
+      <div class="cmd-group">
+        <div class="group-title">Filtros por palabras y líneas</div>
+        <div class="cmd-row"><span class="cmd-name">-fw 10</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Oculta respuestas que contengan exactamente 10 palabras.<br><span class="param">-fw</span> filter words</span></div>
+        <div class="cmd-row"><span class="cmd-name">-fl 5</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Oculta respuestas que contengan exactamente 5 líneas.<br><span class="param">-fl</span> filter lines</span></div>
+        <div class="cmd-row"><span class="cmd-name">-mw 50</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra solo respuestas con 50 palabras.<br><span class="param">-mw</span> match words</span></div>
+        <div class="cmd-row"><span class="cmd-name">-ml 3</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Muestra solo respuestas con 3 líneas.<br><span class="param">-ml</span> match lines</span></div>
+        <div class="cmd-row"><span class="cmd-name">-ac -fs 0</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Auto-calibra + filtra vacías. Combo potente para reducir ruido automáticamente.<br><span class="param">-ac</span> auto-calibrate · <span class="param">-fs 0</span> filter size 0</span></div>
+      </div>
+    </div>
+
+    <!-- #################### AVANZADO #################### -->
+    <!-- AVANZADO - AUTENTICACIÓN -->
+    <div class="section" id="tab-adv-auth" data-group="adv-auth">
+      <div class="cmd-group">
+        <div class="group-title">Autenticación y headers</div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL -w wordlist.txt -H "Authorization: Bearer TOKEN"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Envía un header de autenticación con cada petición. Útil para APIs protegidas.<br><span class="param">-H</span> añadir header</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL -w wordlist.txt -H "Cookie: session=abc123"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Envía una cookie específica. Para fuzzing de áreas autenticadas.<br><span class="param">-H</span> header personalizado</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL -w wordlist.txt -X POST -d 'user=admin&pass=FUZZ'</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Fuerza bruta de contraseñas via POST. FUZZ se sustituye en el campo pass.<br><span class="param">-X POST</span> método · <span class="param">-d</span> datos</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL -w wordlist.txt -H "Content-Type: application/json" -X POST -d '{"user":"admin","pass":"FUZZ"}'</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Fuerza bruta con JSON body. Útil para APIs REST.<br><span class="param">-H "Content-Type: application/json"</span> tipo de contenido</span></div>
+      </div>
+    </div>
+
+    <!-- AVANZADO - PROXY/HEADERS -->
+    <div class="section" id="tab-adv-proxy" data-group="adv-proxy">
+      <div class="cmd-group">
+        <div class="group-title">Proxy y headers personalizados</div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL -w wordlist.txt -x http://127.0.0.1:8080</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Envía todo el tráfico por un proxy (Burp Suite). Para interceptar y analizar.<br><span class="param">-x</span> proxy URL</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL -w wordlist.txt -H "X-Forwarded-For: 127.0.0.1"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Inyecta header X-Forwarded-For. Para bypass de restricciones IP.<br><span class="param">-H</span> header personalizado</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL -w wordlist.txt -t 50</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ejecuta 50 hilos simultáneos. Por defecto usa 40.<br><span class="param">-t</span> threads (hilos)</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL -w wordlist.txt -p 0.5</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Añade delay de 0.5 segundos entre peticiones. Para evitar rate limiting.<br><span class="param">-p</span> delay (segundos)</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL -w wordlist.txt -rate 100</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Limita a 100 peticiones por segundo.<br><span class="param">-rate</span> peticiones por segundo</span></div>
+      </div>
+    </div>
+
+    <!-- AVANZADO - RECURSIÓN -->
+    <div class="section" id="tab-adv-recursion" data-group="adv-recursion">
+      <div class="cmd-group">
+        <div class="group-title">Recursión y output</div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL/FUZZ -w wordlist.txt -recursion -recursion-depth 2</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Busca recursivamente en directorios encontrados. Profundidad máxima de 2 niveles.<br><span class="param">-recursion</span> activar · <span class="param">-recursion-depth</span> niveles</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL/FUZZ -w wordlist.txt -o resultados.json -of json</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Guarda los resultados en formato JSON.<br><span class="param">-o</span> archivo de salida · <span class="param">-of</span> formato (json, csv, html, md)</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL/FUZZ -w wordlist.txt -o report.html -of html</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Genera un reporte HTML con los resultados. Fácil de revisar después.<br><span class="param">-of html</span> formato HTML</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL/FUZZ -w wordlist.txt -v</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Modo verbose. Muestra más detalles de cada petición.<br><span class="param">-v</span> verbose</span></div>
+        <div class="cmd-row"><span class="cmd-name">ffuf -u URL/FUZZ -w wordlist.txt -s</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Modo silencioso. Solo muestra resultados, sin barra de progreso.<br><span class="param">-s</span> silent mode</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!--  JAVASCRIPT: lógica unificada -->
+<script src="../scripts.js"></script>
