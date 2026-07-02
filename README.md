@@ -15,9 +15,15 @@ Proyecto web estatico que agrupa guias de referencia interactivas con pestanas, 
 
 ### Herramientas de Red y Seguridad
 - **Nmap** (`nmap/`): Escaneo de red, descubrimiento de hosts, puertos, servicios, evasion de firewall y scripts NSE
-- **Metasploit** (`metasploit/`): msfconsole, exploits, msfvenom, Meterpreter, post-explotacion y evasión
+- **Metasploit** (`metasploit/`): msfconsole, exploits, msfvenom, Meterpreter, post-explotacion y evasion
 - **Hydra** (`hydra/`): Fuerza bruta de credenciales, formularios web, servicios remotos y bases de datos
 - **Telnet** (`telnet/`): Conexion, debug, testing de puertos e interaccion manual con protocolos
+- **FFUF** (`ffuf/`): Web fuzzer: fuerza bruta de directorios, parametros, filtros y fuzzing de APIs
+- **Feroxbuster** (`feroxbuster/`): Fuzzing de directorios: escaneo recursivo, filtros, extensiones y output personalizado
+- **SQLMap** (`sqlmap/`): Automatizacion de inyeccion SQL, deteccion, bypass WAF, extraccion de datos y post-explotacion
+- **WPScan** (`wpscan/`): Auditoria de WordPress: plugins, themes, usuarios, brute force y enumeracion
+- **SMB / Impacket** (`smb/`): Enumeracion SMB, smbclient, enum4linux, Impacket PSExec, WMIExec, SecretsDump y Pass-the-Hash
+- **John / Hashcat** (`john/`): Cracking de hashes: John the Ripper, Hashcat, identificacion de hashes, rules, masks y wordlists
 
 ### Web
 - **Google Dorks** (`web/`): Busquedas web avanzadas para investigacion y descubrimiento de informacion
@@ -51,6 +57,18 @@ comandos/
 │   └── hydra_commands.html
 ├── telnet/
 │   └── telnet_commands.html
+├── ffuf/
+│   └── ffuf_commands.html
+├── feroxbuster/
+│   └── feroxbuster_commands.html
+├── sqlmap/
+│   └── sqlmap_commands.html
+├── wpscan/
+│   └── wpscan_commands.html
+├── smb/
+│   └── smb_commands.html
+├── john/
+│   └── john_hashcat_commands.html
 └── web/
     └── google_dorks.html
 ```
