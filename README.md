@@ -89,7 +89,9 @@ comandos/
 
 ## Colaborar
 
-Si quieres contribuir, visita el [repositorio en GitHub](https://github.com/Andres-Caso-Iglesias/CheatSheet).
+Si quieres contribuir, bienvenido es.
+
+visitalo [aquí](https://andres-caso-iglesias.github.io/CheatSheet/).
 
 ## Creditos
 
