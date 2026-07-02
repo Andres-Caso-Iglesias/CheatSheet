@@ -1,261 +1,274 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cheat Sheet WPScan</title>
-    <link rel="stylesheet" href="../styles.css">
-</head>
-<body>
-    <h1 class="main-title">WPScan — Auditoría WordPress</h1>
+<!--
+  HOJA DE REFERENCIA: WPScan - Auditoría WordPress
+  ==================================================
+  Este documento es una cheat sheet interactiva con pestañas y búsqueda.
+-->
 
-    <h2 class="sr-only">Navegación</h2>
-    <div class="main-container">
-        <a href="../index.html" class="back-link">← Volver al Índice</a>
+<link rel="stylesheet" href="../styles.css" />
 
-        <div class="tabs-main">
-            <button class="tab-main" onclick="showMainTab(event, 'scan')">Escaneo</button>
-            <button class="tab-main" onclick="showMainTab(event, 'users')">Usuarios</button>
-            <button class="tab-main" onclick="showMainTab(event, 'plugins')">Plugins</button>
-            <button class="tab-main" onclick="showMainTab(event, 'themes')">Themes</button>
-            <button class="tab-main" onclick="showMainTab(event, 'brute')">Brute Force</button>
-            <button class="tab-main" onclick="showMainTab(event, 'api')">API / Opciones</button>
-        </div>
+<!-- TÍTULO VISIBLE CENTRADO -->
+<h1 class="main-title">WPScan — Auditoría WordPress</h1>
 
-        <!-- Buscador -->
-        <div class="search-box">
-            <input type="text" id="search" placeholder="Buscar comando..." oninput="filterCmds()">
-        </div>
+<!-- TÍTULO ACCESIBLE (solo para lectores de pantalla) -->
+<h2 class="sr-only">Referencia interactiva de comandos WPScan para auditoría de WordPress</h2>
 
-        <div class="allCmds" id="allCmds">
+<!--  CONTENEDOR PRINCIPAL-->
+<div class="main-container">
+  <!-- BOTÓN VOLVER AL INICIO -->
+  <div class="back-wrapper">
+    <a href="../index.html" class="back-link">
+      &larr; Volver al inicio
+    </a>
+  </div>
 
-            <!-- ========== ESCANEO ========== -->
-            <div class="tabs tab-content active" id="scan">
-                <div class="subtabs">
-                    <button class="tabsub-btn active" onclick="showSubTab(event, 'scan', 'basic')">Básico</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'scan', 'enumerate')">Enumeración</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'scan', 'stealth')">Stealth</button>
-                </div>
+  <!-- PESTAÑAS PRINCIPALES -->
+  <div class="tabs-main">
+    <button class="tab-main active" onclick="showMainTab('scan')">Escaneo</button>
+    <button class="tab-main" onclick="showMainTab('users')">Usuarios</button>
+    <button class="tab-main" onclick="showMainTab('plugins')">Plugins</button>
+    <button class="tab-main" onclick="showMainTab('themes')">Themes</button>
+    <button class="tab-main" onclick="showMainTab('brute')">Brute Force</button>
+    <button class="tab-main" onclick="showMainTab('api')">API / Opciones</button>
+  </div>
 
-                <!-- Básico -->
-                <div class="subtab-content active" id="scan-basic">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Escaneo Básico</h3>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target</span><span class="cmd-desc">Escaneo básico del sitio</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --no-banner</span><span class="cmd-desc">No mostrar banner</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -v</span><span class="cmd-desc">Verbose mode</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --format cli-no-colour</span><span class="cmd-desc">Output sin colores</span></div>
-                    </div>
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Output</h3>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -o results.txt</span><span class="cmd-desc">Guardar en archivo</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -o results.json --format json</span><span class="cmd-desc">Output JSON</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -o results.html --format cli-no-colour</span><span class="cmd-desc">Output legible</span></div>
-                    </div>
-                </div>
+  <!-- PESTAÑAS SECUNDARIAS: Escaneo -->
+  <div id="subtabs-scan" class="subtabs">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('scan-basic')">Básico</button>
+      <button class="subtab" onclick="showSubTab('scan-enumerate')">Enumeración</button>
+      <button class="subtab" onclick="showSubTab('scan-stealth')">Stealth</button>
+    </div>
+  </div>
 
-                <!-- Enumeración -->
-                <div class="subtab-content" id="scan-enumerate">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Enumaración</h3>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vp</span><span class="cmd-desc">Plugins vulnerables</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e ap</span><span class="cmd-desc">Todos los plugins (no solo vuln)</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e at</span><span class="cmd-desc">Todos los themes</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e u</span><span class="cmd-desc">Enumerar usuarios</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e tt</span><span class="cmd-desc">Timthumbs</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e m</span><span class="cmd-desc">Medias (uploads públicos)</span></div>
-                    </div>
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Enumeración Combinada</h3>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vp,u</span><span class="cmd-desc">Plugins vuln + usuarios</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e ap,at,u</span><span class="cmd-desc">Todos plugins + themes + users</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e "vp,ap,u"</span><span class="cmd-desc">Mismo con comillas</span></div>
-                    </div>
-                </div>
+  <!-- PESTAÑAS SECUNDARIAS: Usuarios -->
+  <div id="subtabs-users" class="subtabs hidden">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('users-enum')">Enumeración</button>
+      <button class="subtab" onclick="showSubTab('users-passwords')">Passwords</button>
+    </div>
+  </div>
 
-                <!-- Stealth -->
-                <div class="subtab-content" id="scan-stealth">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Modo Stealth</h3>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --throttle=5</span><span class="cmd-desc">5 segundos entre requests</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --random-user-agent</span><span class="cmd-desc">User-Agent aleatorio</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --rua</span><span class="cmd-desc">Short para random-user-agent</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --max-threads=5</span><span class="cmd-desc">Limitar hilos</span></div>
-                    </div>
-                </div>
-            </div>
+  <!-- PESTAÑAS SECUNDARIAS: Plugins -->
+  <div id="subtabs-plugins" class="subtabs hidden">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('plugins-vuln')">Vulnerables</button>
+      <button class="subtab" onclick="showSubTab('plugins-enum')">Enumeración</button>
+    </div>
+  </div>
 
-            <!-- ========== USUARIOS ========== -->
-            <div class="tabs tab-content" id="users">
-                <div class="subtabs">
-                    <button class="tabsub-btn active" onclick="showSubTab(event, 'users', 'enum')">Enumeración</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'users', 'passwords')">Passwords</button>
-                </div>
+  <!-- PESTAÑAS SECUNDARIAS: Themes -->
+  <div id="subtabs-themes" class="subtabs hidden">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('themes-vuln')">Vulnerables</button>
+      <button class="subtab" onclick="showSubTab('themes-enum')">Enumeración</button>
+    </div>
+  </div>
 
-                <!-- Enumeración -->
-                <div class="subtab-content active" id="users-enum">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Enumerar Usuarios</h3>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e u</span><span class="cmd-desc">Enumerar usuarios (by default)</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e u --detection-mode aggressive</span><span class="cmd-desc">Detección agresiva</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e u --users-to-iterate "1,2,3"</span><span class="cmd-desc">Iterar IDs específicos</span></div>
-                    </div>
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">IDs de Usuario</h3>
-                        <div class="cmd-row"><span class="cmd-name">wp-json/wp/v2/users</span><span class="cmd-desc">API REST — enumerar usuarios</span></div>
-                        <div class="cmd-row"><span class="cmd-name">?author=1</span><span class="cmd-desc">Author archive — redirige a /author/admin</span></div>
-                        <div class="cmd-row"><span class="cmd-name">?author=2</span><span class="cmd-desc">Probar diferentes IDs</span></div>
-                    </div>
-                </div>
+  <!-- PESTAÑAS SECUNDARIAS: Brute Force -->
+  <div id="subtabs-brute" class="subtabs hidden">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('brute-passwords')">Passwords</button>
+      <button class="subtab" onclick="showSubTab('brute-xmlrpc')">XML-RPC</button>
+    </div>
+  </div>
 
-                <!-- Passwords -->
-                <div class="subtab-content" id="users-passwords">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Diccionarios</h3>
-                        <div class="cmd-row"><span class="cmd-name">--wordlist /usr/share/wordlists/rockyou.txt</span><span class="cmd-desc">Rockyou para brute force</span></div>
-                        <div class="cmd-row"><span class="cmd-name">--passwords users.txt</span><span class="cmd-desc">Archivo con contraseñas</span></div>
-                    </div>
-                </div>
-            </div>
+  <!-- PESTAÑAS SECUNDARIAS: API / Opciones -->
+  <div id="subtabs-api" class="subtabs hidden">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('api-token')">Token API</button>
+      <button class="subtab" onclick="showSubTab('api-proxy')">Proxy</button>
+      <button class="subtab" onclick="showSubTab('api-options')">Opciones</button>
+    </div>
+  </div>
 
-            <!-- ========== PLUGINS ========== -->
-            <div class="tabs tab-content" id="plugins">
-                <div class="subtabs">
-                    <button class="tabsub-btn active" onclick="showSubTab(event, 'plugins', 'vuln')">Vulnerables</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'plugins', 'enum')">Enumeración</button>
-                </div>
+  <!-- CAJA DE BÚSQUEDA -->
+  <input class="search-box" type="text" placeholder="Buscar comando o parámetro..." oninput="filterCmds(this.value)"
+    id="searchInput" />
 
-                <!-- Vulnerables -->
-                <div class="subtab-content active" id="plugins-vuln">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Plugins Vulnerables</h3>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vp</span><span class="cmd-desc">Solo plugins con vulnerabilidades conocidas</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vp --plugins-detection mixed</span><span class="cmd-desc">Detección mixta (aggressive + passive)</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vp --plugins-version-detection aggressive</span><span class="cmd-desc">Forzar detección de versión</span></div>
-                    </div>
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Plugins Específicos</h3>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vp --plugin-detection aggressive</span><span class="cmd-desc">Detectar todos los plugins instalados</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vp --wp-plugins-dir /wp-content/plugins</span><span class="cmd-desc">Directorio custom de plugins</span></div>
-                    </div>
-                </div>
+  <div id="allCmds">
 
-                <!-- Enumeración -->
-                <div class="subtab-content" id="plugins-enum">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Enumeración de Plugins</h3>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e ap</span><span class="cmd-desc">Todos los plugins (no solo vuln)</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e ap --plugins-detection aggressive</span><span class="cmd-desc">Detección agresiva de plugins</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e ap --wp-content-dir /custom/plugins</span><span class="cmd-desc">Directorio custom</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========== THEMES ========== -->
-            <div class="tabs tab-content" id="themes">
-                <div class="subtabs">
-                    <button class="tabsub-btn active" onclick="showSubTab(event, 'themes', 'vuln')">Vulnerables</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'themes', 'enum')">Enumeración</button>
-                </div>
-
-                <!-- Vulnerables -->
-                <div class="subtab-content active" id="themes-vuln">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Themes Vulnerables</h3>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vt</span><span class="cmd-desc">Themes con vulnerabilidades conocidas</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vt --themes-detection aggressive</span><span class="cmd-desc">Detección agresiva de themes</span></div>
-                    </div>
-                </div>
-
-                <!-- Enumeración -->
-                <div class="subtab-content" id="themes-enum">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Enumeración de Themes</h3>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e at</span><span class="cmd-desc">Todos los themes instalados</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e at --themes-detection aggressive</span><span class="cmd-desc">Detección agresiva</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========== BRUTE FORCE ========== -->
-            <div class="tabs tab-content" id="brute">
-                <div class="subtabs">
-                    <button class="tabsub-btn active" onclick="showSubTab(event, 'brute', 'passwords')">Passwords</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'brute', 'xmlrpc')">XML-RPC</button>
-                </div>
-
-                <!-- Passwords -->
-                <div class="subtab-content active" id="brute-passwords">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Brute Force de Contraseñas</h3>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --passwords users.txt</span><span class="cmd-desc">Brute force con lista de usuarios</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --passwords users.txt --wordlist rockyou.txt</span><span class="cmd-desc">Brute force con diccionario</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --passwords users.txt --threads=5</span><span class="cmd-desc">5 hilos para brute force</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --passwords users.txt --throttle=2</span><span class="cmd-desc">2 segundos entre intentos</span></div>
-                        </div>
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Archivos de Usuario</h3>
-                        <div class="cmd-row"><span class="cmd-name">echo -e "admin\neditor\nuser1" > users.txt</span><span class="cmd-desc">Crear lista de usuarios</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e u --format cli-no-colour > users.txt</span><span class="cmd-desc">Exportar usuarios encontrados</span></div>
-                    </div>
-                </div>
-
-                <!-- XML-RPC -->
-                <div class="subtab-content" id="brute-xmlrpc">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">XML-RPC</h3>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e xmlrpc</span><span class="cmd-desc">Verificar XML-RPC</span></div>
-                        <div class="cmd-row"><span class="cmd-name">xmlrpc.php</span><span class="cmd-desc">Endpoint XML-RPC</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wp.getUsersBlogs</span><span class="cmd-desc">Método para brute force</span></div>
-                        <div class="cmd-row"><span class="cmd-name">system.multicall</span><span class="cmd-desc">Múltiples intentos en un solo request</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========== API / OPCIONES ========== -->
-            <div class="tabs tab-content" id="api">
-                <div class="subtabs">
-                    <button class="tabsub-btn active" onclick="showSubTab(event, 'api', 'token')">Token API</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'api', 'proxy')">Proxy</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'api', 'options')">Opciones</button>
-                </div>
-
-                <!-- Token API -->
-                <div class="subtab-content active" id="api-token">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Token de API WPScan</h3>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --api-token "TOKEN"</span><span class="cmd-desc">Usar token de API para datos de vulns</span></div>
-                        <div class="cmd-row"><span class="cmd-name">--api-token (env var)</span><span class="cmd-desc">Variable de entorno WPSCAN_API_TOKEN</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vp --api-token "TOKEN"</span><span class="cmd-desc">Enum plugins con datos de vulns</span></div>
-                    </div>
-                </div>
-
-                <!-- Proxy -->
-                <div class="subtab-content" id="api-proxy">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Proxy</h3>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --proxy "http://127.0.0.1:8080"</span><span class="cmd-desc">Proxy HTTP</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --proxy "socks5://127.0.0.1:9050"</span><span class="cmd-desc">Proxy SOCKS5 (Tor)</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --proxy "http://127.0.0.1:8080" --proxy-auth "user:pass"</span><span class="cmd-desc">Proxy con autenticación</span></div>
-                    </div>
-                </div>
-
-                <!-- Opciones -->
-                <div class="subtab-content" id="api-options">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Opciones Varias</h3>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --disable-tls-checks</span><span class="cmd-desc">Deshabilitar verificación TLS</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --force</span><span class="cmd-desc">Forzar escaneo (ignorar wpscan.yml)</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --wp-content-path /custom</span><span class="cmd-desc">Directorio WP custom</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --wp-plugins-dir /plugins</span><span class="cmd-desc">Directorio plugins custom</span></div>
-                        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --cookie-string "session=abc"</span><span class="cmd-desc">Cookie para autenticación</span></div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+    <!-- #################### ESCANEO #################### -->
+    <!-- ESCANEO - BÁSICO -->
+    <div class="section active" id="tab-scan-basic" data-group="scan-basic">
+      <div class="cmd-group">
+        <div class="group-title">Escaneo Básico</div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Escaneo básico del sitio.<br><span class="param">--url</span> URL objetivo</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --no-banner</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> No mostrar banner.<br><span class="param">--no-banner</span> ocultar banner</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -v</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verbose mode.<br><span class="param">-v</span> verbose</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --format cli-no-colour</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Output sin colores.<br><span class="param">--format</span> formato de salida</span></div>
+      </div>
+      <div class="cmd-group">
+        <div class="group-title">Output</div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -o results.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Guardar en archivo.<br><span class="param">-o</span> archivo de salida</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -o results.json --format json</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Output JSON.<br><span class="param">--format json</span> formato JSON</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -o results.html --format cli-no-colour</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Output legible.<br><span class="param">--format cli-no-colour</span> sin colores</span></div>
+      </div>
     </div>
 
-    <script src="../scripts.js"></script>
-</body>
-</html>
+    <!-- ESCANEO - ENUMERACIÓN -->
+    <div class="section" id="tab-scan-enumerate" data-group="scan-enumerate">
+      <div class="cmd-group">
+        <div class="group-title">Enumeración</div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vp</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Plugins vulnerables.<br><span class="param">-e vp</span> vulnerable plugins</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e ap</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Todos los plugins (no solo vuln).<br><span class="param">-e ap</span> all plugins</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e at</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Todos los themes.<br><span class="param">-e at</span> all themes</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e u</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Enumerar usuarios.<br><span class="param">-e u</span> enumerate users</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e tt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Timthumbs.<br><span class="param">-e tt</span> timthumbs</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e m</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Medias (uploads públicos).<br><span class="param">-e m</span> media</span></div>
+      </div>
+      <div class="cmd-group">
+        <div class="group-title">Enumeración Combinada</div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vp,u</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Plugins vuln + usuarios.<br><span class="param">-e vp,u</span> combinados</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e ap,at,u</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Todos plugins + themes + users.<br><span class="param">-e ap,at,u</span> todo junto</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e "vp,ap,u"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Mismo con comillas.<br><span class="param">-e</span> acepta comillas</span></div>
+      </div>
+    </div>
+
+    <!-- ESCANEO - STEALTH -->
+    <div class="section" id="tab-scan-stealth" data-group="scan-stealth">
+      <div class="cmd-group">
+        <div class="group-title">Modo Stealth</div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --throttle=5</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> 5 segundos entre requests.<br><span class="param">--throttle</span> delay entre peticiones</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --random-user-agent</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> User-Agent aleatorio.<br><span class="param">--random-user-agent</span> UA random</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --rua</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Short para random-user-agent.<br><span class="param">--rua</span> alias corto</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --max-threads=5</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Limitar hilos.<br><span class="param">--max-threads</span> máximo de hilos</span></div>
+      </div>
+    </div>
+
+    <!-- #################### USUARIOS #################### -->
+    <!-- USUARIOS - ENUMERACIÓN -->
+    <div class="section" id="tab-users-enum" data-group="users-enum">
+      <div class="cmd-group">
+        <div class="group-title">Enumerar Usuarios</div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e u</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Enumerar usuarios (by default).<br><span class="param">-e u</span> enumerate users</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e u --detection-mode aggressive</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Detección agresiva.<br><span class="param">--detection-mode aggressive</span> más preciso</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e u --users-to-iterate "1,2,3"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Iterar IDs específicos.<br><span class="param">--users-to-iterate</span> IDs a probar</span></div>
+      </div>
+      <div class="cmd-group">
+        <div class="group-title">IDs de Usuario</div>
+        <div class="cmd-row"><span class="cmd-name">wp-json/wp/v2/users</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> API REST — enumerar usuarios.<br><span class="param">/wp-json/wp/v2/users</span> endpoint REST</span></div>
+        <div class="cmd-row"><span class="cmd-name">?author=1</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Author archive — redirige a /author/admin.<br><span class="param">?author=</span> ID de autor</span></div>
+        <div class="cmd-row"><span class="cmd-name">?author=2</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Probar diferentes IDs.<br><span class="param">?author=</span> iterar IDs</span></div>
+      </div>
+    </div>
+
+    <!-- USUARIOS - PASSWORDS -->
+    <div class="section" id="tab-users-passwords" data-group="users-passwords">
+      <div class="cmd-group">
+        <div class="group-title">Diccionarios</div>
+        <div class="cmd-row"><span class="cmd-name">--wordlist /usr/share/wordlists/rockyou.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Rockyou para brute force.<br><span class="param">--wordlist</span> diccionario</span></div>
+        <div class="cmd-row"><span class="cmd-name">--passwords users.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Archivo con contraseñas.<br><span class="param">--passwords</span> lista de passwords</span></div>
+      </div>
+    </div>
+
+    <!-- #################### PLUGINS #################### -->
+    <!-- PLUGINS - VULNERABLES -->
+    <div class="section" id="tab-plugins-vuln" data-group="plugins-vuln">
+      <div class="cmd-group">
+        <div class="group-title">Plugins Vulnerables</div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vp</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Solo plugins con vulnerabilidades conocidas.<br><span class="param">-e vp</span> vulnerable plugins</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vp --plugins-detection mixed</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Detección mixta (aggressive + passive).<br><span class="param">--plugins-detection mixed</span> mix de métodos</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vp --plugins-version-detection aggressive</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Forzar detección de versión.<br><span class="param">--plugins-version-detection aggressive</span> forzar versión</span></div>
+      </div>
+      <div class="cmd-group">
+        <div class="group-title">Plugins Específicos</div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vp --plugin-detection aggressive</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Detectar todos los plugins instalados.<br><span class="param">--plugin-detection aggressive</span> detección fuerte</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vp --wp-plugins-dir /wp-content/plugins</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Directorio custom de plugins.<br><span class="param">--wp-plugins-dir</span> ruta custom</span></div>
+      </div>
+    </div>
+
+    <!-- PLUGINS - ENUMERACIÓN -->
+    <div class="section" id="tab-plugins-enum" data-group="plugins-enum">
+      <div class="cmd-group">
+        <div class="group-title">Enumeración de Plugins</div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e ap</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Todos los plugins (no solo vuln).<br><span class="param">-e ap</span> all plugins</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e ap --plugins-detection aggressive</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Detección agresiva de plugins.<br><span class="param">--plugins-detection aggressive</span> más completo</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e ap --wp-content-dir /custom/plugins</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Directorio custom.<br><span class="param">--wp-content-dir</span> ruta custom</span></div>
+      </div>
+    </div>
+
+    <!-- #################### THEMES #################### -->
+    <!-- THEMES - VULNERABLES -->
+    <div class="section" id="tab-themes-vuln" data-group="themes-vuln">
+      <div class="cmd-group">
+        <div class="group-title">Themes Vulnerables</div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Themes con vulnerabilidades conocidas.<br><span class="param">-e vt</span> vulnerable themes</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vt --themes-detection aggressive</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Detección agresiva de themes.<br><span class="param">--themes-detection aggressive</span> más preciso</span></div>
+      </div>
+    </div>
+
+    <!-- THEMES - ENUMERACIÓN -->
+    <div class="section" id="tab-themes-enum" data-group="themes-enum">
+      <div class="cmd-group">
+        <div class="group-title">Enumeración de Themes</div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e at</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Todos los themes instalados.<br><span class="param">-e at</span> all themes</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e at --themes-detection aggressive</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Detección agresiva.<br><span class="param">--themes-detection aggressive</span> más completo</span></div>
+      </div>
+    </div>
+
+    <!-- #################### BRUTE FORCE #################### -->
+    <!-- BRUTE - PASSWORDS -->
+    <div class="section" id="tab-brute-passwords" data-group="brute-passwords">
+      <div class="cmd-group">
+        <div class="group-title">Brute Force de Contraseñas</div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --passwords users.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Brute force con lista de usuarios.<br><span class="param">--passwords</span> lista de usuarios</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --passwords users.txt --wordlist rockyou.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Brute force con diccionario.<br><span class="param">--wordlist</span> diccionario de passwords</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --passwords users.txt --threads=5</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> 5 hilos para brute force.<br><span class="param">--threads</span> hilos simultáneos</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --passwords users.txt --throttle=2</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> 2 segundos entre intentos.<br><span class="param">--throttle</span> delay entre intentos</span></div>
+      </div>
+      <div class="cmd-group">
+        <div class="group-title">Archivos de Usuario</div>
+        <div class="cmd-row"><span class="cmd-name">echo -e "admin\neditor\nuser1" > users.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Crear lista de usuarios.<br><span class="param">echo -e</span> crear archivo</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e u --format cli-no-colour > users.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Exportar usuarios encontrados.<br><span class="param">-e u</span> + redirect</span></div>
+      </div>
+    </div>
+
+    <!-- BRUTE - XML-RPC -->
+    <div class="section" id="tab-brute-xmlrpc" data-group="brute-xmlrpc">
+      <div class="cmd-group">
+        <div class="group-title">XML-RPC</div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e xmlrpc</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verificar XML-RPC.<br><span class="param">-e xmlrpc</span> detectar XML-RPC</span></div>
+        <div class="cmd-row"><span class="cmd-name">xmlrpc.php</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Endpoint XML-RPC.<br><span class="param">xmlrpc.php</span> ruta del endpoint</span></div>
+        <div class="cmd-row"><span class="cmd-name">wp.getUsersBlogs</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Método para brute force.<br><span class="param">wp.getUsersBlogs</span> método XML-RPC</span></div>
+        <div class="cmd-row"><span class="cmd-name">system.multicall</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Múltiples intentos en un solo request.<br><span class="param">system.multicall</span> bypass rate limit</span></div>
+      </div>
+    </div>
+
+    <!-- #################### API / OPCIONES #################### -->
+    <!-- API - TOKEN -->
+    <div class="section" id="tab-api-token" data-group="api-token">
+      <div class="cmd-group">
+        <div class="group-title">Token de API WPScan</div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --api-token "TOKEN"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Usar token de API para datos de vulns.<br><span class="param">--api-token</span> token de la API</span></div>
+        <div class="cmd-row"><span class="cmd-name">--api-token (env var)</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Variable de entorno WPSCAN_API_TOKEN.<br><span class="param">WPSCAN_API_TOKEN</span> env var</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target -e vp --api-token "TOKEN"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Enum plugins con datos de vulns.<br><span class="param">--api-token</span> + <span class="param">-e vp</span> enriquecido</span></div>
+      </div>
+    </div>
+
+    <!-- API - PROXY -->
+    <div class="section" id="tab-api-proxy" data-group="api-proxy">
+      <div class="cmd-group">
+        <div class="group-title">Proxy</div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --proxy "http://127.0.0.1:8080"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Proxy HTTP.<br><span class="param">--proxy</span> URL del proxy</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --proxy "socks5://127.0.0.1:9050"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Proxy SOCKS5 (Tor).<br><span class="param">--proxy</span> proxy Tor</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --proxy "http://127.0.0.1:8080" --proxy-auth "user:pass"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Proxy con autenticación.<br><span class="param">--proxy-auth</span> credenciales del proxy</span></div>
+      </div>
+    </div>
+
+    <!-- API - OPCIONES -->
+    <div class="section" id="tab-api-options" data-group="api-options">
+      <div class="cmd-group">
+        <div class="group-title">Opciones Varias</div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --disable-tls-checks</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Deshabilitar verificación TLS.<br><span class="param">--disable-tls-checks</span> ignorar TLS</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --force</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Forzar escaneo (ignorar wpscan.yml).<br><span class="param">--force</span> forzar</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --wp-content-path /custom</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Directorio WP custom.<br><span class="param">--wp-content-path</span> ruta custom</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --wp-plugins-dir /plugins</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Directorio plugins custom.<br><span class="param">--wp-plugins-dir</span> ruta custom</span></div>
+        <div class="cmd-row"><span class="cmd-name">wpscan --url http://target --cookie-string "session=abc"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cookie para autenticación.<br><span class="param">--cookie-string</span> cookie</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!--  JAVASCRIPT: lógica unificada -->
+<script src="../scripts.js"></script>

