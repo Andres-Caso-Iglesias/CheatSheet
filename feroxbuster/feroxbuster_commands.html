@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheat Sheet Feroxbuster</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <h1 class="main-title">Feroxbuster — Fuzzing Directorios</h1>
+
+    <h2 class="sr-only">Navegación</h2>
+    <div class="main-container">
+        <a href="../index.html" class="back-link">← Volver al Índice</a>
+
+        <div class="tabs-main">
+            <button class="tab-main" onclick="showMainTab(event, 'basic')">Básico</button>
+            <button class="tab-main" onclick="showMainTab(event, 'filters')">Filtros</button>
+            <button class="tab-main" onclick="showMainTab(event, 'options')">Opciones</button>
+            <button class="tab-main" onclick="showMainTab(event, 'recursive')">Recursivo</button>
+            <button class="tab-main" onclick="showMainTab(event, 'wordlist')">Wordlists</button>
+        </div>
+
+        <!-- Buscador -->
+        <div class="search-box">
+            <input type="text" id="search" placeholder="Buscar comando..." oninput="filterCmds()">
+        </div>
+
+        <div class="allCmds" id="allCmds">
+
+            <!-- ========== BÁSICO ========== -->
+            <div class="tabs tab-content active" id="basic">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'basic', 'scan')">Escaneo</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'basic', 'methods')">Métodos HTTP</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'basic', 'ext')">Extensiones</button>
+                </div>
+
+                <!-- Escaneo -->
+                <div class="subtab-content active" id="basic-scan">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Escaneo Básico</h3>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target</span><span class="cmd-desc">Escaneo básico de directorios</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -w /usr/share/wordlists/dirb/common.txt</span><span class="cmd-desc">Con wordlist específica</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -t 50</span><span class="cmd-desc">50 hilos</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --silent</span><span class="cmd-desc">Solo output de resultados</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -v</span><span class="cmd-desc">Verbose mode</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -vv</span><span class="cmd-desc">Double verbose</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Output</h3>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -o results.txt</span><span class="cmd-desc">Guardar en archivo</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --json</span><span class="cmd-desc">Output JSON</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --json -o results.json</span><span class="cmd-desc">JSON a archivo</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --debug-log debug.log</span><span class="cmd-desc">Debug log</span></div>
+                    </div>
+                </div>
+
+                <!-- Métodos HTTP -->
+                <div class="subtab-content" id="basic-methods">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Métodos HTTP</h3>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --methods GET</span><span class="cmd-desc">Solo GET (default)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --methods GET,POST</span><span class="cmd-desc">GET y POST</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --methods POST</span><span class="cmd-desc">Solo POST</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -m PUT,DELETE</span><span class="cmd-desc">PUT y DELETE</span></div>
+                    </div>
+                </div>
+
+                <!-- Extensiones -->
+                <div class="subtab-content" id="basic-ext">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Extensiones</h3>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -x php,html,txt</span><span class="cmd-desc">Probar con extensiones</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -x php,bak,old,zip</span><span class="cmd-desc">Extensiones de backup</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -x asp,aspx,jsp</span><span class="cmd-desc">Extensiones Windows/Java</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== FILTROS ========== -->
+            <div class="tabs tab-content" id="filters">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'filters', 'status')">Status Codes</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'filters', 'size')">Filtros de Tamaño</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'filters', 'regex')">Regex</button>
+                </div>
+
+                <!-- Status Codes -->
+                <div class="subtab-content active" id="filters-status">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Filtros por Status</h3>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -s 200,301,302</span><span class="cmd-desc">Solo mostrar estos status</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --filter-status 404</span><span class="cmd-desc">Filtrar 404</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --filter-status 403,404</span><span class="cmd-desc">Filtrar 403 y 404</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -s 200 --filter-status 404</span><span class="cmd-desc">Mostrar 200, filtrar 404</span></div>
+                    </div>
+                </div>
+
+                <!-- Filtros de Tamaño -->
+                <div class="subtab-content" id="filters-size">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Filtros por Tamaño</h3>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --filter-size 4523</span><span class="cmd-desc">Filtrar por tamaño exacto</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --filter-regex "Not Found"</span><span class="cmd-desc">Filtrar por regex</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --filter-wordcount 1234</span><span class="cmd-desc">Filtrar por número de palabras</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --filter-linecount 45</span><span class="cmd-desc">Filtrar por número de líneas</span></div>
+                    </div>
+                </div>
+
+                <!-- Regex -->
+                <div class="subtab-content" id="filters-regex">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Regex Filters</h3>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --filter-regex "error|forbidden"</span><span class="cmd-desc">Múltiples patrones regex</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --filter-regex "404"</span><span class="cmd-desc">Filtrar contenido 404</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -C "Not Found"</span><span class="cmd-desc">Filtrar cadena exacta</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== OPCIONES ========== -->
+            <div class="tabs tab-content" id="options">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'options', 'headers')">Headers</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'options', 'proxy')">Proxy</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'options', 'auth')">Autenticación</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'options', 'misc')">Misc</button>
+                </div>
+
+                <!-- Headers -->
+                <div class="subtab-content active" id="options-headers">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Custom Headers</h3>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -H "Authorization: Bearer token"</span><span class="cmd-desc">Auth header</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -H "Cookie: session=abc123"</span><span class="cmd-desc">Cookie header</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -H "X-Forwarded-For: 127.0.0.1"</span><span class="cmd-desc">Custom header</span></div>
+                    </div>
+                </div>
+
+                <!-- Proxy -->
+                <div class="subtab-content" id="options-proxy">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Proxy</h3>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --proxy http://127.0.0.1:8080</span><span class="cmd-desc">Proxy HTTP</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --proxy socks5://127.0.0.1:9050</span><span class="cmd-desc">Proxy SOCKS5 (Tor)</span></div>
+                    </div>
+                </div>
+
+                <!-- Autenticación -->
+                <div class="subtab-content" id="options-auth">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Autenticación</h3>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --basic-auth user:pass</span><span class="cmd-desc">Basic Auth</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --cookie "session=abc123"</span><span class="cmd-desc">Cookie para auth</span></div>
+                    </div>
+                </div>
+
+                <!-- Misc -->
+                <div class="subtab-content" id="options-misc">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Otras Opciones</h3>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --user-agent "Mozilla/5.0"</span><span class="cmd-desc">Custom User-Agent</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --delay 1</span><span class="cmd-desc">1 segundo entre requests</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --timeout 10</span><span class="cmd-desc">Timeout de 10 segundos</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --dont-filter</span><span class="cmd-desc">No aplicar filtros automáticos</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --no-recursion</span><span class="cmd-desc">No recusar directorios</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --insecure</span><span class="cmd-desc">No verificar TLS/SSL</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== RECURSIVO ========== -->
+            <div class="tabs tab-content" id="recursive">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'recursive', 'basic')">Básico</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'recursive', 'depth')">Profundidad</button>
+                </div>
+
+                <!-- Básico -->
+                <div class="subtab-content active" id="recursive-basic">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Recursión</h3>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -r</span><span class="cmd-desc">Habilitar recursión</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --recursive</span><span class="cmd-desc">Mismo que -r</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -r -e</span><span class="cmd-desc">Recursión + extraer links</span></div>
+                    </div>
+                </div>
+
+                <!-- Profundidad -->
+                <div class="subtab-content" id="recursive-depth">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Control de Profundidad</h3>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -r --depth 3</span><span class="cmd-desc">Max 3 niveles de recursión</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -r --force-recursion</span><span class="cmd-desc">Forzar recursión (ignorar filters)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -r -C "Not Found"</span><span class="cmd-desc">Filtrar en recursión</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== WORDLISTS ========== -->
+            <div class="tabs tab-content" id="wordlist">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'wordlist', 'common')">Comunes</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'wordlist', 'custom')">Personalizadas</button>
+                </div>
+
+                <!-- Comunes -->
+                <div class="subtab-content active" id="wordlist-common">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Wordlists para Directorios</h3>
+                        <div class="cmd-row"><span class="cmd-name">/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt</span><span class="cmd-desc">220K — medium</span></div>
+                        <div class="cmd-row"><span class="cmd-name">/usr/share/wordlists/dirb/common.txt</span><span class="cmd-desc">4.6K — common</span></div>
+                        <div class="cmd-row"><span class="cmd-name">/usr/share/seclists/Discovery/Web-Content/common.txt</span><span class="cmd-desc">Common web content</span></div>
+                        <div class="cmd-row"><span class="cmd-name">/usr/share/seclists/Discovery/Web-Content/big.txt</span><span class="cmd-desc">Big web content</span></div>
+                        <div class="cmd-row"><span class="cmd-name">/usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt</span><span class="cmd-desc">RAFT large</span></div>
+                        <div class="cmd-row"><span class="cmd-name">/usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt</span><span class="cmd-desc">RAFT medium</span></div>
+                    </div>
+                </div>
+
+                <!-- Personalizadas -->
+                <div class="subtab-content" id="wordlist-custom">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Uso de Wordlists</h3>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -w /path/to/wordlist.txt</span><span class="cmd-desc">Wordlist personalizada</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target -w common.txt -x php</span><span class="cmd-desc">Wordlist + extensiones</span></div>
+                        <div class="cmd-row"><span class="cmd-name">feroxbuster -u http://target --default-wordlist /usr/share/wordlists/dirb/common.txt</span><span class="cmd-desc">Default wordlist config</span></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="../scripts.js"></script>
+</body>
+</html>

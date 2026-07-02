@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheat Sheet John the Ripper / Hashcat</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <h1 class="main-title">John the Ripper / Hashcat — Cracking de Hashes</h1>
+
+    <h2 class="sr-only">Navegación</h2>
+    <div class="main-container">
+        <a href="../index.html" class="back-link">← Volver al Índice</a>
+
+        <div class="tabs-main">
+            <button class="tab-main" onclick="showMainTab(event, 'john')">John the Ripper</button>
+            <button class="tab-main" onclick="showMainTab(event, 'hashcat')">Hashcat</button>
+            <button class="tab-main" onclick="showMainTab(event, 'hashid')">Identificar Hashes</button>
+            <button class="tab-main" onclick="showMainTab(event, 'formats')">Formatos de Hash</button>
+            <button class="tab-main" onclick="showMainTab(event, 'wordlists')">Diccionarios</button>
+            <button class="tab-main" onclick="showMainTab(event, 'rules')">Rules / Masks</button>
+        </div>
+
+        <!-- Buscador -->
+        <div class="search-box">
+            <input type="text" id="search" placeholder="Buscar comando..." oninput="filterCmds()">
+        </div>
+
+        <div class="allCmds" id="allCmds">
+
+            <!-- ========== JOHN THE RIPPER ========== -->
+            <div class="tabs tab-content active" id="john">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'john', 'basic')">Básico</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'john', 'format')">Formatos</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'john', 'options')">Opciones</button>
+                </div>
+
+                <!-- Básico -->
+                <div class="subtab-content active" id="john-basic">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">John Básico</h3>
+                        <div class="cmd-row"><span class="cmd-name">john hashfile.txt</span><span class="cmd-desc">Crackear hashes (auto-detect format)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --wordlist=/usr/share/wordlists/rockyou.txt hashfile.txt</span><span class="cmd-desc">Crackear con diccionario</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --show hashfile.txt</span><span class="cmd-desc">Mostrar hashes crackeados</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --list=formats</span><span class="cmd-desc">Listar todos los formatos soportados</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --list=formats | grep -i hash</span><span class="cmd-desc">Filtrar formatos específicos</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Formatos Específicos</h3>
+                        <div class="cmd-row"><span class="cmd-name">john --format=raw-md5 hashfile.txt</span><span class="cmd-desc">MD5 raw</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --format=raw-sha256 hashfile.txt</span><span class="cmd-desc">SHA256 raw</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --format=bcrypt hashfile.txt</span><span class="cmd-desc">BCrypt</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --format=descrypt hashfile.txt</span><span class="cmd-desc">DES Crypt (Unix)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --format=md5crypt hashfile.txt</span><span class="cmd-desc">MD5 Crypt (Unix)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --format=netlm hashfile.txt</span><span class="cmd-desc">NetLM (Windows)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --format=netntlmv2 hashfile.txt</span><span class="cmd-desc">NetNTLMv2</span></div>
+                    </div>
+                </div>
+
+                <!-- Formatos -->
+                <div class="subtab-content" id="john-format">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Unzip / Extract Hashes</h3>
+                        <div class="cmd-row"><span class="cmd-name">zip2john encrypted.zip > hashes.txt</span><span class="cmd-desc">Extraer hashes de ZIP</span></div>
+                        <div class="cmd-row"><span class="cmd-name">rar2john encrypted.rar > hashes.txt</span><span class="cmd-desc">Extraer hashes de RAR</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john hashfile.txt --wordlist=rockyou.txt</span><span class="cmd-desc">Crackear ZIP/RAR</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">John Examples</h3>
+                        <div class="cmd-row"><span class="cmd-name">john --format=ssh hashfile.txt</span><span class="cmd-desc">SSH keys privadas</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --format=gpg hashfile.txt</span><span class="cmd-desc">GPG keys</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --format=keepass hashfile.txt</span><span class="cmd-desc">KeePass databases</span></div>
+                    </div>
+                </div>
+
+                <!-- Opciones -->
+                <div class="subtab-content" id="john-options">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Opciones de John</h3>
+                        <div class="cmd-row"><span class="cmd-name">john --fork=4 hashfile.txt</span><span class="cmd-desc">4 procesos paralelos</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --pot=john.pot hashfile.txt</span><span class="cmd-desc">Archivo pot personalizado</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --session=mysession hashfile.txt</span><span class="cmd-desc">Nombre de sesión</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --restore=mysession</span><span class="cmd-desc">Restaurar sesión</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --show --format=raw-md5 hashfile.txt</span><span class="cmd-desc">Mostrar con formato específico</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== HASHCAT ========== -->
+            <div class="tabs tab-content" id="hashcat">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'hashcat', 'basic')">Básico</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'hashcat', 'attack')">Tipos de Ataque</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'hashcat', 'options')">Opciones</button>
+                </div>
+
+                <!-- Básico -->
+                <div class="subtab-content active" id="hashcat-basic">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Hashcat Básico</h3>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 0 hashfile.txt rockyou.txt</span><span class="cmd-desc">MD5 (mode 0)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 1000 hashfile.txt rockyou.txt</span><span class="cmd-desc">NTLM (mode 1000)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 1800 hashfile.txt rockyou.txt</span><span class="cmd-desc">SHA-512 Unix (mode 1800)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 3200 hashfile.txt rockyou.txt</span><span class="cmd-desc">BCrypt (mode 3200)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat --show</span><span class="cmd-desc">Mostrar hashes crackeados</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 0 --show hashfile.txt</span><span class="cmd-desc">Mostrar con formato específico</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Modos Comunes</h3>
+                        <div class="cmd-row"><span class="cmd-name">0 = MD5</span><span class="cmd-desc">MD5</span></div>
+                        <div class="cmd-row"><span class="cmd-name">100 = SHA1</span><span class="cmd-desc">SHA1</span></div>
+                        <div class="cmd-row"><span class="cmd-name">1400 = SHA-256</span><span class="cmd-desc">SHA-256</span></div>
+                        <div class="cmd-row"><span class="cmd-name">1000 = NTLM</span><span class="cmd-desc">Windows NTLM</span></div>
+                        <div class="cmd-row"><span class="cmd-name">1800 = sha512crypt</span><span class="cmd-desc">SHA-512 Unix</span></div>
+                        <div class="cmd-row"><span class="cmd-name">3200 = bcrypt</span><span class="cmd-desc">BCrypt</span></div>
+                        <div class="cmd-row"><span class="cmd-name">5600 = NetNTLMv2</span><span class="cmd-desc">NetNTLMv2</span></div>
+                        <div class="cmd-row"><span class="cmd-name">9600 = MS-SQL</span><span class="cmd-desc">MS-SQL NTLM</span></div>
+                        <div class="cmd-row"><span class="cmd-name">2612 = PHPS</span><span class="cmd-desc">PHP md5($pass.$salt)</span></div>
+                    </div>
+                </div>
+
+                <!-- Tipos de Ataque -->
+                <div class="subtab-content" id="hashcat-attack">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Attack Modes</h3>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -a 0 -m 0 hash.txt rockyou.txt</span><span class="cmd-desc">Dict attack (default)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -a 1 -m 0 hash.txt rock1.txt rock2.txt</span><span class="cmd-desc">Combination attack</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -a 3 -m 0 hash.txt ?a?a?a?a?a?a</span><span class="cmd-desc">Brute force (mask)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -a 6 -m 0 hash.txt rock1.txt ?a?a?a</span><span class="cmd-desc">Hybrid wordlist + mask</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -a 7 -m 0 hash.txt ?a?a?a rock1.txt</span><span class="cmd-desc">Hybrid mask + wordlist</span></div>
+                    </div>
+                </div>
+
+                <!-- Opciones -->
+                <div class="subtab-content" id="hashcat-options">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Opciones de Hashcat</h3>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 0 -d 1 hash.txt rockyou.txt</span><span class="cmd-desc">Device 1 (GPU)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 0 -d 1,2 hash.txt rockyou.txt</span><span class="cmd-desc">Múltiples GPUs</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 0 -o output.txt hash.txt rockyou.txt</span><span class="cmd-desc">Output a archivo</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 0 -O hash.txt rockyou.txt</span><span class="cmd-desc">Optimized kernels (solo hashes comunes)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 0 --force hash.txt rockyou.txt</span><span class="cmd-desc">Force (ignorar warnings)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 0 --status</span><span class="cmd-desc">Enable status screen</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 0 -j '$-$-$-$-$' hash.txt rockyou.txt</span><span class="cmd-desc">Left rule (wordlist rules)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 0 -k '$-$-$-$-$' hash.txt rockyou.txt</span><span class="cmd-desc">Right rule</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== IDENTIFICAR HASHES ========== -->
+            <div class="tabs tab-content" id="hashid">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'hashid', 'tools')">Herramientas</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'hashid', 'patterns')">Patrones</button>
+                </div>
+
+                <!-- Herramientas -->
+                <div class="subtab-content active" id="hashid-tools">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Identificar Hashes</h3>
+                        <div class="cmd-row"><span class="cmd-name">hashid HASH</span><span class="cmd-desc">Identificar tipo de hash</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashid -m HASH</span><span class="cmd-desc">Mostrar modos de hashcat</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashid -j HASH</span><span class="cmd-desc">Mostrar modos de john</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashid -f hashfile.txt</span><span class="cmd-desc">Identificar hashes de archivo</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hash-identifier</span><span class="cmd-desc">Herramienta interactiva</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Online Crackers</h3>
+                        <div class="cmd-row"><span class="cmd-name">https://crackstation.net/</span><span class="cmd-desc">Online — rocks DB enorme</span></div>
+                        <div class="cmd-row"><span class="cmd-name">https://hashes.com/en/decrypt/hash</span><span class="cmd-desc">Online — multi-formato</span></div>
+                        <div class="cmd-row"><span class="cmd-name">https://www.cmd5.com/</span><span class="cmd-desc">Online — MD5, SHA1, NTLM</span></div>
+                    </div>
+                </div>
+
+                <!-- Patrones -->
+                <div class="subtab-content" id="hashid-patterns">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Longitud / Patrón</h3>
+                        <div class="cmd-row"><span class="cmd-name">MD5 = 32 hex chars</span><span class="cmd-desc">51478c...1f0</span></div>
+                        <div class="cmd-row"><span class="cmd-name">SHA1 = 40 hex chars</span><span class="cmd-desc">aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d</span></div>
+                        <div class="cmd-row"><span class="cmd-name">SHA256 = 64 hex chars</span><span class="cmd-desc">5e884898da28047151d0e56f8dc...e5</span></div>
+                        <div class="cmd-row"><span class="cmd-name">NTLM = 32 hex chars</span><span class="cmd-desc">aad3b435b51404eeaad3b435b51404ee:e02bc503339d51f71d913c245d35b50b</span></div>
+                        <div class="cmd-row"><span class="cmd-name">BCrypt = 60 chars ($2a$, $2b$, $2y$)</span><span class="cmd-desc">$2a$10$N9qo8uLOickgx2ZMRZoMy...MmrgRO...</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== FORMATOS DE HASH ========== -->
+            <div class="tabs tab-content" id="formats">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'formats', 'linux')">Linux</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'formats', 'windows')">Windows</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'formats', 'web')">Web / Apps</button>
+                </div>
+
+                <!-- Linux -->
+                <div class="subtab-content active" id="formats-linux">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Linux Hashes</h3>
+                        <div class="cmd-row"><span class="cmd-name">$1$ = MD5 Crypt</span><span class="cmd-desc">$1$salt$hash</span></div>
+                        <div class="cmd-row"><span class="cmd-name">$5$ = SHA-256 Crypt</span><span class="cmd-desc">$5$salt$hash</span></div>
+                        <div class="cmd-row"><span class="cmd-name">$6$ = SHA-512 Crypt</span><span class="cmd-desc">$6$salt$hash</span></div>
+                        <div class="cmd-row"><span class="cmd-name">!: = DES Crypt</span><span class="cmd-desc">Formato antiguo</span></div>
+                        <div class="cmd-row"><span class="cmd-name">$2a$, $2b$, $2y$ = BCrypt</span><span class="cmd-desc">BCrypt variants</span></div>
+                    </div>
+                </div>
+
+                <!-- Windows -->
+                <div class="subtab-content" id="formats-windows">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Windows Hashes</h3>
+                        <div class="cmd-row"><span class="cmd-name">LM = 32 hex</span><span class="cmd-desc">LAN Manager (legacy, weak)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">NTLM = 32 hex</span><span class="cmd-desc">NT LAN Manager</span></div>
+                        <div class="cmd-row"><span class="cmd-name">NetLM = 32 hex</span><span class="cmd-desc">Network LM</span></div>
+                        <div class="cmd-row"><span class="cmd-name">NetNTLMv2 = hash:challenge</span><span class="cmd-desc">Network NTLMv2</span></div>
+                        <div class="cmd-row"><span class="cmd-name">DCC2 = $mscc$hash</span><span class="cmd-desc">Domain Cached Credentials</span></div>
+                    </div>
+                </div>
+
+                <!-- Web / Apps -->
+                <div class="subtab-content" id="formats-web">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Web / Applications</h3>
+                        <div class="cmd-row"><span class="cmd-name">MD5 = 32 hex</span><span class="cmd-desc">PHP, MySQL, etc</span></div>
+                        <div class="cmd-row"><span class="cmd-name">SHA1 = 40 hex</span><span class="cmd-desc">SHA1</span></div>
+                        <div class="cmd-row"><span class="cmd-name">$P$ = PHPass</span><span class="cmd-desc">WordPress, phpBB3</span></div>
+                        <div class="cmd-row"><span class="cmd-name">$H$ = PHPS</span><span class="cmd-desc">phpBB2</span></div>
+                        <div class="cmd-row"><span class="cmd-name">$2y$ = BCrypt</span><span class="cmd-desc">PHP BCrypt</span></div>
+                        <div class="cmd-row"><span class="cmd-name">$argon2i$ = Argon2</span><span class="cmd-desc">Modern password hash</span></div>
+                        <div class="cmd-row"><span class="cmd-name">$pbkdf2$ = PBKDF2</span><span class="cmd-desc">PKCS#5 v2.0</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== DICcionarios ========== -->
+            <div class="tabs tab-content" id="wordlists">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'wordlists', 'common')">Comunes</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'wordlists', 'custom')">Personalizados</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'wordlists', 'gen')">Generación</button>
+                </div>
+
+                <!-- Comunes -->
+                <div class="subtab-content active" id="wordlists-common">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Wordlists Comunes</h3>
+                        <div class="cmd-row"><span class="cmd-name">/usr/share/wordlists/rockyou.txt</span><span class="cmd-desc">14M passwords — el clásico</span></div>
+                        <div class="cmd-row"><span class="cmd-name">/usr/share/seclists/Passwords/Common-Credentials/</span><span class="cmd-desc">Múltiples listas de passwords comunes</span></div>
+                        <div class="cmd-row"><span class="cmd-name">/usr/share/seclists/Usernames/</span><span class="cmd-desc">Nombres de usuario comunes</span></div>
+                        <div class="cmd-row"><span class="cmd-name">/usr/share/wordlists/SecLists/Usernames/Names/names.txt</span><span class="cmd-desc">Nombres propios</span></div>
+                    </div>
+                </div>
+
+                <!-- Personalizados -->
+                <div class="subtab-content" id="wordlists-custom">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Crear Wordlists</h3>
+                        <div class="cmd-row"><span class="cmd-name">crunch 8 8 -t @@@@%%%% -o wordlist.txt</span><span class="cmd-desc">8 chars: 4 lowercase + 4 digits</span></div>
+                        <div class="cmd-row"><span class="cmd-name">echo -e "admin\nroot\npassword" > users.txt</span><span class="cmd-desc">Lista de usuarios simple</span></div>
+                        <div class="cmd-row"><span class="cmd-name">cat users.txt | sort -u > users_unique.txt</span><span class="cmd-desc">Eliminar duplicados</span></div>
+                        <div class="cmd-row"><span class="cmd-name">sed -n '1,1000p' rockyou.txt > top1000.txt</span><span class="cmd-desc">Primeras 1000 líneas</span></div>
+                    </div>
+                </div>
+
+                <!-- Generación -->
+                <div class="subtab-content" id="wordlists-gen">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Generación Inteligente</h3>
+                        <div class="cmd-row"><span class="cmd-name">cewl -d 3 -m 5 http://target > wordlist.txt</span><span class="cmd-desc">Scraping web para generar wordlist</span></div>
+                        <div class="cmd-row"><span class="cmd-name">cewl -d 2 -m 4 http://target -w wordlist.txt</span><span class="cmd-desc">Más permisivo</span></div>
+                        <div class="cmd-row"><span class="cmd-name">crunch 6 6 -t @@@@%% -o wordlist.txt</span><span class="cmd-desc">6 chars: 4 lower + 2 digits</span></div>
+                        <div class="cmd-row"><span class="cmd-name">crunch 4 4 1234567890 -o numbers.txt</span><span class="cmd-desc">Números de 4 dígitos</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== RULES / MASKS ========== -->
+            <div class="tabs tab-content" id="rules">
+                <div class="subtabs">
+                    <button class="tabsub-btn active" onclick="showSubTab(event, 'rules', 'john')">John Rules</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'rules', 'hashcat')">Hashcat Rules</button>
+                    <button class="tabsub-btn" onclick="showSubTab(event, 'rules', 'masks')">Masks / Placeholders</button>
+                </div>
+
+                <!-- John Rules -->
+                <div class="subtab-content active" id="rules-john">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">John Rules</h3>
+                        <div class="cmd-row"><span class="cmd-name">john --wordlist=rockyou.txt --rules hash.txt</span><span class="cmd-desc">Reglas por defecto</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --wordlist=rockyou.txt --rules=all hash.txt</span><span class="cmd-desc">Todas las reglas</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --wordlist=rockyou.txt --rules=single hash.txt</span><span class="cmd-desc">Regla single</span></div>
+                        <div class="cmd-row"><span class="cmd-name">john --wordlist=rockyou.txt --rules=extra hash.txt</span><span class="cmd-desc">Reglas extra</span></div>
+                    </div>
+                </div>
+
+                <!-- Hashcat Rules -->
+                <div class="subtab-content" id="rules-hashcat">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Hashcat Rules</h3>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 0 -r rules/best64.rule hash.txt rockyou.txt</span><span class="cmd-desc">Reglas best64</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 0 -r rules/d3ad0ne.rule hash.txt rockyou.txt</span><span class="cmd-desc">Reglas d3ad0ne</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 0 -r rules/toggles1-5.rule hash.txt rockyou.txt</span><span class="cmd-desc">Toggles (case)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -m 0 -j '$-$-$-$-$' -k '$-$-$-$-$' hash.txt rockyou.txt</span><span class="cmd-desc">Left + Right rules</span></div>
+                    </div>
+                </div>
+
+                <!-- Masks / Placeholders -->
+                <div class="subtab-content" id="rules-masks">
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Mask Placeholders</h3>
+                        <div class="cmd-row"><span class="cmd-name">?l = lowercase (a-z)</span><span class="cmd-desc">Letras minúsculas</span></div>
+                        <div class="cmd-row"><span class="cmd-name">?u = uppercase (A-Z)</span><span class="cmd-desc">Letras mayúsculas</span></div>
+                        <div class="cmd-row"><span class="cmd-name">?d = digit (0-9)</span><span class="cmd-desc">Dígitos</span></div>
+                        <div class="cmd-row"><span class="cmd-name">?s = special (!@#$...)</span><span class="cmd-desc">Caracteres especiales</span></div>
+                        <div class="cmd-row"><span class="cmd-name">?a = all (?l?u?d?s)</span><span class="cmd-desc">Todos los caracteres</span></div>
+                        <div class="cmd-row"><span class="cmd-name">?b = 0x00-0xff</span><span class="cmd-desc">Todos los bytes</span></div>
+                    </div>
+                    <div class="cmd-group">
+                        <h3 class="cmd-group-title">Ejemplos de Masks</h3>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -a 3 -m 0 hash.txt ?d?d?d?d?d?d</span><span class="cmd-desc">6 dígitos (PIN)</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -a 3 -m 0 hash.txt ?l?l?l?l?l?l?l</span><span class="cmd-desc">7 minúsculas</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -a 3 -m 0 hash.txt ?u?l?l?l?l?d?d</span><span class="cmd-desc">1 mayúscula + 4 min + 2 dígitos</span></div>
+                        <div class="cmd-row"><span class="cmd-name">hashcat -a 3 -m 0 hash.txt ?a?a?a?a?a?a?a?a</span><span class="cmd-desc">8 all (lento)</span></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="../scripts.js"></script>
+</body>
+</html>
